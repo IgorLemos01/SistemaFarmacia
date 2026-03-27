@@ -1713,6 +1713,11 @@ function salvarUsuario() {
 // lsArr still needed for seedAdmin (users bootstrapping)
 function lsArr(k) { try { return JSON.parse(localStorage.getItem('fc_'+k) || '[]'); } catch(e) { return []; } }
 
+// Nova função para guardar dados no LocalStorage com o prefixo correto
+function lsSet(key, value) { 
+  localStorage.setItem('fc_' + key, JSON.stringify(value)); 
+}
+   
 function openTopAction() {
   if (STATE.page === 'clientes') openModalCliente();
   if (STATE.page === 'manipulacao' || STATE.page === 'exames') openModalServico();
