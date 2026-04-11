@@ -90,7 +90,7 @@ nav{
   display:flex;
   align-items:center;
   padding-top:68px;
-  z-index:1; /* Fica atrás das outras seções que rolam por cima */
+  z-index:1;
 }
 .hbg{position:absolute;inset:0;pointer-events:none;width:100%;height:100%}
 #heroCanvas{position:absolute;inset:0;width:100%;height:100%}
@@ -241,8 +241,8 @@ nav{
 .wafloat:hover .wftip{opacity:1}
 
 /* ─── FOOTER ─── */
-footer{background:var(--tx);color:rgba(255,255,255,.62);padding:2.5rem 2rem;position:relative;z-index:10;}
-.foot-in{max-width:1160px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.25rem}
+footer{background:var(--tx);color:rgba(255,255,255,.62);padding:2.5rem 2rem 0;position:relative;z-index:10;}
+.foot-in{max-width:1160px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.25rem;padding-bottom:2rem}
 .flogo{display:flex;align-items:center;gap:10px}
 .flic{width:34px;height:34px;background:var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
 .flt{font-family:'Playfair Display',serif;color:#fff;font-size:1rem;font-weight:700}
@@ -250,6 +250,31 @@ footer{background:var(--tx);color:rgba(255,255,255,.62);padding:2.5rem 2rem;posi
 .flinks a{color:rgba(255,255,255,.52);text-decoration:none;font-size:.82rem;transition:color .2s}
 .flinks a:hover{color:#fff}
 .fcp{font-size:.76rem;color:rgba(255,255,255,.32)}
+
+/* ─── FOOTER LEGAL ─── */
+.foot-legal{
+  max-width:1160px;margin:0 auto;
+  border-top:1px solid rgba(255,255,255,.09);
+  padding:1.5rem 0 2rem;
+}
+.foot-legal-text{
+  font-size:.72rem;color:rgba(255,255,255,.36);
+  line-height:1.9;text-align:center;
+}
+.foot-legal-text strong{color:rgba(255,255,255,.52);font-weight:600}
+.foot-legal-text a{color:rgba(255,255,255,.44);text-decoration:none;transition:color .2s}
+.foot-legal-text a:hover{color:rgba(255,255,255,.75)}
+.foot-legal-bottom{
+  margin-top:.875rem;padding-top:.875rem;
+  border-top:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:center;gap:1.25rem;flex-wrap:wrap;
+}
+.foot-legal-bottom a{
+  color:rgba(255,255,255,.38);font-size:.7rem;
+  text-decoration:none;transition:color .2s;
+}
+.foot-legal-bottom a:hover{color:rgba(255,255,255,.7)}
+.foot-legal-bottom span{font-size:.7rem;color:rgba(255,255,255,.22)}
 
 /* ─── BOTÃO SISTEMA ─── */
 .nsistema{
@@ -485,6 +510,32 @@ footer{background:var(--tx);color:rgba(255,255,255,.62);padding:2.5rem 2rem;posi
     </ul>
     <p class="fcp">© 2026 Farmácia Couto. Todos os direitos reservados.</p>
   </div>
+
+  <!-- RODAPÉ LEGAL / REGULATÓRIO -->
+  <div class="foot-legal">
+    <p class="foot-legal-text">
+      <strong>Farmácia Couto</strong>
+      &nbsp;|&nbsp; CNPJ: 53.835.152/0001-70
+      &nbsp;|&nbsp; I.E.: 215.334.598
+      &nbsp;|&nbsp; Dt. Jorrinho s/n, Tucano — Bahia (BA)
+      &nbsp;|&nbsp; CEP: 48790-000
+      &nbsp;|&nbsp; Para dúvidas, elogios e reclamações acesse nossa
+      <a href="https://api.whatsapp.com/send/?phone=5575991154571&text=Ol%C3%A1%2C%20gostaria%20de%20entrar%20em%20contato&type=phone_number&app_absent=0" target="_blank" rel="noopener">Central de Atendimento no WhatsApp</a>
+      <br/>
+      <strong>Farmacêutico responsável:</strong> Leandro Couto dos Santos
+      &nbsp;|&nbsp; CRF: 9992
+      &nbsp;|&nbsp; AFE: 5.08735-2
+      <br/>
+      As informações contidas neste site não devem ser usadas para automedicação. Maiores esclarecimentos, consultar o site:
+      <a href="https://www.anvisa.gov.br" target="_blank" rel="noopener">www.anvisa.gov.br</a>.
+      A privacidade e a segurança dos clientes são compromissos da Farmácia Couto.
+    </p>
+    <div class="foot-legal-bottom">
+      <a href="#">Política de Privacidade</a>
+      <span>·</span>
+      <span>© 2026 Farmácia Couto. Todos os direitos reservados.</span>
+    </div>
+  </div>
 </footer>
 
 <!-- FLOATING WHATSAPP -->
@@ -500,10 +551,9 @@ footer{background:var(--tx);color:rgba(255,255,255,.62);padding:2.5rem 2rem;posi
   var cv = document.getElementById('heroCanvas');
   if(!cv) return;
   var ctx = cv.getContext('2d'), W, H, pts, animFrameId;
-  var isHeroVisible = true; // Controla quando o Canvas deve rodar
+  var isHeroVisible = true;
   
   function resize(){
-    // Usa window.innerWidth em vez do offsetWidth para evitar forçar reflow lateral
     W = cv.width = window.innerWidth;
     H = cv.height = cv.parentElement.offsetHeight;
   }
@@ -520,7 +570,7 @@ footer{background:var(--tx);color:rgba(255,255,255,.62);padding:2.5rem 2rem;posi
   }
   
   function draw(){
-    if(!isHeroVisible) return; // Se o hero sumir da tela, economiza GPU e Bateria
+    if(!isHeroVisible) return;
     
     ctx.clearRect(0, 0, W, H);
     var DIST = 135;
@@ -561,7 +611,6 @@ footer{background:var(--tx);color:rgba(255,255,255,.62);padding:2.5rem 2rem;posi
   window.addEventListener('resize', function(){ resize(); mkPts(58); });
   resize(); mkPts(58); draw();
   
-  // Intersection Observer para pausar o Canvas quando não estiver visível (Performance)
   if ('IntersectionObserver' in window) {
     var heroObserver = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
@@ -586,7 +635,7 @@ footer{background:var(--tx);color:rgba(255,255,255,.62);padding:2.5rem 2rem;posi
     entries.forEach(function(e, i){
       if(e.isIntersecting) {
         setTimeout(function(){ e.target.classList.add('vis'); }, i * 75);
-        obs.unobserve(e.target); // Deixa de observar depois que anima (Performance)
+        obs.unobserve(e.target);
       }
     });
   }, { threshold: 0.08, rootMargin: '0px 0px -28px 0px' });
