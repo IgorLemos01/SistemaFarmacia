@@ -139,25 +139,7 @@ nav{
 /* ═══════════ 2. SOBRE ═══════════ */
 #sobre{background:var(--off)}
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
-@media(max-width:860px) {
-  .sg {
-    grid-template-columns: 1fr;
-    gap: 3.5rem; /* Aumentamos o espaço (gap) para o bloco vermelho não cobrir o texto de baixo */
-  }
-  
-  .sbadge {
-    right: 50%; /* Joga o bloco para o meio */
-    transform: translateX(50%); /* Centraliza perfeitamente */
-    bottom: -25px; /* Ajusta a altura da sobreposição */
-    width: 90%; /* Define uma largura máxima para não vazar a tela */
-    padding: 0.8rem 1rem; /* Dá uma leve ajustada no espaçamento interno */
-  }
-
-  .sbadge strong {
-    font-size: 1.5rem; /* Diminui levemente a fonte do título no celular para caber melhor */
-  }
-}
-
+@media(max-width:860px){.sg{grid-template-columns:1fr;gap:2.5rem}}
 .svis{position:relative;overflow:visible}
 .sbox{background:linear-gradient(135deg,var(--blue),var(--blue-m));border-radius:var(--rl);aspect-ratio:4/3;min-height:260px;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:var(--sl);overflow:hidden}
 .sbg-ico{font-size:8rem;opacity:.08;position:absolute}
