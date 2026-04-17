@@ -150,6 +150,11 @@ nav{
 .sbadge{position:absolute;bottom:-18px;right:-18px;background:var(--red);color:#fff;border-radius:14px;padding:1rem 1.25rem;box-shadow:0 12px 32px rgba(200,16,46,.36);text-align:center;z-index:2}
 .sbadge strong{font-family:'Playfair Display',serif;font-size:1.9rem;display:block}
 .sbadge span{font-size:.7rem;font-weight:600;opacity:.82}
+@media(max-width:860px){
+  .sbadge{position:relative;bottom:auto;right:auto;margin-top:1rem;display:inline-block}
+  .svis{overflow:visible;text-align:center}
+  .sbox{margin-bottom:.5rem}
+}
 .sfeats{margin-top:2.2rem;display:flex;flex-direction:column;gap:1.1rem}
 .feat{display:flex;gap:.95rem;align-items:flex-start;padding:1.1rem;background:#fff;border-radius:var(--r);box-shadow:var(--ss);border-left:3px solid var(--red);transition:transform .2s,box-shadow .2s}
 .feat:hover{transform:translateX(4px);box-shadow:var(--sm)}
