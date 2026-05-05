@@ -223,6 +223,7 @@ tr:hover td{background:rgba(0,48,135,.02)}
 .alert-blue{background:var(--blue-l);border:1px solid rgba(0,48,135,.15);color:var(--blue)}
 .alert-red{background:var(--red-l);border:1px solid rgba(200,16,46,.2);color:var(--red-d)}
 .alert-green{background:var(--green-l);border:1px solid rgba(16,185,129,.2);color:#065F46}
+.alert-yellow{background:var(--yellow-l);border:1px solid rgba(245,158,11,.2);color:#92400E}
 
 #toasts{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:.6rem}
 .toast{background:#fff;border-radius:10px;padding:.875rem 1.25rem;box-shadow:0 8px 32px rgba(0,0,0,.15);border-left:4px solid var(--blue);display:flex;align-items:center;gap:10px;font-size:.85rem;font-weight:500;animation:tin .25s ease;min-width:260px;max-width:340px}
@@ -369,13 +370,19 @@ tr:hover td{background:rgba(0,48,135,.02)}
       <div class="fg"><label>Nome Completo *</label><input id="cNome" placeholder="João da Silva"/></div>
       <div class="fg"><label>Data de Nascimento</label><input id="cNasc" type="date"/></div>
       <div class="fg"><label>Sexo</label><select id="cSexo"><option value="">—</option><option>Masculino</option><option>Feminino</option><option>Outro</option></select></div>
-      <div class="fg"><label>WhatsApp *</label><input id="cTel" placeholder="(75) 99999-9999" maxlength="15" oninput="mPhone(this)"/></div>
+      <div class="fg">
+        <label>WhatsApp *</label>
+        <input id="cTel" placeholder="(75) 99999-9999" maxlength="15" oninput="mPhone(this);clearFieldErr('cTel')"/>
+        <span id="cTelErr" style="display:none;color:var(--red);font-size:.75rem;margin-top:.2rem"></span>
+      </div>
       <div class="fg"><label>E-mail</label><input id="cEmail" type="email" placeholder="joao@email.com"/></div>
       <div class="fg full"><label>Endereço</label><input id="cEnd" placeholder="Rua, número, bairro, cidade"/></div>
-      <div class="fg full"><label>Observações</label><textarea id="cObs" placeholder="Alergias, condições médicas relevantes, etc."></textarea></div>
+      <div class="fg full"><label>Alergias</label><input id="cAlergias" placeholder="Ex: Penicilina, Dipirona, Látex..."/></div>
+      <div class="fg full"><label>Médico de Referência</label><input id="cMedico" placeholder="Dr. Nome Sobrenome — CRM 12345"/></div>
+      <div class="fg full"><label>Observações</label><textarea id="cObs" placeholder="Informações adicionais sobre o paciente..."></textarea></div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modalCliente')">Cancelar</button>
+      <button class="btn btn-ghost" onclick="cancelarModalCliente()">Cancelar</button>
       <button class="btn btn-primary" onclick="salvarCliente()">💾 Salvar Cliente</button>
     </div>
   </div>
@@ -409,6 +416,7 @@ tr:hover td{background:rgba(0,48,135,.02)}
       <div class="fg full" id="fManip" style="display:none">
         <label>Fórmula / Composição *</label>
         <textarea id="sFormula" placeholder="Descreva os componentes, concentrações e forma farmacêutica..."></textarea>
+        <span id="sFormulaHint" style="display:none;font-size:.75rem;color:var(--tx3);margin-top:.3rem">💡 Informe os componentes, concentrações e forma farmacêutica (ex: Retinol 0,05% + Vitamina C 5% em gel)</span>
       </div>
       <div class="fg" id="fPrazo" style="display:none">
         <label>Prazo de Entrega</label>
@@ -418,11 +426,19 @@ tr:hover td{background:rgba(0,48,135,.02)}
         <label>Tipo de Exame *</label>
         <input id="sTipoExame" placeholder="Ex: Hemograma completo, Glicemia, Colesterol total..."/>
       </div>
+      <div class="fg full" id="fResultado" style="display:none">
+        <label>Resultado do Exame</label>
+        <textarea id="sResultadoExame" placeholder="Informe o resultado (opcional)..."></textarea>
+      </div>
+      <div class="fg" id="fLaboratorio" style="display:none">
+        <label>Laboratório Responsável</label>
+        <input id="sLaboratorio" placeholder="Nome do laboratório..."/>
+      </div>
       <div class="fg full" id="fProduto" style="display:none">
         <label>Produto(s) *</label>
         <input id="sProdutoDesc" placeholder="Ex: Vitamina C 1000mg x2, Omega 3 Premium..."/>
       </div>
-      <div class="fg"><label>Valor (R$) *</label><input id="sValor" type="number" step="0.01" placeholder="0,00"/></div>
+      <div class="fg"><label>Valor (R$) *</label><input id="sValor" placeholder="R$ 0,00" oninput="maskValorServico(this)"/></div>
       <div class="fg">
         <label>Forma de Pagamento *</label>
         <select id="sPagamento">
@@ -437,7 +453,7 @@ tr:hover td{background:rgba(0,48,135,.02)}
       <div class="fg full"><label>Observações</label><textarea id="sObs" placeholder="Informações adicionais sobre este serviço..."></textarea></div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modalServico')">Cancelar</button>
+      <button class="btn btn-ghost" onclick="cancelarModalServico()">Cancelar</button>
       <button class="btn btn-primary" onclick="salvarServico()">💾 Registrar Serviço</button>
     </div>
   </div>
@@ -452,8 +468,17 @@ tr:hover td{background:rgba(0,48,135,.02)}
     </div>
     <div class="form-grid">
       <div class="fg"><label>Nome *</label><input id="uNome" placeholder="Nome completo"/></div>
-      <div class="fg"><label>E-mail *</label><input id="uEmail" type="email" placeholder="email@farmacia.com"/></div>
-      <div class="fg"><label>Senha *</label><input id="uSenha" type="password" placeholder="Mínimo 8 caracteres"/></div>
+      <div class="fg">
+        <label>E-mail *</label>
+        <input id="uEmail" type="email" placeholder="email@farmacia.com" oninput="clearFieldErr('uEmail')"/>
+        <span id="uEmailErr" style="display:none;color:var(--red);font-size:.75rem;margin-top:.2rem"></span>
+      </div>
+      <div class="fg">
+        <label>Senha *</label>
+        <input id="uSenha" type="password" placeholder="Mínimo 6 caracteres" oninput="updateSenhaCounter()"/>
+        <span id="uSenhaCounter" style="font-size:.72rem;color:var(--tx3);margin-top:.2rem">0 caracteres</span>
+        <span id="uSenhaErr" style="display:none;color:var(--red);font-size:.75rem;margin-top:.2rem"></span>
+      </div>
       <div class="fg">
         <label>Perfil *</label>
         <select id="uPerfil" onchange="onPerfilChange()">
@@ -642,7 +667,9 @@ async function dbGetClientes() {
 async function dbSaveCliente(obj, isEdit) {
   var row = { id:obj.id, nome:obj.nome, nasc:obj.nasc||null,
     sexo:obj.sexo||null, tel:obj.tel, email:obj.email||null,
-    endereco:obj.endereco||null, obs:obj.obs||null, ativo:true };
+    endereco:obj.endereco||null, obs:obj.obs||null, ativo:true,
+    alergias_cliente:obj.alergiasCliente||null,
+    medico_referencia:obj.medicoReferencia||null };
   var cached = fromCache('clientes');
   if (isEdit) {
     var idx = cached.findIndex(function(c){return c.id===obj.id;});
@@ -692,6 +719,9 @@ function normaliseServico(s) {
     formula: s.formula, prazo: s.prazo,
     tipoExame: s.tipo_exame||s.tipoExame, produtoDesc: s.produto_desc||s.produtoDesc,
     criadoPor: s.criado_por||s.criadoPor, criado_em: s.criado_em,
+    resultadoExame: s.resultado_exame||s.resultadoExame||null,
+    laboratorio: s.laboratorio||null,
+    dataEntregaReal: s.data_entrega_real||s.dataEntregaReal||null,
   };
 }
 
@@ -724,6 +754,9 @@ async function dbSaveServico(obj) {
     formula: obj.formula||null, prazo: obj.prazo||null,
     tipo_exame: obj.tipoExame||null, produto_desc: obj.produtoDesc||null,
     criado_por: obj.criadoPor||null,
+    resultado_exame: obj.resultadoExame||null,
+    laboratorio: obj.laboratorio||null,
+    data_entrega_real: obj.dataEntregaReal||null,
   };
   var normed = normaliseServico(row);
   var cached = fromCache('servicos');
@@ -740,6 +773,34 @@ async function dbSaveServico(obj) {
     toast('Salvo localmente. Sincronizará quando a conexão for restabelecida.','yw');
     return nextNum;
   }
+}
+
+async function dbUpdateServico(id, changes) {
+  var cached = fromCache('servicos') || [];
+  var idx = cached.findIndex(function(x){return x.id===id;});
+  var existing = idx >= 0 ? cached[idx] : {};
+  var updated = Object.assign({}, existing, changes);
+  if (idx >= 0) cached[idx] = updated; else cached.unshift(updated);
+  setCache('servicos', cached);
+  if (!sb) return updated.orcNum || existing.orcNum;
+  try {
+    var dbRow = {
+      cliente_id: changes.clienteId, tipo: changes.tipo,
+      data: changes.data, valor: parseFloat(changes.valor)||0, pagamento: changes.pagamento,
+      obs: changes.obs||null,
+      formula: changes.formula||null, prazo: changes.prazo||null,
+      tipo_exame: changes.tipoExame||null, produto_desc: changes.produtoDesc||null,
+      resultado_exame: changes.resultadoExame||null,
+      laboratorio: changes.laboratorio||null,
+    };
+    var res = await sb.from('servicos').update(dbRow).eq('id', id);
+    if (res.error) throw res.error;
+    clearCache('servicos');
+  } catch(e) {
+    console.error('dbUpdateServico error:', e);
+    toast('Atualizado localmente. Sincronizará quando a conexão for restabelecida.','yw');
+  }
+  return updated.orcNum || existing.orcNum;
 }
 
 async function dbGetUsers() {
@@ -822,6 +883,10 @@ function doLogin() {
     var users = lsArr('users');
     var user = users.find(function(u) { return u.email === email && u.senha === pass && u.ativo !== false; });
     if (user) {
+      // Salvar ultimo acesso
+      var allUsers = lsArr('users');
+      var idx = allUsers.findIndex(function(u){return u.id===user.id;});
+      if(idx>=0){ allUsers[idx].ultimoAcesso = new Date().toISOString(); lsSet('users', allUsers); }
       STATE.user = user;
       var p = user.perms || {};
       if (typeof p.clientes === 'undefined' && typeof p.clientes_w !== 'undefined') {
@@ -950,6 +1015,12 @@ function pgDashboard() {
     var receita = servicos.reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
     var receitaHoje = hojeSrv.reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
     var manip = servicos.filter(function(s){return s.tipo==='manipulacao';});
+    var exames = servicos.filter(function(s){return s.tipo==='exame';});
+    var aReceber = servicos.filter(function(s){return s.pagamento==='pendente';}).reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
+    // Manipulacoes atrasadas
+    var manipAtrasadas = manip.filter(function(s){
+      return s.prazo && s.prazo < hoje && !s.dataEntregaReal;
+    });
     var dias = [];
     for(var i=6;i>=0;i--){
       var d=new Date();d.setDate(d.getDate()-i);
@@ -957,35 +1028,68 @@ function pgDashboard() {
       var v=servicos.filter(function(s){return s.data===ds;}).reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
       dias.push({d:ds.slice(5),v:v});
     }
-    set('content', `
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">👥</div><div><div class="stat-val">${clientes.length}</div><div class="stat-lbl">Clientes cadastrados</div></div></div>
-        <div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">📋</div><div><div class="stat-val">${hojeSrv.length}</div><div class="stat-lbl">Atendimentos hoje</div></div></div>
-        <div class="stat-card"><div class="stat-ico" style="background:var(--purple-l)">⚗️</div><div><div class="stat-val">${manip.length}</div><div class="stat-lbl">Manipulações total</div></div></div>
-        <div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">💰</div><div><div class="stat-val">${fmt(receita)}</div><div class="stat-lbl">Receita total</div><div class="stat-chg chg-up">+${fmt(receitaHoje)} hoje</div></div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:1.25rem">
-        <div class="card">
-          <div class="card-head"><div><div class="card-title">Últimos Serviços</div><div class="card-sub">Registros mais recentes</div></div></div>
-          ${servicos.length===0?'<div class="empty"><span class="empty-ico">📋</span><p class="empty-txt">Nenhum serviço registrado</p></div>':
-          '<div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Tipo</th><th>Valor</th><th>Pagamento</th><th>Data</th></tr></thead><tbody>'+
+    // Saudacao
+    var hora = new Date().getHours();
+    var saudacao = hora < 12 ? 'Bom dia' : hora < 18 ? 'Boa tarde' : 'Boa noite';
+    var nomeUser = STATE.user ? (STATE.user.nome || '').split(' ')[0] : '';
+    // Alertas
+    var alertas = [];
+    if (manipAtrasadas.length > 0) {
+      alertas.push(manipAtrasadas.length + ' manipula' + (manipAtrasadas.length===1?'ção':'ções') + ' com prazo vencido — <a href="#" onclick="goTo(\'manipulacao\');return false;" style="color:inherit;font-weight:700;text-decoration:underline">Ver manipulações</a>');
+    }
+    if (aReceber > 0) {
+      alertas.push(fmt(aReceber) + ' a receber no total — <a href="#" onclick="goTo(\'orcamentos\');return false;" style="color:inherit;font-weight:700;text-decoration:underline">Ver orçamentos</a>');
+    }
+    // Distribuicao por tipo
+    var totalSrv = servicos.length;
+    var tiposDistrib = ['manipulacao','exame','produto'].map(function(t){
+      var n = servicos.filter(function(s){return s.tipo===t;}).length;
+      var pct = totalSrv > 0 ? Math.round(n/totalSrv*100) : 0;
+      return {t:t, n:n, pct:pct};
+    }).filter(function(x){return x.n>0;});
+    var distribHTML = tiposDistrib.length === 0 ? '<p style="color:var(--tx3);font-size:.83rem">Sem dados</p>' :
+      tiposDistrib.map(function(x){
+        return '<div style="margin-bottom:.6rem"><div style="display:flex;justify-content:space-between;margin-bottom:.25rem"><span>'+tipoBadge(x.t)+'</span><span style="font-size:.75rem;font-weight:600">'+x.pct+'% ('+x.n+')</span></div><div style="background:var(--bg);border-radius:4px;height:8px"><div style="width:'+x.pct+'%;height:100%;background:var(--blue);border-radius:4px"></div></div></div>';
+      }).join('');
+    set('content',
+      (nomeUser ? '<p style="font-size:.85rem;color:var(--tx3);margin-bottom:1rem">'+saudacao+', <strong>'+esc(nomeUser)+'</strong>! 👋</p>' : '') +
+      (alertas.length ? '<div class="alert alert-yellow" style="margin-bottom:1.25rem">⚠️ <div><strong>Atenção:</strong> '+alertas.join(' &nbsp;·&nbsp; ')+'</div></div>' : '') +
+      '<div class="stats-grid">' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">👥</div><div><div class="stat-val">'+clientes.length+'</div><div class="stat-lbl">Clientes cadastrados</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">📋</div><div><div class="stat-val">'+hojeSrv.length+'</div><div class="stat-lbl">Atendimentos hoje</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--purple-l)">⚗️</div><div><div class="stat-val">'+manip.length+'</div><div class="stat-lbl">Manipulações total</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">🔬</div><div><div class="stat-val">'+exames.length+'</div><div class="stat-lbl">Exames total</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">💰</div><div><div class="stat-val">'+fmt(receita)+'</div><div class="stat-lbl">Receita total</div><div class="stat-chg chg-up">+'+fmt(receitaHoje)+' hoje</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">⏳</div><div><div class="stat-val">'+fmt(aReceber)+'</div><div class="stat-lbl">A receber</div></div></div>' +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:1.6fr 1fr;gap:1.25rem">' +
+        '<div class="card">' +
+          '<div class="card-head"><div><div class="card-title">Últimos Serviços</div><div class="card-sub">Registros mais recentes</div></div></div>' +
+          (servicos.length===0 ? '<div class="empty"><span class="empty-ico">📋</span><p class="empty-txt">Nenhum serviço registrado</p></div>' :
+          '<div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Tipo</th><th>Atendente</th><th>Valor</th><th>Pagamento</th><th>Data</th></tr></thead><tbody>' +
           servicos.slice(0,8).map(function(s){
             var cl=clientes.find(function(c){return c.id===s.clienteId;});
-            return '<tr><td class="td-name">'+(cl?esc(cl.nome):'—')+'</td><td>'+tipoBadge(s.tipo)+'</td><td style="font-weight:600">'+fmt(s.valor)+'</td><td>'+pagBadge(s.pagamento)+'</td><td class="td-muted">'+fmtDate(s.data)+'</td></tr>';
-          }).join('')+'</tbody></table></div>'}
-        </div>
-        <div class="card">
-          <div class="card-head"><div class="card-title">Receita (7 dias)</div></div>
-          <div style="display:flex;flex-direction:column;gap:.5rem">
-          ${dias.map(function(d){
-            var max=Math.max.apply(null,dias.map(function(x){return x.v;}));
-            var pct=max>0?Math.round(d.v/max*100):0;
-            return '<div style="display:flex;align-items:center;gap:.75rem"><span style="font-size:.72rem;color:var(--tx3);width:32px;flex-shrink:0">'+d.d+'</span><div style="flex:1;background:var(--bg);border-radius:4px;height:10px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-m));border-radius:4px;transition:width .5s"></div></div><span style="font-size:.72rem;font-weight:600;width:60px;text-align:right">'+fmt(d.v)+'</span></div>';
-          }).join('')}
-          </div>
-        </div>
-      </div>
-    `);
+            return '<tr><td class="td-name">'+(cl?esc(cl.nome):'—')+'</td><td>'+tipoBadge(s.tipo)+'</td><td class="td-muted">'+esc(s.criadoPor||'—')+'</td><td style="font-weight:600">'+fmt(s.valor)+'</td><td>'+pagBadge(s.pagamento)+'</td><td class="td-muted">'+fmtDate(s.data)+'</td></tr>';
+          }).join('')+'</tbody></table></div>') +
+        '</div>' +
+        '<div style="display:flex;flex-direction:column;gap:1.25rem">' +
+          '<div class="card">' +
+            '<div class="card-head"><div class="card-title">Receita (7 dias)</div></div>' +
+            '<div style="display:flex;flex-direction:column;gap:.5rem">' +
+            dias.map(function(d){
+              var max=Math.max.apply(null,dias.map(function(x){return x.v;}));
+              var pct=max>0?Math.round(d.v/max*100):0;
+              return '<div style="display:flex;align-items:center;gap:.75rem"><span style="font-size:.72rem;color:var(--tx3);width:32px;flex-shrink:0">'+d.d+'</span><div style="flex:1;background:var(--bg);border-radius:4px;height:10px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-m));border-radius:4px;transition:width .5s"></div></div><span style="font-size:.72rem;font-weight:600;width:60px;text-align:right">'+fmt(d.v)+'</span></div>';
+            }).join('') +
+            '</div>' +
+          '</div>' +
+          '<div class="card">' +
+            '<div class="card-head"><div class="card-title">Por Tipo de Serviço</div></div>' +
+            distribHTML +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
   });
 }
 
@@ -994,15 +1098,15 @@ function pgClientes() {
   if (!canView('clientes')) { set('content','<div class="alert alert-red">⛔ Você não tem permissão para acessar esta área.</div>'); return; }
   var btn = document.getElementById('topActionBtn');
   if (canEdit('clientes')) { btn.style.display=''; btn.textContent='＋ Novo Cliente'; }
-  set('content',`
-    <div class="card">
-      <div class="card-head">
-        <div class="search-bar"><span class="ico">🔍</span><input placeholder="Buscar por nome ou telefone..." oninput="filterClientes(this.value)" id="clienteFilter"/></div>
-        ${canEdit('clientes')?'<button class="btn btn-primary" onclick="openModalCliente()">＋ Novo Cliente</button>':''}
-      </div>
-      <div id="clientesTable"><div class="empty"><span class="empty-ico">⏳</span><p class="empty-txt">Carregando...</p></div></div>
-    </div>
-  `);
+  set('content',
+    '<div class="card">' +
+      '<div class="card-head">' +
+        '<div class="search-bar"><span class="ico">🔍</span><input placeholder="Buscar por nome, telefone, e-mail..." oninput="filterClientes(this.value)" id="clienteFilter"/></div>' +
+        (canEdit('clientes') ? '<button class="btn btn-primary" onclick="openModalCliente()">＋ Novo Cliente</button>' : '') +
+      '</div>' +
+      '<div id="clientesTable"><div class="empty"><span class="empty-ico">⏳</span><p class="empty-txt">Carregando...</p></div></div>' +
+    '</div>'
+  );
   Promise.all([dbGetClientes(), dbGetServicos()]).then(function(r) {
     set('clientesTable', renderClientesTable(r[0], r[1], ''));
   });
@@ -1015,12 +1119,26 @@ function filterClientes(q) {
 }
 
 function renderClientesTable(clientes, servicos, q) {
-  var list = q ? clientes.filter(function(c){ return (c.nome+(c.tel||'')).toLowerCase().includes(q.toLowerCase()); }) : clientes;
-  if (!list.length) return '<div class="empty"><span class="empty-ico">👥</span><p class="empty-txt">'+(q?'Nenhum cliente encontrado':'Nenhum cliente cadastrado')+'</p>'+(q?'':'<p class="empty-sub">Clique em "+ Novo Cliente" para começar</p>')+'</div>';
-  return '<div class="table-wrap"><table><thead><tr><th>#</th><th>Nome</th><th>WhatsApp</th><th>Atendimentos</th><th>Ações</th></tr></thead><tbody>'+
+  var list = q ? clientes.filter(function(c){
+    var haystack = (c.nome+(c.tel||'')+(c.email||'')+(c.id||'')).toLowerCase();
+    return haystack.includes(q.toLowerCase());
+  }) : clientes;
+  // Ordenar por mais recentemente atendido
+  list = list.slice().sort(function(a, b) {
+    var srvA = servicos.filter(function(s){return s.clienteId===a.id;});
+    var srvB = servicos.filter(function(s){return s.clienteId===b.id;});
+    var lastA = srvA.length ? Math.max.apply(null, srvA.map(function(s){return s.orcNum||0;})) : -1;
+    var lastB = srvB.length ? Math.max.apply(null, srvB.map(function(s){return s.orcNum||0;})) : -1;
+    return lastB - lastA;
+  });
+  if (!list.length) return '<div class="empty"><span class="empty-ico">👥</span><p class="empty-txt">'+(q?'Nenhum cliente encontrado':'Nenhum cliente cadastrado')+'</p>'+(q?'':(canEdit('clientes')?'<p class="empty-sub">Clique em "+ Novo Cliente" para começar</p><button class="btn btn-primary" style="margin-top:1rem" onclick="openModalCliente()">＋ Novo Cliente</button>':'<p class="empty-sub">Nenhum cliente cadastrado ainda</p>'))+'</div>';
+  return '<div class="table-wrap"><table><thead><tr><th>#</th><th>Nome</th><th>WhatsApp</th><th>Atendimentos</th><th>Último atend.</th><th>Ações</th></tr></thead><tbody>'+
     list.map(function(c,i){
-      var total = servicos.filter(function(s){return s.clienteId===c.id;}).length;
-      return '<tr><td class="td-muted">'+(i+1)+'</td><td class="td-name">'+esc(c.nome)+'</td><td>'+esc(c.tel)+'</td><td><span class="badge badge-blue">'+total+' registro(s)</span></td><td style="display:flex;gap:.4rem"><button class="btn btn-sm btn-ghost" onclick="verCliente(\''+c.id+'\')">👁 Ver</button>'+(canEdit('manipulacao')||canEdit('exames')?'<button class="btn btn-sm btn-primary" onclick="openModalServico(\''+c.id+'\')">＋ Serviço</button>':'')+'</td></tr>';
+      var srvCliente = servicos.filter(function(s){return s.clienteId===c.id;});
+      var total = srvCliente.length;
+      var lastSrv = srvCliente.slice().sort(function(a,b){return (b.orcNum||0)-(a.orcNum||0);})[0];
+      var lastDate = lastSrv ? fmtDate(lastSrv.data) : '<span class="td-muted">—</span>';
+      return '<tr><td class="td-muted">'+(i+1)+'</td><td class="td-name">'+esc(c.nome)+'</td><td>'+esc(c.tel||'—')+'</td><td><span class="badge badge-blue">'+total+' atend.</span></td><td class="td-muted">'+lastDate+'</td><td style="display:flex;gap:.4rem"><button class="btn btn-sm btn-ghost" onclick="verCliente(\''+c.id+'\')">👁 Ver</button>'+(canEdit('manipulacao')||canEdit('exames')?'<button class="btn btn-sm btn-primary" onclick="openModalServico(\''+c.id+'\')">＋ Serviço</button>':'')+'</td></tr>';
     }).join('')+'</tbody></table></div>';
 }
 
@@ -1033,29 +1151,67 @@ function verCliente(id) {
     var receita = servicos.reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
     document.getElementById('mdcNome').textContent = c.nome;
     document.getElementById('mdcSub').textContent = 'Tel: '+c.tel;
-    set('mdcBody', `
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1.25rem">
-        <div style="background:var(--blue-l);border-radius:var(--r);padding:.875rem;text-align:center"><div style="font-size:1.4rem;font-weight:700;color:var(--blue)">${servicos.length}</div><div style="font-size:.75rem;color:var(--tx3)">Atendimentos</div></div>
-        <div style="background:var(--green-l);border-radius:var(--r);padding:.875rem;text-align:center"><div style="font-size:1.4rem;font-weight:700;color:var(--green)">${fmt(receita)}</div><div style="font-size:.75rem;color:var(--tx3)">Total gasto</div></div>
-        <div style="background:var(--yellow-l);border-radius:var(--r);padding:.875rem;text-align:center"><div style="font-size:1.4rem;font-weight:700;color:var(--yellow)">${servicos.filter(function(s){return s.tipo==='manipulacao';}).length}</div><div style="font-size:.75rem;color:var(--tx3)">Manipulações</div></div>
-      </div>
-      <div class="divider"></div>
-      <div style="font-size:.85rem;font-weight:600;margin-bottom:.875rem">Dados Cadastrais</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1.25rem;font-size:.83rem">
-        <div><span style="color:var(--tx3)">Endereço: </span>${esc(c.endereco||'—')}</div>
-        <div><span style="color:var(--tx3)">E-mail: </span>${esc(c.email||'—')}</div>
-        <div><span style="color:var(--tx3)">Nascimento: </span>${c.nasc?fmtDate(c.nasc):'—'}</div>
-        <div><span style="color:var(--tx3)">Sexo: </span>${esc(c.sexo||'—')}</div>
-      </div>
-      ${c.obs?'<div style="background:var(--yellow-l);border-radius:var(--r);padding:.75rem;font-size:.8rem;margin-bottom:1.25rem"><strong>Obs:</strong> '+esc(c.obs)+'</div>':''}
-      <div class="divider"></div>
-      <div style="font-size:.85rem;font-weight:600;margin-bottom:.875rem">Histórico de Serviços</div>
-      ${servicos.length===0?'<div class="empty" style="padding:1.5rem"><span class="empty-ico">📋</span><p class="empty-txt">Nenhum serviço registrado</p></div>':
-      '<div class="timeline">'+servicos.slice().sort(function(a,b){return (b.orcNum||0)-(a.orcNum||0);}).map(function(s){
-        return '<div class="tl-item"><div class="tl-dot" style="background:'+(s.tipo==='manipulacao'?'var(--purple)':s.tipo==='exame'?'var(--blue)':'var(--green)')+'"></div><div><div class="tl-title">'+tipoBadge(s.tipo)+' <span style="font-weight:600">'+esc(getServicoDesc(s))+'</span></div><div class="tl-meta">'+fmtDate(s.data)+' · '+fmt(s.valor)+' · '+pagBadge(s.pagamento)+'</div>'+(s.obs?'<div class="tl-meta">'+esc(s.obs)+'</div>':'')+'</div></div>';
-      }).join('')+'</div>'}
-    `);
+    var alergiasVal = c.alergiasCliente||c.alergias_cliente||'';
+    var medicoVal = c.medicoReferencia||c.medico_referencia||'';
+    set('mdcBody',
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1.25rem">' +
+        '<div style="background:var(--blue-l);border-radius:var(--r);padding:.875rem;text-align:center"><div style="font-size:1.4rem;font-weight:700;color:var(--blue)">'+servicos.length+'</div><div style="font-size:.75rem;color:var(--tx3)">Atendimentos</div></div>' +
+        '<div style="background:var(--green-l);border-radius:var(--r);padding:.875rem;text-align:center"><div style="font-size:1.4rem;font-weight:700;color:var(--green)">'+fmt(receita)+'</div><div style="font-size:.75rem;color:var(--tx3)">Total gasto</div></div>' +
+        '<div style="background:var(--yellow-l);border-radius:var(--r);padding:.875rem;text-align:center"><div style="font-size:1.4rem;font-weight:700;color:var(--yellow)">'+servicos.filter(function(s){return s.tipo==='manipulacao';}).length+'</div><div style="font-size:.75rem;color:var(--tx3)">Manipulações</div></div>' +
+      '</div>' +
+      '<div class="divider"></div>' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem"><div style="font-size:.85rem;font-weight:600">Dados Cadastrais</div>'+(canEdit('clientes')?'<button class="btn btn-sm btn-ghost" onclick="closeModal(\'modalDetalheCliente\');openModalCliente(\''+c.id+'\')">✏️ Editar</button>':'')+'</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1.25rem;font-size:.83rem">' +
+        '<div><span style="color:var(--tx3)">Endereço: </span>'+esc(c.endereco||'—')+'</div>' +
+        '<div><span style="color:var(--tx3)">E-mail: </span>'+esc(c.email||'—')+'</div>' +
+        '<div><span style="color:var(--tx3)">Nascimento: </span>'+(c.nasc?fmtDate(c.nasc):'—')+'</div>' +
+        '<div><span style="color:var(--tx3)">Sexo: </span>'+esc(c.sexo||'—')+'</div>' +
+        (medicoVal?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">Médico de referência: </span>'+esc(medicoVal)+'</div>':'') +
+      '</div>' +
+      (alergiasVal?'<div class="alert alert-yellow" style="margin-bottom:.75rem">⚠️ <div><strong>Alergias:</strong> '+esc(alergiasVal)+'</div></div>':'') +
+      (c.obs?'<div style="background:var(--yellow-l);border-radius:var(--r);padding:.75rem;font-size:.8rem;margin-bottom:1.25rem"><strong>Obs:</strong> '+esc(c.obs)+'</div>':'') +
+      '<div class="divider"></div>' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem"><div style="font-size:.85rem;font-weight:600">Histórico de Serviços</div></div>' +
+      '<div class="tabs" style="margin-bottom:1rem" id="tlTabs"><button class="tab active" onclick="filtrarTL(\'todos\',\''+c.id+'\')">Todos</button><button class="tab" onclick="filtrarTL(\'manipulacao\',\''+c.id+'\')">Manipulação</button><button class="tab" onclick="filtrarTL(\'exame\',\''+c.id+'\')">Exames</button><button class="tab" onclick="filtrarTL(\'outro\',\''+c.id+'\')">Outros</button></div>' +
+      '<div id="tlBody">'+renderTimeline(servicos,'todos')+'</div>'
+    );
     openModal('modalDetalheCliente');
+  });
+}
+
+function renderTimeline(servicos, filtro) {
+  var list = filtro==='todos' ? servicos :
+    filtro==='outro' ? servicos.filter(function(s){return s.tipo!=='manipulacao'&&s.tipo!=='exame';}) :
+    servicos.filter(function(s){return s.tipo===filtro;});
+  list = list.slice().sort(function(a,b){return (b.orcNum||0)-(a.orcNum||0);});
+  if(!list.length) return '<div class="empty" style="padding:1.5rem"><span class="empty-ico">📋</span><p class="empty-txt">Nenhum serviço nesta categoria</p></div>';
+  return '<div class="timeline">'+list.map(function(s){
+    var canEditSrv = canEdit('manipulacao')||canEdit('exames');
+    var tipoModal = s.tipo==='manipulacao' ? 'verManipulacao' : s.tipo==='exame' ? 'verExame' : 'verOrcamento';
+    return '<div class="tl-item" style="display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem">'
+      +'<div style="display:flex;align-items:flex-start;gap:.5rem;flex:1;min-width:0">'
+        +'<div class="tl-dot" style="background:'+(s.tipo==='manipulacao'?'var(--purple)':s.tipo==='exame'?'var(--blue)':'var(--green)')+';margin-top:.3rem;flex-shrink:0"></div>'
+        +'<div style="min-width:0">'
+          +'<div class="tl-title">'+tipoBadge(s.tipo)+' <span style="font-weight:600">'+esc(getServicoDesc(s))+'</span> <span class="orc-num" style="font-size:.75rem">#'+padNum(s.orcNum)+'</span></div>'
+          +'<div class="tl-meta">'+fmtDate(s.data)+' · '+fmt(s.valor)+' · '+pagBadge(s.pagamento)+'</div>'
+          +(s.obs?'<div class="tl-meta" style="font-style:italic">'+esc(s.obs)+'</div>':'')
+        +'</div>'
+      +'</div>'
+      +'<div style="display:flex;gap:.3rem;flex-shrink:0;padding-top:.1rem">'
+        +'<button class="btn btn-icon btn-sm" title="Ver detalhes" onclick="'+tipoModal+'(\''+s.id+'\')">👁</button>'
+        +(canEditSrv?'<button class="btn btn-icon btn-sm" title="Editar pedido" onclick="closeModal(\'modalDetalheCliente\');openModalServico(null,null,\''+s.id+'\')">✏️</button>':'')
+      +'</div>'
+    +'</div>';
+  }).join('')+'</div>';
+}
+
+function filtrarTL(filtro, clienteId) {
+  document.querySelectorAll('#tlTabs .tab').forEach(function(b){b.classList.remove('active');});
+  var idxMap={'todos':0,'manipulacao':1,'exame':2,'outro':3};
+  var tabs = document.querySelectorAll('#tlTabs .tab');
+  if(tabs[idxMap[filtro]]) tabs[idxMap[filtro]].classList.add('active');
+  dbGetServicos().then(function(all){
+    set('tlBody', renderTimeline(all.filter(function(s){return s.clienteId===clienteId;}), filtro));
   });
 }
 
@@ -1066,23 +1222,127 @@ function pgManipulacao() {
   if (canEdit('manipulacao')) { btn.style.display=''; btn.textContent='＋ Nova Manipulação'; }
   set('content','<div class="card"><div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div></div>');
   Promise.all([dbGetServicos(), dbGetClientes()]).then(function(r) {
-    var servicos = r[0].filter(function(s){return s.tipo==='manipulacao';}), clientes = r[1];
-    set('content', `
-      <div class="card">
-        <div class="card-head">
-          <div><div class="card-title">Histórico de Manipulações</div><div class="card-sub">${servicos.length} registro(s)</div></div>
-          ${canEdit('manipulacao')?'<button class="btn btn-primary" onclick="openModalServico(null,\'manipulacao\')">＋ Nova Manipulação</button>':''}
-        </div>
-        ${servicos.length===0?'<div class="empty"><span class="empty-ico">⚗️</span><p class="empty-txt">Nenhuma manipulação registrada</p></div>':
-        '<div class="table-wrap"><table><thead><tr><th>Orç#</th><th>Cliente</th><th>Fórmula</th><th>Entrega</th><th>Valor</th><th>Pagamento</th><th>Data</th></tr></thead><tbody>'+
-        servicos.map(function(s){
-          var cl=clientes.find(function(c){return c.id===s.clienteId;});
-          return '<tr><td><span class="orc-num" style="font-size:.9rem">#'+padNum(s.orcNum)+'</span></td><td class="td-name">'+(cl?esc(cl.nome):'—')+'</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8rem">'+esc(s.formula||'—')+'</td><td class="td-muted">'+(s.prazo?fmtDate(s.prazo):'—')+'</td><td style="font-weight:600">'+fmt(s.valor)+'</td><td>'+pagBadge(s.pagamento)+'</td><td class="td-muted">'+fmtDate(s.data)+'</td></tr>';
-        }).join('')+'</tbody></table></div>'}
-      </div>
-    `);
+    var hoje = new Date().toISOString().split('T')[0];
+    var servicos = r[0].filter(function(s){return s.tipo==='manipulacao';}).sort(function(a,b){return (b.orcNum||0)-(a.orcNum||0);}), clientes = r[1];
+    var valTotal = servicos.reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
+    var pendentes = servicos.filter(function(s){return !s.dataEntregaReal && (!s.prazo||s.prazo>=hoje);}).length;
+    var atrasadas = servicos.filter(function(s){return !s.dataEntregaReal && s.prazo && s.prazo<hoje;}).length;
+    function statusBadge(s) {
+      if(s.dataEntregaReal) return '<span class="badge badge-green">🟢 Entregue</span>';
+      if(!s.prazo) return '<span class="badge badge-gray">— Sem prazo</span>';
+      return s.prazo < hoje ? '<span class="badge badge-red">🔴 Atrasado</span>' : '<span class="badge badge-yellow">🟡 Pendente</span>';
+    }
+    set('content',
+      '<div class="stats-grid" style="margin-bottom:1.25rem">' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--purple-l)">⚗️</div><div><div class="stat-val">'+servicos.length+'</div><div class="stat-lbl">Manipulações</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">💰</div><div><div class="stat-val">'+fmt(valTotal)+'</div><div class="stat-lbl">Valor total</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">⏳</div><div><div class="stat-val">'+pendentes+'</div><div class="stat-lbl">Pendentes de entrega</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--red-l)">🔴</div><div><div class="stat-val">'+atrasadas+'</div><div class="stat-lbl">Atrasadas</div></div></div>' +
+      '</div>' +
+      '<div class="card" style="margin-bottom:1.25rem">' +
+        '<div style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap">' +
+          '<div class="fg"><label>De</label><input type="date" id="mDe" style="width:150px"/></div>' +
+          '<div class="fg"><label>Até</label><input type="date" id="mAte" style="width:150px"/></div>' +
+          '<div class="fg"><label>Status</label><select id="mStatus" style="width:150px"><option value="">Todos</option><option value="entregue">Entregue</option><option value="pendente">Pendente</option><option value="atrasado">Atrasado</option></select></div>' +
+          '<div class="fg"><label>Pagamento</label><select id="mPag" style="width:150px"><option value="">Todos</option><option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="debito">Débito</option><option value="credito">Crédito</option><option value="pendente">A receber</option></select></div>' +
+          '<button class="btn btn-primary" onclick="filtrarManipulacoes()">🔍 Filtrar</button>' +
+          (canEdit('manipulacao')?'<button class="btn btn-primary" onclick="openModalServico(null,\'manipulacao\')">＋ Nova Manipulação</button>':'') +
+        '</div>' +
+      '</div>' +
+      '<div class="card" id="manipResult">' +
+        '<div class="card-head"><div class="card-title">Histórico de Manipulações</div></div>' +
+        renderManipTable(servicos, clientes, hoje) +
+      '</div>'
+    );
+    window._manipServicos = servicos; window._manipClientes = clientes; window._manipHoje = hoje;
   });
 }
+
+function renderManipTable(servicos, clientes, hoje) {
+  if(!servicos.length) return '<div class="empty"><span class="empty-ico">⚗️</span><p class="empty-txt">Nenhuma manipulação registrada</p>'+(canEdit('manipulacao')?'<button class="btn btn-primary" style="margin-top:1rem" onclick="openModalServico(null,\'manipulacao\')">＋ Nova Manipulação</button>':'')+'</div>';
+  function statusBadge(s) {
+    if(s.dataEntregaReal) return '<span class="badge badge-green">🟢 Entregue</span>';
+    if(!s.prazo) return '<span class="badge badge-gray">— Sem prazo</span>';
+    return s.prazo < hoje ? '<span class="badge badge-red">🔴 Atrasado</span>' : '<span class="badge badge-yellow">🟡 Pendente</span>';
+  }
+  return '<div class="table-wrap"><table><thead><tr><th>Orç#</th><th>Cliente</th><th>Fórmula</th><th>Entrega</th><th>Valor</th><th>Pagamento</th><th>Data</th><th></th></tr></thead><tbody>' +
+    servicos.map(function(s){
+      var cl=clientes.find(function(c){return c.id===s.clienteId;});
+      var formulaTrunc = (s.formula||'—').slice(0,50)+((s.formula||'').length>50?'…':'');
+      return '<tr><td><span class="orc-num" style="font-size:.9rem">#'+padNum(s.orcNum)+'</span></td>' +
+        '<td class="td-name">'+(cl?esc(cl.nome):'—')+'</td>' +
+        '<td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8rem" title="'+esc(s.formula||'—')+'">'+esc(formulaTrunc)+'</td>' +
+        '<td>'+statusBadge(s)+'</td>' +
+        '<td style="font-weight:600">'+fmt(s.valor)+'</td>' +
+        '<td>'+pagBadge(s.pagamento)+'</td>' +
+        '<td class="td-muted">'+fmtDate(s.data)+'</td>' +
+        '<td style="display:flex;gap:.3rem">' +
+          '<button class="btn btn-icon btn-sm" title="Ver detalhes" onclick="verManipulacao(\''+s.id+'\')">👁</button>' +
+          (canEdit('manipulacao')?'<button class="btn btn-icon btn-sm" title="Editar" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\''+s.id+'\')">✏️</button>':'') +
+          (!s.dataEntregaReal&&canEdit('manipulacao')?'<button class="btn btn-sm btn-green" onclick="marcarEntregue(\''+s.id+'\')" style="font-size:.72rem;padding:.3rem .6rem" title="Marcar como entregue">✅</button>':'') +
+        '</td></tr>';
+    }).join('')+'</tbody></table></div>';
+}
+
+function filtrarManipulacoes() {
+  var de=gv('mDe'),ate=gv('mAte'),status=gv('mStatus'),pag=gv('mPag');
+  var hoje=window._manipHoje||new Date().toISOString().split('T')[0];
+  var list=(window._manipServicos||[]).filter(function(s){
+    if(de&&s.data<de) return false;
+    if(ate&&s.data>ate) return false;
+    if(pag&&s.pagamento!==pag) return false;
+    if(status==='entregue'&&!s.dataEntregaReal) return false;
+    if(status==='pendente'&&(s.dataEntregaReal||!s.prazo||s.prazo<hoje)) return false;
+    if(status==='atrasado'&&(s.dataEntregaReal||!s.prazo||s.prazo>=hoje)) return false;
+    return true;
+  });
+  set('manipResult','<div class="card-head"><div class="card-title">Resultados</div></div>'+renderManipTable(list,window._manipClientes||[],hoje));
+}
+
+function verManipulacao(id) {
+  Promise.all([dbGetServicos(),dbGetClientes()]).then(function(r){
+    var s=r[0].find(function(x){return x.id===id;});
+    if(!s) return;
+    var cl=r[1].find(function(c){return c.id===s.clienteId;});
+    document.getElementById('mOrcSub').textContent='Manipulação #'+padNum(s.orcNum);
+    set('mOrcBody',
+      '<div style="text-align:center;padding:1rem 0 1.5rem"><div class="orc-num" style="font-size:2.5rem">#'+padNum(s.orcNum)+'</div><div style="font-size:.8rem;color:var(--tx3)">'+fmtDate(s.data)+'</div></div>' +
+      '<div class="divider"></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;font-size:.85rem;margin-bottom:1.25rem">' +
+        '<div><span style="color:var(--tx3)">Cliente:</span> <strong>'+(cl?esc(cl.nome):'—')+'</strong></div>' +
+        '<div><span style="color:var(--tx3)">Pagamento:</span> '+pagBadge(s.pagamento)+'</div>' +
+        '<div><span style="color:var(--tx3)">Prazo:</span> '+(s.prazo?fmtDate(s.prazo):'—')+'</div>' +
+        '<div><span style="color:var(--tx3)">Entrega real:</span> '+(s.dataEntregaReal?fmtDate(s.dataEntregaReal):'Não entregue')+'</div>' +
+        '<div style="grid-column:1/-1"><span style="color:var(--tx3)">Fórmula:</span><div style="margin-top:.3rem;font-size:.82rem;background:var(--bg);padding:.75rem;border-radius:var(--r)">'+esc(s.formula||'—')+'</div></div>' +
+        (s.obs?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">Obs:</span> '+esc(s.obs)+'</div>':'') +
+      '</div>' +
+      '<div class="divider"></div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0">' +
+        '<span style="font-size:1rem;font-weight:700">Total</span>' +
+        '<span style="font-family:\'Playfair Display\',serif;font-size:1.6rem;font-weight:800;color:var(--blue)">'+fmt(s.valor)+'</span>' +
+      '</div>' +
+      '<div style="display:flex;gap:.75rem;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)">' +
+        (canEdit('manipulacao')?'<button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\''+s.id+'\')">✏️ Editar</button>':'') +
+        '<button class="btn btn-primary" style="flex:1;justify-content:center" onclick="gerarPDFServicoById(\''+s.id+'\')">📄 Gerar PDF</button>' +
+      '</div>'
+
+    );
+    openModal('modalOrc');
+  });
+}
+
+function marcarEntregue(id) {
+  var hoje = new Date().toISOString().split('T')[0];
+  var cached = fromCache('servicos')||[];
+  var idx = cached.findIndex(function(x){return x.id===id;});
+  if(idx>=0){ cached[idx].dataEntregaReal=hoje; cached[idx].data_entrega_real=hoje; setCache('servicos',cached); }
+  clearCache('servicos');
+  toast('Manipulação marcada como entregue!','ok');
+  pgManipulacao();
+}
+
+
+
 
 // ─── EXAMES ──────────────────────────────────────────────
 function pgExames() {
@@ -1091,23 +1351,101 @@ function pgExames() {
   if (canEdit('exames')) { btn.style.display=''; btn.textContent='＋ Novo Exame'; }
   set('content','<div class="card"><div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div></div>');
   Promise.all([dbGetServicos(), dbGetClientes()]).then(function(r) {
-    var servicos = r[0].filter(function(s){return s.tipo==='exame';}), clientes = r[1];
-    set('content', `
-      <div class="card">
-        <div class="card-head">
-          <div><div class="card-title">Histórico de Exames</div><div class="card-sub">${servicos.length} registro(s)</div></div>
-          ${canEdit('exames')?'<button class="btn btn-primary" onclick="openModalServico(null,\'exame\')">＋ Novo Exame</button>':''}
-        </div>
-        ${servicos.length===0?'<div class="empty"><span class="empty-ico">🔬</span><p class="empty-txt">Nenhum exame registrado</p></div>':
-        '<div class="table-wrap"><table><thead><tr><th>Orç#</th><th>Cliente</th><th>Tipo de Exame</th><th>Valor</th><th>Pagamento</th><th>Data</th></tr></thead><tbody>'+
-        servicos.map(function(s){
-          var cl=clientes.find(function(c){return c.id===s.clienteId;});
-          return '<tr><td><span class="orc-num" style="font-size:.9rem">#'+padNum(s.orcNum)+'</span></td><td class="td-name">'+(cl?esc(cl.nome):'—')+'</td><td>'+esc(s.tipoExame||'—')+'</td><td style="font-weight:600">'+fmt(s.valor)+'</td><td>'+pagBadge(s.pagamento)+'</td><td class="td-muted">'+fmtDate(s.data)+'</td></tr>';
-        }).join('')+'</tbody></table></div>'}
-      </div>
-    `);
+    var servicos = r[0].filter(function(s){return s.tipo==='exame';}).sort(function(a,b){return (b.orcNum||0)-(a.orcNum||0);}), clientes = r[1];
+    var valTotal = servicos.reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
+    var comResult = servicos.filter(function(s){return !!(s.resultadoExame||s.resultado_exame);}).length;
+    var semResult = servicos.length - comResult;
+    set('content',
+      '<div class="stats-grid" style="margin-bottom:1.25rem">' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">🔬</div><div><div class="stat-val">'+servicos.length+'</div><div class="stat-lbl">Total de exames</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">💰</div><div><div class="stat-val">'+fmt(valTotal)+'</div><div class="stat-lbl">Valor total</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">✅</div><div><div class="stat-val">'+comResult+'</div><div class="stat-lbl">Com resultado</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">⏳</div><div><div class="stat-val">'+semResult+'</div><div class="stat-lbl">Aguardando resultado</div></div></div>' +
+      '</div>' +
+      '<div class="card" style="margin-bottom:1.25rem">' +
+        '<div style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap">' +
+          '<div class="fg"><label>De</label><input type="date" id="eDe" style="width:150px"/></div>' +
+          '<div class="fg"><label>Até</label><input type="date" id="eAte" style="width:150px"/></div>' +
+          '<div class="fg"><label>Pagamento</label><select id="ePag" style="width:150px"><option value="">Todos</option><option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="debito">Débito</option><option value="credito">Crédito</option><option value="pendente">A receber</option></select></div>' +
+          '<button class="btn btn-primary" onclick="filtrarExames()">🔍 Filtrar</button>' +
+          (canEdit('exames')?'<button class="btn btn-primary" onclick="openModalServico(null,\'exame\')">＋ Novo Exame</button>':'') +
+        '</div>' +
+      '</div>' +
+      '<div class="card" id="exameResult">' +
+        '<div class="card-head"><div class="card-title">Histórico de Exames</div></div>' +
+        renderExameTable(servicos, clientes) +
+      '</div>'
+    );
+    window._exameServicos = servicos; window._exameClientes = clientes;
   });
 }
+
+function renderExameTable(servicos, clientes) {
+  if(!servicos.length) return '<div class="empty"><span class="empty-ico">🔬</span><p class="empty-txt">Nenhum exame registrado</p>'+(canEdit('exames')?'<button class="btn btn-primary" style="margin-top:1rem" onclick="openModalServico(null,\'exame\')">＋ Novo Exame</button>':'')+'</div>';
+  return '<div class="table-wrap"><table><thead><tr><th>Orç#</th><th>Cliente</th><th>Tipo de Exame</th><th>Resultado</th><th>Valor</th><th>Pagamento</th><th>Data</th><th></th></tr></thead><tbody>' +
+    servicos.map(function(s){
+      var cl=clientes.find(function(c){return c.id===s.clienteId;});
+      var temResult = !!(s.resultadoExame||s.resultado_exame);
+      return '<tr><td><span class="orc-num" style="font-size:.9rem">#'+padNum(s.orcNum)+'</span></td>' +
+        '<td class="td-name">'+(cl?esc(cl.nome):'—')+'</td>' +
+        '<td>'+esc(s.tipoExame||'—')+'</td>' +
+        '<td>'+(temResult?'<span class="badge badge-green">✅ Com resultado</span>':'<span class="badge badge-yellow">⏳ Aguardando</span>')+'</td>' +
+        '<td style="font-weight:600">'+fmt(s.valor)+'</td>' +
+        '<td>'+pagBadge(s.pagamento)+'</td>' +
+        '<td class="td-muted">'+fmtDate(s.data)+'</td>' +
+        '<td style="display:flex;gap:.3rem">' +
+          '<button class="btn btn-icon btn-sm" title="Ver detalhes" onclick="verExame(\''+s.id+'\')">👁</button>' +
+          (canEdit('exames')?'<button class="btn btn-icon btn-sm" title="Editar" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\''+s.id+'\')">✏️</button>':'') +
+        '</td>' +
+      '</tr>';
+    }).join('')+'</tbody></table></div>';
+}
+
+function filtrarExames() {
+  var de=gv('eDe'),ate=gv('eAte'),pag=gv('ePag');
+  var list=(window._exameServicos||[]).filter(function(s){
+    if(de&&s.data<de) return false;
+    if(ate&&s.data>ate) return false;
+    if(pag&&s.pagamento!==pag) return false;
+    return true;
+  });
+  set('exameResult','<div class="card-head"><div class="card-title">Resultados</div></div>'+renderExameTable(list,window._exameClientes||[]));
+}
+
+function verExame(id) {
+  Promise.all([dbGetServicos(),dbGetClientes()]).then(function(r){
+    var s=r[0].find(function(x){return x.id===id;});
+    if(!s) return;
+    var cl=r[1].find(function(c){return c.id===s.clienteId;});
+    var resultado=s.resultadoExame||s.resultado_exame||'';
+    var lab=s.laboratorio||'';
+    document.getElementById('mOrcSub').textContent='Exame #'+padNum(s.orcNum);
+    set('mOrcBody',
+      '<div style="text-align:center;padding:1rem 0 1.5rem"><div class="orc-num" style="font-size:2.5rem">#'+padNum(s.orcNum)+'</div><div style="font-size:.8rem;color:var(--tx3)">'+fmtDate(s.data)+'</div></div>' +
+      '<div class="divider"></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;font-size:.85rem;margin-bottom:1.25rem">' +
+        '<div><span style="color:var(--tx3)">Cliente:</span> <strong>'+(cl?esc(cl.nome):'—')+'</strong></div>' +
+        '<div><span style="color:var(--tx3)">Pagamento:</span> '+pagBadge(s.pagamento)+'</div>' +
+        '<div style="grid-column:1/-1"><span style="color:var(--tx3)">Tipo de Exame:</span> <strong>'+esc(s.tipoExame||'—')+'</strong></div>' +
+        (lab?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">Laboratório:</span> '+esc(lab)+'</div>':'') +
+        (resultado?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">Resultado:</span><div style="margin-top:.3rem;font-size:.82rem;background:var(--bg);padding:.75rem;border-radius:var(--r)">'+esc(resultado)+'</div></div>':'') +
+        (s.obs?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">Obs:</span> '+esc(s.obs)+'</div>':'') +
+      '</div>' +
+      '<div class="divider"></div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0">' +
+        '<span style="font-size:1rem;font-weight:700">Total</span>' +
+        '<span style="font-family:\'Playfair Display\',serif;font-size:1.6rem;font-weight:800;color:var(--blue)">'+fmt(s.valor)+'</span>' +
+      '</div>' +
+      '<div style="display:flex;gap:.75rem;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)">' +
+        (canEdit('exames')?'<button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\''+s.id+'\')">✏️ Editar</button>':'') +
+        '<button class="btn btn-primary" style="flex:1;justify-content:center" onclick="gerarPDFServicoById(\''+s.id+'\')">📄 Gerar PDF</button>' +
+      '</div>'
+
+    );
+    openModal('modalOrc');
+  });
+}
+
 
 // ─── ORÇAMENTOS ──────────────────────────────────────────
 function pgOrcamentos() {
@@ -1116,20 +1454,33 @@ function pgOrcamentos() {
   }
   var hoje = new Date().toISOString().split('T')[0];
   var mesInicio = hoje.slice(0,8)+'01';
-  set('content', `
-    <div class="card" style="margin-bottom:1.25rem">
-      <div class="card-head"><div class="card-title">Filtrar Período</div></div>
-      <div style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap">
-        <div class="fg"><label>Data Início</label><input type="date" id="orcDe" value="${mesInicio}" style="width:160px"/></div>
-        <div class="fg"><label>Data Fim</label><input type="date" id="orcAte" value="${hoje}" style="width:160px"/></div>
-        <div class="fg"><label>Tipo</label><select id="orcTipo" style="width:160px"><option value="">Todos</option><option value="manipulacao">Manipulação</option><option value="exame">Exame</option><option value="produto">Produto</option></select></div>
-        <div class="fg"><label>Pagamento</label><select id="orcPag" style="width:160px"><option value="">Todos</option><option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="debito">Débito</option><option value="credito">Crédito</option><option value="pendente">A receber</option></select></div>
-        <button class="btn btn-primary" onclick="filtrarOrcamentos()">🔍 Filtrar</button>
-        <button class="btn btn-ghost" onclick="gerarPDFOrcamentos()" style="border-color:var(--red);color:var(--red)">📄 Exportar PDF</button>
-      </div>
-    </div>
-    <div id="orcResult"><div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div></div>
-  `);
+  dbGetUsers().then(function(users){
+    var userOpts = users.map(function(u){return '<option value="'+esc(u.nome)+'">'+esc(u.nome)+'</option>';}).join('');
+    set('content',
+      '<div class="card" style="margin-bottom:1.25rem">' +
+        '<div class="card-head"><div class="card-title">Filtrar Período</div></div>' +
+        '<div style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap">' +
+          '<div class="fg"><label>Data Início</label><input type="date" id="orcDe" value="'+mesInicio+'" style="width:160px"/></div>' +
+          '<div class="fg"><label>Data Fim</label><input type="date" id="orcAte" value="'+hoje+'" style="width:160px"/></div>' +
+          '<div class="fg"><label>Tipo</label><select id="orcTipo" style="width:160px"><option value="">Todos</option><option value="manipulacao">Manipulação</option><option value="exame">Exame</option><option value="produto">Produto</option></select></div>' +
+          '<div class="fg"><label>Pagamento</label><select id="orcPag" style="width:160px"><option value="">Todos</option><option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="debito">Débito</option><option value="credito">Crédito</option><option value="pendente">A receber</option></select></div>' +
+          '<div class="fg"><label>Atendente</label><select id="orcUser" style="width:160px"><option value="">Todos</option>'+userOpts+'</select></div>' +
+          '<button class="btn btn-primary" onclick="filtrarOrcamentos()">🔍 Filtrar</button>' +
+          '<button class="btn btn-ghost" onclick="limparFiltrosOrc()">✕ Limpar</button>' +
+          '<button class="btn btn-ghost" onclick="gerarPDFOrcamentos()" style="border-color:var(--red);color:var(--red)">📄 Exportar PDF</button>' +
+        '</div>' +
+      '</div>' +
+      '<div id="orcResult"><div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div></div>'
+    );
+    filtrarOrcamentos();
+  });
+}
+
+function limparFiltrosOrc() {
+  var hoje = new Date().toISOString().split('T')[0];
+  setVal('orcDe', hoje.slice(0,8)+'01');
+  setVal('orcAte', hoje);
+  setVal('orcTipo',''); setVal('orcPag',''); setVal('orcUser','');
   filtrarOrcamentos();
 }
 
@@ -1138,51 +1489,66 @@ function filtrarOrcamentos() {
   var ate  = gv('orcAte');
   var tipo = gv('orcTipo');
   var pag  = gv('orcPag');
+  var user = gv('orcUser')||'';
   set('orcResult','<div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div>');
   Promise.all([dbGetServicos({de:de,ate:ate,tipo:tipo,pag:pag}), dbGetClientes()]).then(function(r) {
     var list = r[0], clientes = r[1];
+    if(user) list = list.filter(function(s){return (s.criadoPor||'')=== user;});
     var total    = list.reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
     var pendente = list.filter(function(s){return s.pagamento==='pendente';}).reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
     var byPag = {};
     list.forEach(function(s){byPag[s.pagamento]=(byPag[s.pagamento]||0)+(parseFloat(s.valor)||0);});
-    var html = `
-      <div class="stats-grid" style="margin-bottom:1.25rem">
-        <div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">📋</div><div><div class="stat-val">${list.length}</div><div class="stat-lbl">Atendimentos no período</div></div></div>
-        <div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">💰</div><div><div class="stat-val">${fmt(total)}</div><div class="stat-lbl">Receita total</div></div></div>
-        <div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">⏳</div><div><div class="stat-val">${fmt(pendente)}</div><div class="stat-lbl">A receber</div></div></div>
-        <div class="stat-card"><div class="stat-ico" style="background:var(--purple-l)">📊</div><div><div class="stat-val">${fmt(total-pendente)}</div><div class="stat-lbl">Recebido</div></div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem">
-        <div class="card"><div class="card-head"><div class="card-title">Por Forma de Pagamento</div></div>
-          <div style="display:flex;flex-direction:column;gap:.5rem">
-          ${Object.entries(byPag).map(function(e){
-            var pct=total>0?Math.round(e[1]/total*100):0;
-            return '<div style="display:flex;align-items:center;gap:.75rem"><span style="font-size:.78rem;width:70px;flex-shrink:0">'+pagBadge(e[0])+'</span><div style="flex:1;background:var(--bg);border-radius:4px;height:8px"><div style="width:'+pct+'%;height:100%;background:var(--blue);border-radius:4px"></div></div><span style="font-size:.75rem;font-weight:600;width:72px;text-align:right">'+fmt(e[1])+'</span></div>';
-          }).join('')||'<p style="color:var(--tx3);font-size:.83rem">Sem dados</p>'}
-          </div>
-        </div>
-        <div class="card"><div class="card-head"><div class="card-title">Por Tipo de Serviço</div></div>
-          ${['manipulacao','exame','produto'].map(function(t){
-            var v=list.filter(function(s){return s.tipo===t;}).reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
-            var n=list.filter(function(s){return s.tipo===t;}).length;
-            if(!n)return'';
-            return '<div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--border)"><div>'+tipoBadge(t)+'</div><div style="text-align:right"><div style="font-weight:600;font-size:.88rem">'+fmt(v)+'</div><div style="font-size:.72rem;color:var(--tx3)">'+n+' registro(s)</div></div></div>';
-          }).join('')}
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-head"><div class="card-title">Detalhamento</div><div class="card-sub">${list.length} registro(s) no período</div></div>
-        ${list.length===0?'<div class="empty"><span class="empty-ico">📋</span><p class="empty-txt">Nenhum registro no período selecionado</p></div>':
-        '<div class="table-wrap"><table><thead><tr><th>Orç#</th><th>Cliente</th><th>Tipo</th><th>Descrição</th><th>Valor</th><th>Pagamento</th><th>Data</th><th></th></tr></thead><tbody>'+
+    var byCliente = {};
+    list.forEach(function(s){byCliente[s.clienteId]=(byCliente[s.clienteId]||0)+(parseFloat(s.valor)||0);});
+    var top5 = Object.keys(byCliente).sort(function(a,b){return byCliente[b]-byCliente[a];}).slice(0,5).map(function(cid){
+      var cl=clientes.find(function(c){return c.id===cid;});
+      return {nome:cl?cl.nome:cid, val:byCliente[cid]};
+    });
+    var diasMap={};
+    list.forEach(function(s){diasMap[s.data]=(diasMap[s.data]||0)+(parseFloat(s.valor)||0);});
+    var diasArr=Object.keys(diasMap).sort().map(function(d){return {d:d,v:diasMap[d]};});
+    var maxV=diasArr.length?Math.max.apply(null,diasArr.map(function(x){return x.v;})):0;
+    var html =
+      '<p style="font-size:.8rem;color:var(--tx3);margin-bottom:1rem">Exibindo '+list.length+' registro(s) de '+fmtDate(de||'...')+' a '+fmtDate(ate||'...')+'</p>' +
+      '<div class="stats-grid" style="margin-bottom:1.25rem">' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">📋</div><div><div class="stat-val">'+list.length+'</div><div class="stat-lbl">Atendimentos no período</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">💰</div><div><div class="stat-val">'+fmt(total)+'</div><div class="stat-lbl">Receita total</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">⏳</div><div><div class="stat-val">'+fmt(pendente)+'</div><div class="stat-lbl">A receber</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--purple-l)">📊</div><div><div class="stat-val">'+fmt(total-pendente)+'</div><div class="stat-lbl">Recebido</div></div></div>' +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;margin-bottom:1.25rem">' +
+        '<div class="card"><div class="card-head"><div class="card-title">Por Forma de Pagamento</div></div><div style="display:flex;flex-direction:column;gap:.5rem">'+
+          Object.entries(byPag).map(function(e){var pct=total>0?Math.round(e[1]/total*100):0;return '<div style="display:flex;align-items:center;gap:.75rem"><span style="font-size:.78rem;width:70px;flex-shrink:0">'+pagBadge(e[0])+'</span><div style="flex:1;background:var(--bg);border-radius:4px;height:8px"><div style="width:'+pct+'%;height:100%;background:var(--blue);border-radius:4px"></div></div><span style="font-size:.75rem;font-weight:600;width:72px;text-align:right">'+fmt(e[1])+'</span></div>';}).join('')||'<p style="color:var(--tx3);font-size:.83rem">Sem dados</p>'+
+        '</div></div>' +
+        '<div class="card"><div class="card-head"><div class="card-title">Por Tipo de Serviço</div></div>'+
+          ['manipulacao','exame','produto'].map(function(t){var v=list.filter(function(s){return s.tipo===t;}).reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);var n=list.filter(function(s){return s.tipo===t;}).length;if(!n)return'';return '<div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--border)"><div>'+tipoBadge(t)+'</div><div style="text-align:right"><div style="font-weight:600;font-size:.88rem">'+fmt(v)+'</div><div style="font-size:.72rem;color:var(--tx3)">'+n+' registro(s)</div></div></div>';}).join('')+
+        '</div>' +
+        '<div class="card"><div class="card-head"><div class="card-title">🏆 Top 5 Clientes</div></div>'+
+          (top5.length?top5.map(function(c,i){return '<div style="display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.83rem"><span>'+(i+1)+'. '+esc(c.nome)+'</span><strong>'+fmt(c.val)+'</strong></div>';}).join(''):'<p style="color:var(--tx3);font-size:.83rem">Sem dados</p>')+
+        '</div>' +
+      '</div>' +
+      (diasArr.length?'<div class="card" style="margin-bottom:1.25rem"><div class="card-head"><div class="card-title">Receita por Dia</div></div><div style="display:flex;flex-direction:column;gap:.4rem">'+diasArr.map(function(d){var pct=maxV>0?Math.round(d.v/maxV*100):0;return '<div style="display:flex;align-items:center;gap:.75rem"><span style="font-size:.72rem;color:var(--tx3);width:50px;flex-shrink:0">'+fmtDate(d.d)+'</span><div style="flex:1;background:var(--bg);border-radius:4px;height:8px"><div style="width:'+pct+'%;height:100%;background:var(--blue);border-radius:4px"></div></div><span style="font-size:.72rem;font-weight:600;width:72px;text-align:right">'+fmt(d.v)+'</span></div>';}).join('')+'</div></div>':'') +
+      '<div class="card">' +
+        '<div class="card-head"><div class="card-title">Detalhamento</div><div class="card-sub">'+list.length+' registro(s) no período</div></div>' +
+        (list.length===0?'<div class="empty"><span class="empty-ico">📋</span><p class="empty-txt">Nenhum registro no período selecionado</p></div>':
+        '<div class="table-wrap"><table><thead><tr><th>Orç#</th><th>Cliente</th><th>Tipo</th><th>Descrição</th><th>Valor</th><th>Pagamento</th><th>Data</th><th></th></tr></thead><tbody>' +
         list.map(function(s){
           var cl=clientes.find(function(c){return c.id===s.clienteId;});
-          return '<tr><td><span class="orc-num" style="font-size:.9rem">#'+padNum(s.orcNum)+'</span></td><td class="td-name">'+(cl?esc(cl.nome):'—')+'</td><td>'+tipoBadge(s.tipo)+'</td><td style="font-size:.8rem;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(getServicoDesc(s))+'</td><td style="font-weight:600">'+fmt(s.valor)+'</td><td>'+pagBadge(s.pagamento)+'</td><td class="td-muted">'+fmtDate(s.data)+'</td><td><button class="btn btn-icon btn-sm" onclick="verOrcamento(\''+s.id+'\')">👁</button></td></tr>';
-        }).join('')+'</tbody></table></div>'}
-      </div>
-    `;
+          var isPend = s.pagamento==='pendente';
+          var canEditSrv = canEdit('manipulacao')||canEdit('exames')||canEdit('orcamentos');
+          return '<tr><td><span class="orc-num" style="font-size:.9rem">#'+padNum(s.orcNum)+'</span></td><td class="td-name">'+(cl?esc(cl.nome):'—')+'</td><td>'+tipoBadge(s.tipo)+'</td><td style="font-size:.8rem;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(getServicoDesc(s))+'</td><td style="font-weight:600">'+fmt(s.valor)+'</td><td style="'+(isPend?'background:var(--yellow-l)':'')+'">'+pagBadge(s.pagamento)+'</td><td class="td-muted">'+fmtDate(s.data)+'</td>'
+            +'<td style="display:flex;gap:.3rem">'
+            +'<button class="btn btn-icon btn-sm" title="Ver detalhes" onclick="verOrcamento(\''+s.id+'\')">👁</button>'
+            +(canEditSrv?'<button class="btn btn-icon btn-sm" title="Editar" onclick="openModalServico(null,null,\''+s.id+'\')">✏️</button>':'')
+            +'</td></tr>';
+        }).join('')+
+        '<tr style="background:var(--bg)"><td colspan="4" style="font-weight:700;text-align:right;font-size:.83rem">Total:</td><td style="font-weight:700;color:var(--blue)">'+fmt(total)+'</td><td colspan="3"></td></tr>'+
+        '</tbody></table></div>') +
+      '</div>';
     set('orcResult', html);
   });
 }
+
 
 function gerarPDFOrcamentos() {
   var de   = gv('orcDe');
@@ -1242,30 +1608,29 @@ function verOrcamento(id) {
     if (!s) return;
     var cl = r[1].find(function(c){return c.id===s.clienteId;});
     document.getElementById('mOrcSub').textContent = 'Orçamento #'+padNum(s.orcNum);
-    var html = `
-      <div style="text-align:center;padding:1rem 0 1.5rem">
-        <div class="orc-num" style="font-size:2.5rem">#${padNum(s.orcNum)}</div>
-        <div style="font-size:.8rem;color:var(--tx3)">Emitido em ${fmtDate(s.data)}</div>
-      </div>
-      <div class="divider"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;font-size:.85rem;margin-bottom:1.25rem">
-        <div><span style="color:var(--tx3)">Cliente:</span> <strong>${cl?esc(cl.nome):'—'}</strong></div>
-        <div><span style="color:var(--tx3)">Serviço:</span> ${tipoBadge(s.tipo)}</div>
-        <div><span style="color:var(--tx3)">Pagamento:</span> ${pagBadge(s.pagamento)}</div>
-        ${s.tipo==='manipulacao'?'<div class="full" style="grid-column:1/-1"><span style="color:var(--tx3)">Fórmula:</span> '+esc(s.formula||'—')+'</div>':''}
-        ${s.tipo==='exame'?'<div><span style="color:var(--tx3)">Exame:</span> '+esc(s.tipoExame||'—')+'</div>':''}
-      </div>
-      <div class="divider"></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0">
-        <span style="font-size:1rem;font-weight:700">Total</span>
-        <span style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:800;color:var(--blue)">${fmt(s.valor)}</span>
-      </div>
-      ${s.obs?'<div class="divider"></div><p style="font-size:.82rem;color:var(--tx3)">Obs: '+esc(s.obs)+'</p>':''}
-      <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)">
-        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="gerarPDFServicoById('${s.id}')">📄 Gerar PDF deste Orçamento</button>
-      </div>
-    `;
-    set('mOrcBody', html);
+    set('mOrcBody',
+      '<div style="text-align:center;padding:1rem 0 1.5rem"><div class="orc-num" style="font-size:2.5rem">#'+padNum(s.orcNum)+'</div><div style="font-size:.8rem;color:var(--tx3)">Emitido em '+fmtDate(s.data)+'</div></div>' +
+      '<div class="divider"></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;font-size:.85rem;margin-bottom:1.25rem">' +
+        '<div><span style="color:var(--tx3)">Cliente:</span> <strong>'+(cl?esc(cl.nome):'—')+'</strong></div>' +
+        '<div><span style="color:var(--tx3)">Serviço:</span> '+tipoBadge(s.tipo)+'</div>' +
+        '<div><span style="color:var(--tx3)">Pagamento:</span> '+pagBadge(s.pagamento)+'</div>' +
+        '<div><span style="color:var(--tx3)">Atendente:</span> '+esc(s.criadoPor||'—')+'</div>' +
+        (s.tipo==='manipulacao'?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">Fórmula:</span><div style="margin-top:.3rem;font-size:.82rem;background:var(--bg);padding:.75rem;border-radius:var(--r)">'+esc(s.formula||'—')+'</div></div>':'') +
+        (s.tipo==='exame'?'<div><span style="color:var(--tx3)">Exame:</span> '+esc(s.tipoExame||'—')+'</div>':'') +
+        (s.obs?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">Obs:</span> '+esc(s.obs)+'</div>':'') +
+      '</div>' +
+      '<div class="divider"></div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0">' +
+        '<span style="font-size:1rem;font-weight:700">Total</span>' +
+        '<span style="font-family:\'Playfair Display\',serif;font-size:1.6rem;font-weight:800;color:var(--blue)">'+fmt(s.valor)+'</span>' +
+      '</div>' +
+      '<div style="display:flex;gap:.75rem;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)">' +
+        (canEdit('orcamentos')||canEdit('manipulacao')||canEdit('exames')?'<button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\''+s.id+'\')">✏️ Editar Orçamento</button>':'') +
+        '<button class="btn btn-primary" style="flex:1;justify-content:center" onclick="gerarPDFServicoById(\''+s.id+'\')">📄 Gerar PDF</button>' +
+      '</div>'
+
+    );
     openModal('modalOrc');
   });
 }
@@ -1289,6 +1654,7 @@ function pgUsuarios() {
   btn.style.display=''; btn.textContent='＋ Novo Usuário';
   set('content','<div class="card"><div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div></div>');
   dbGetUsers().then(function(users) {
+    var ativos = users.filter(function(u){return u.ativo!==false;}).length;
     function permSummary(u) {
       return MODULOS.map(function(m) {
         var v = (u.perms||{})[m.key] || 'none';
@@ -1298,46 +1664,64 @@ function pgUsuarios() {
         return '<span class="perm-chip '+cls+'">'+lbl+'</span>';
       }).join('');
     }
-    set('content', `
-      <div class="card">
-        <div class="card-head">
-          <div><div class="card-title">Usuários do Sistema</div><div class="card-sub">Gerencie acessos, perfis e permissões por módulo</div></div>
-          <button class="btn btn-primary" onclick="openModalUsuario()">＋ Novo Usuário</button>
-        </div>
-        <div class="alert alert-blue" style="margin-bottom:1.25rem">ℹ️ <div><strong>Admin:</strong> admin@farmaciacouto.com / Couto@2025! — Guarde em local seguro.</div></div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Módulos com acesso</th><th>Status</th><th>Ações</th></tr></thead>
-            <tbody>
-            ${users.map(function(u){
-              var pf = PERFIS[u.perfil]||{label:'?', cor:'badge-gray'};
-              return '<tr>'
-                +'<td class="td-name">'+esc(u.nome)+'</td>'
-                +'<td class="td-muted">'+esc(u.email)+'</td>'
-                +'<td><span class="badge '+pf.cor+'">'+pf.label+'</span></td>'
-                +'<td style="max-width:280px;line-height:1.8">'+(u.perfil==='admin'?'<span style="font-size:.75rem;color:var(--tx3)">Acesso total</span>':permSummary(u))+'</td>'
-                +'<td>'+(u.ativo!==false?'<span class="badge badge-green">Ativo</span>':'<span class="badge badge-gray">Inativo</span>')+'</td>'
-                +'<td style="display:flex;gap:.4rem;align-items:center">'
-                  +(u.perfil!=='admin'
-                    ?'<button class="btn btn-sm btn-ghost" onclick="openModalUsuario(\''+u.id+'\')">✏️ Editar</button>'
-                     +'<button class="btn btn-sm btn-ghost" onclick="toggleUser(\''+u.id+'\','+!(u.ativo!==false)+')">'+(u.ativo!==false?'Desativar':'Ativar')+'</button>'
-                    :'<span style="font-size:.75rem;color:var(--tx3)">🔒 Protegido</span>')
-                +'</td>'
-              +'</tr>';
-            }).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `);
+    set('content',
+      '<div class="card">' +
+        '<div class="card-head"><div><div class="card-title">Usuários do Sistema</div><div class="card-sub">Gerencie acessos, perfis e permissões</div></div>' +
+          '<button class="btn btn-primary" onclick="openModalUsuario()">＋ Novo Usuário</button></div>' +
+        '<div class="alert alert-blue" style="margin-bottom:1.25rem">ℹ️ <div><strong>Admin:</strong> admin@farmaciacouto.com / Couto@2025!</div></div>' +
+        (ativos<=1?'<div class="alert alert-yellow" style="margin-bottom:1.25rem">⚠️ <div>Apenas <strong>1 usuário ativo</strong>. Crie mais para garantir continuidade de acesso.</div></div>':'') +
+        '<div class="table-wrap"><table>' +
+          '<thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Módulos</th><th>Status</th><th>Últ. acesso</th><th>Criado em</th><th>Ações</th></tr></thead>' +
+          '<tbody>' +
+          users.map(function(u){
+            var pf = PERFIS[u.perfil]||{label:'?', cor:'badge-gray'};
+            var ult = u.ultimoAcesso ? fmtDate(u.ultimoAcesso.split('T')[0]) : '—';
+            var cria = u.criado_em ? fmtDate(u.criado_em.split('T')[0]) : '—';
+            return '<tr>' +
+              '<td class="td-name">'+esc(u.nome)+'</td>' +
+              '<td class="td-muted">'+esc(u.email)+'</td>' +
+              '<td><span class="badge '+pf.cor+'">'+pf.label+'</span></td>' +
+              '<td style="max-width:240px;line-height:1.8">'+(u.perfil==='admin'?'<span style="font-size:.75rem;color:var(--tx3)">Acesso total</span>':permSummary(u))+'</td>' +
+              '<td>'+(u.ativo!==false?'<span class="badge badge-green">Ativo</span>':'<span class="badge badge-gray">Inativo</span>')+'</td>' +
+              '<td class="td-muted">'+ult+'</td>' +
+              '<td class="td-muted">'+cria+'</td>' +
+              '<td style="display:flex;gap:.4rem;align-items:center">' +
+                (u.perfil!=='admin'?'<button class="btn btn-sm btn-ghost" onclick="openModalUsuario(\''+u.id+'\')">✏️</button><button class="btn btn-sm btn-ghost" onclick="toggleUser(\''+u.id+'\','+!(u.ativo!==false)+')">'+(u.ativo!==false?'Desativar':'Ativar')+'</button>':'<span style="font-size:.75rem;color:var(--tx3)">🔒</span>') +
+                '<button class="btn btn-sm btn-ghost" title="Atividade" onclick="verAtividadeUsuario(\''+u.id+'\')">📊</button>' +
+              '</td>' +
+            '</tr>';
+          }).join('')+
+          '</tbody></table></div>' +
+      '</div>'
+    );
   });
 }
 
+
 function toggleUser(id, ativo) {
+  var msg = ativo ? 'Ativar este usuário?' : 'Desativar este usuário? Ele perderá acesso ao sistema.';
+  if(!confirm(msg)) return;
   dbToggleUser(id, ativo).then(function() {
     clearCache('users');
     pgUsuarios();
     toast('Status do usuário atualizado.','ok');
+  });
+}
+
+function verAtividadeUsuario(userId) {
+  Promise.all([dbGetServicos(), dbGetUsers()]).then(function(r){
+    var user = r[1].find(function(u){return u.id===userId;});
+    if(!user) return;
+    var srvs = r[0].filter(function(s){return (s.criadoPor||'')===(user.nome||'');}).slice(0,20);
+    document.getElementById('mOrcSub').textContent='Atividade de '+esc(user.nome);
+    set('mOrcBody',
+      '<p style="font-size:.83rem;color:var(--tx3);margin-bottom:1rem">Serviços registrados por este usuário</p>' +
+      (srvs.length===0?'<div class="empty"><span class="empty-ico">📋</span><p class="empty-txt">Nenhum serviço registrado por este usuário</p></div>':
+      '<div class="table-wrap"><table><thead><tr><th>Orç#</th><th>Tipo</th><th>Valor</th><th>Pagamento</th><th>Data</th></tr></thead><tbody>'+
+      srvs.map(function(s){return '<tr><td><span class="orc-num">#'+padNum(s.orcNum)+'</span></td><td>'+tipoBadge(s.tipo)+'</td><td style="font-weight:600">'+fmt(s.valor)+'</td><td>'+pagBadge(s.pagamento)+'</td><td class="td-muted">'+fmtDate(s.data)+'</td></tr>';}).join('')+
+      '</tbody></table></div>')
+    );
+    openModal('modalOrc');
   });
 }
 
@@ -1349,18 +1733,43 @@ function openModalCliente(id) {
   document.getElementById('mClienteTitle').textContent = c ? 'Editar Cliente' : 'Novo Cliente';
   setVal('cNome',c?c.nome:''); setVal('cNasc',c?c.nasc:'');
   setVal('cSexo',c?c.sexo:''); setVal('cTel',c?c.tel:''); setVal('cEmail',c?c.email:'');
-  setVal('cEnd',c?c.endereco:''); setVal('cObs',c?c.obs:'');
+  setVal('cEnd',c?c.endereco:'');
+  setVal('cAlergias',c?(c.alergiasCliente||c.alergias_cliente||''):'');
+  setVal('cMedico',c?(c.medicoReferencia||c.medico_referencia||''):'');
+  setVal('cObs',c?c.obs:'');
   document.getElementById('modalCliente').dataset.editId = id||'';
   openModal('modalCliente');
 }
 
+function cancelarModalCliente() {
+  var editId = document.getElementById('modalCliente').dataset.editId;
+  if (!editId) {
+    // Modo criação: perguntar antes de descartar se campos preenchidos
+    var temDados = gv('cNome') || gv('cTel') || gv('cAlergias') || gv('cMedico') || gv('cObs');
+    if (temDados && !confirm('Descartar os dados preenchidos?')) return;
+  }
+  // Modo edição: fechar diretamente (campos foram preenchidos pelo sistema)
+  closeModal('modalCliente');
+}
+
 function salvarCliente() {
-  var nome=gv('cNome'),tel=gv('cTel');
-  if(!nome||!tel){toast('Preencha nome e WhatsApp.','er');return;}
+  var nome=gv('cNome'), tel=gv('cTel');
+  var numTel = tel.replace(/\D/g,'');
+  var ok = true;
+  if(!nome){toast('Preencha o nome.','er');return;}
+  if(numTel.length < 10){
+    var err=document.getElementById('cTelErr');
+    if(err){err.textContent='Informe um WhatsApp válido (10 ou 11 dígitos).';err.style.display='block';}
+    var inp=document.getElementById('cTel');
+    if(inp) inp.style.borderColor='var(--red)';
+    ok=false;
+  }
+  if(!ok) return;
   var editId=document.getElementById('modalCliente').dataset.editId;
   var obj={
     id: editId||uid(), nome:nome, nasc:gv('cNasc')||null, sexo:gv('cSexo')||null,
     tel:tel, email:gv('cEmail')||null, endereco:gv('cEnd')||null, obs:gv('cObs')||null,
+    alergiasCliente:gv('cAlergias')||null, medicoReferencia:gv('cMedico')||null,
   };
   closeModal('modalCliente');
   dbSaveCliente(obj, !!editId).then(function() {
@@ -1370,19 +1779,85 @@ function salvarCliente() {
   });
 }
 
-function openModalServico(clienteId, tipo) {
+function clearFieldErr(id) {
+  var el=document.getElementById(id);
+  if(el) el.style.borderColor='';
+  var err=document.getElementById(id+'Err');
+  if(err) err.style.display='none';
+}
+
+// ID do serviço sendo editado (null = novo)
+var _editandoServicoId = null;
+
+function openModalServico(clienteId, tipo, servicoId) {
+  _editandoServicoId = servicoId || null;
+  var isEdit = !!servicoId;
+
+  // Modo edição: buscar serviço existente
+  if (isEdit) {
+    var allSrv = fromCache('servicos') || [];
+    var s = allSrv.find(function(x){return x.id===servicoId;});
+    if (!s) {
+      dbGetServicos().then(function(all){
+        var srv = all.find(function(x){return x.id===servicoId;});
+        if(srv) openModalServico(srv.clienteId, srv.tipo, servicoId);
+      });
+      return;
+    }
+    // Preencher com dados existentes
+    clienteId = s.clienteId;
+    tipo = s.tipo;
+    document.getElementById('sClienteId').value = clienteId||'';
+    document.getElementById('sClienteSearch').value = '';
+    set('sClienteSelected','');
+    document.getElementById('sClienteSelected').style.display='none';
+    document.getElementById('sClienteResults').style.display='none';
+    var clientes = fromCache('clientes') || [];
+    var cl = clientes.find(function(c){return c.id===clienteId;});
+    if (cl) {
+      set('sClienteSelected','<strong>'+esc(cl.nome)+'</strong> — '+esc(cl.tel||'')+'<button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">✕</button>');
+      document.getElementById('sClienteSelected').style.display='flex';
+      document.getElementById('mServicoSub').textContent='Editando orçamento #'+padNum(s.orcNum)+' — '+cl.nome;
+    } else {
+      document.getElementById('mServicoSub').textContent='Editando orçamento #'+padNum(s.orcNum);
+    }
+    setVal('sTipo', s.tipo||'');
+    setVal('sData', s.data||new Date().toISOString().split('T')[0]);
+    setVal('sFormula', s.formula||'');
+    setVal('sPrazo', s.prazo||'');
+    setVal('sTipoExame', s.tipoExame||'');
+    setVal('sProdutoDesc', s.produtoDesc||'');
+    // Valor formatado
+    var vRaw = parseFloat(s.valor)||0;
+    var vFmt = 'R$ ' + vRaw.toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+    setVal('sValor', vFmt);
+    setVal('sPagamento', s.pagamento||'');
+    setVal('sObs', s.obs||'');
+    setVal('sResultadoExame', s.resultadoExame||s.resultado_exame||'');
+    setVal('sLaboratorio', s.laboratorio||'');
+    onTipoChange();
+    // Mudar título e botão do modal
+    document.querySelector('#modalServico .modal-title').textContent = 'Editar Serviço';
+    document.querySelector('#modalServico .btn-primary[onclick="salvarServico()"]').textContent = '💾 Salvar Alterações';
+    openModal('modalServico');
+    return;
+  }
+
+  // Modo criação
+  document.querySelector('#modalServico .modal-title').textContent = 'Registrar Serviço';
+  document.querySelector('#modalServico .btn-primary[onclick="salvarServico()"]').textContent = '💾 Registrar Serviço';
   document.getElementById('sClienteId').value = clienteId||'';
   document.getElementById('sClienteSearch').value = '';
   set('sClienteSelected','');
   document.getElementById('sClienteSelected').style.display='none';
   document.getElementById('sClienteResults').style.display='none';
   if(clienteId){
-    var clientes = fromCache('clientes') || [];
-    var cl=clientes.find(function(c){return c.id===clienteId;});
-    if(cl){
-      set('sClienteSelected','<strong>'+esc(cl.nome)+'</strong> — '+esc(cl.tel||'')+'<button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">✕</button>');
+    var clientes2 = fromCache('clientes') || [];
+    var cl2=clientes2.find(function(c){return c.id===clienteId;});
+    if(cl2){
+      set('sClienteSelected','<strong>'+esc(cl2.nome)+'</strong> — '+esc(cl2.tel||'')+'<button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">✕</button>');
       document.getElementById('sClienteSelected').style.display='flex';
-      document.getElementById('mServicoSub').textContent='Cliente: '+cl.nome;
+      document.getElementById('mServicoSub').textContent='Cliente: '+cl2.nome;
     }
   } else {
     document.getElementById('mServicoSub').textContent='Registrar atendimento para um cliente';
@@ -1392,6 +1867,7 @@ function openModalServico(clienteId, tipo) {
   setVal('sFormula','');setVal('sPrazo','');
   setVal('sTipoExame','');setVal('sProdutoDesc','');
   setVal('sValor','');setVal('sPagamento','');setVal('sObs','');
+  setVal('sResultadoExame','');setVal('sLaboratorio','');
   if(tipo) onTipoChange();
   openModal('modalServico');
 }
@@ -1401,7 +1877,30 @@ function onTipoChange() {
   document.getElementById('fManip').style.display = t==='manipulacao'?'':'none';
   document.getElementById('fPrazo').style.display = t==='manipulacao'?'':'none';
   document.getElementById('fExame').style.display = t==='exame'?'':'none';
+  document.getElementById('fResultado').style.display = t==='exame'?'':'none';
+  document.getElementById('fLaboratorio').style.display = t==='exame'?'':'none';
   document.getElementById('fProduto').style.display = t==='produto'?'':'none';
+  var hint = document.getElementById('sFormulaHint');
+  if(hint) hint.style.display = t==='manipulacao'?'':'none';
+}
+
+function cancelarModalServico() {
+  var temDados = gv('sFormula') || gv('sTipoExame') || gv('sProdutoDesc') || gv('sValor') || gv('sObs');
+  if(temDados && !confirm('Descartar os dados preenchidos?')) return;
+  closeModal('modalServico');
+}
+
+function maskValorServico(inp) {
+  var raw = inp.value.replace(/\D/g,'');
+  if(!raw) { inp.value=''; return; }
+  var n = (parseInt(raw,10)/100).toFixed(2);
+  inp.value = 'R$ ' + n.replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+}
+
+function updateSenhaCounter() {
+  var v = document.getElementById('uSenha');
+  var c = document.getElementById('uSenhaCounter');
+  if(v&&c){ var n=v.value.length; c.textContent=n+' caractere'+(n!==1?'s':''); c.style.color=n>=6?'var(--green)':'var(--tx3)'; }
 }
 
 var _srTimeout;
@@ -1451,22 +1950,63 @@ function clearClienteServico() {
 // ══════════════════════════════════════════════════════════
 //  SALVAR SERVIÇO — abre modal de confirmação com PDF
 // ══════════════════════════════════════════════════════════
+function _setFieldErr(id, msg) {
+  var el = document.getElementById(id);
+  if (el) { el.style.borderColor='var(--red)'; el.addEventListener('input', function(){ el.style.borderColor=''; }, {once:true}); }
+}
 function salvarServico() {
   var clienteId=document.getElementById('sClienteId').value;
   var tipo=gv('sTipo'),data=gv('sData'),valor=gv('sValor'),pag=gv('sPagamento');
-  if(!clienteId){toast('Selecione um cliente.','er');return;}
-  if(!tipo){toast('Selecione o tipo de serviço.','er');return;}
-  if(!data){toast('Informe a data.','er');return;}
-  if(!valor){toast('Informe o valor.','er');return;}
-  if(!pag){toast('Selecione a forma de pagamento.','er');return;}
-  if(tipo==='manipulacao'&&!gv('sFormula')){toast('Informe a fórmula.','er');return;}
-  if(tipo==='exame'&&!gv('sTipoExame')){toast('Informe o tipo de exame.','er');return;}
+  var hasErr=false;
+  if(!clienteId){toast('Selecione um cliente.','er');hasErr=true;}
+  if(!tipo){_setFieldErr('sTipo');toast('Selecione o tipo de serviço.','er');hasErr=true;}
+  if(!data){_setFieldErr('sData');if(!hasErr)toast('Informe a data.','er');hasErr=true;}
+  if(!valor){_setFieldErr('sValor');if(!hasErr)toast('Informe o valor.','er');hasErr=true;}
+  if(!pag){_setFieldErr('sPagamento');if(!hasErr)toast('Selecione a forma de pagamento.','er');hasErr=true;}
+  if(tipo==='manipulacao'&&!gv('sFormula')){_setFieldErr('sFormula');if(!hasErr)toast('Informe a fórmula.','er');hasErr=true;}
+  if(tipo==='exame'&&!gv('sTipoExame')){_setFieldErr('sTipoExame');if(!hasErr)toast('Informe o tipo de exame.','er');hasErr=true;}
+  if(hasErr)return;
 
+  var valorNum = parseFloat(valor.replace(/[R$\s\.]/g,'').replace(',','.'))||0;
+
+  // ─── MODO EDIÇÃO ────────────────────────────────────────
+  if (_editandoServicoId) {
+    var editId = _editandoServicoId;
+    var cached = fromCache('servicos') || [];
+    var existing = cached.find(function(x){return x.id===editId;}) || {};
+    var changes = {
+      clienteId: clienteId, tipo: tipo, data: data,
+      valor: valorNum, pagamento: pag, obs: gv('sObs')||null,
+      formula: gv('sFormula')||null, prazo: gv('sPrazo')||null,
+      tipoExame: gv('sTipoExame')||null, produtoDesc: gv('sProdutoDesc')||null,
+      resultadoExame: gv('sResultadoExame')||null,
+      laboratorio: gv('sLaboratorio')||null,
+    };
+    closeModal('modalServico');
+    var _clienteParaConfirm2 = (fromCache('clientes')||[]).find(function(c){return c.id===clienteId;}) || null;
+    dbUpdateServico(editId, changes).then(function(num) {
+      clearCache('servicos');
+      renderPage(STATE.page);
+      toast('Orçamento #'+padNum(num||existing.orcNum)+' atualizado com sucesso!','ok');
+      // Mostrar modal de confirmação atualizado com opção de PDF
+      setTimeout(function(){
+        var objFinal = Object.assign({}, existing, changes, {orcNum: num||existing.orcNum});
+        abrirConfirmServico(objFinal, _clienteParaConfirm2, num||existing.orcNum);
+      }, 150);
+    });
+    _editandoServicoId = null;
+    return;
+  }
+
+  // ─── MODO CRIAÇÃO ───────────────────────────────────────
   var obj={
     id:uid(), clienteId:clienteId, tipo:tipo, data:data,
-    valor:parseFloat(valor), pagamento:pag, obs:gv('sObs'),
+    valor: valorNum,
+    pagamento:pag, obs:gv('sObs'),
     formula:gv('sFormula'), prazo:gv('sPrazo')||null,
     tipoExame:gv('sTipoExame'), produtoDesc:gv('sProdutoDesc'),
+    resultadoExame:gv('sResultadoExame')||null,
+    laboratorio:gv('sLaboratorio')||null,
     criadoPor:STATE.user?STATE.user.nome:'—',
   };
 
@@ -1493,8 +2033,15 @@ function openModalUsuario(editId) {
   setVal('uNome',  u ? u.nome  : '');
   setVal('uEmail', u ? u.email : '');
   setVal('uSenha', '');
+  // Placeholder da senha: indica que é opcional na edição
+  var uSenhaEl = document.getElementById('uSenha');
+  if (uSenhaEl) uSenhaEl.placeholder = editId ? 'Deixe em branco para não alterar' : 'Mínimo 6 caracteres';
   setVal('uPerfil', u ? u.perfil : 'atendente');
   var defaultPerms = u ? u.perms : (PERFIS.atendente.perms);
+  // Limpar erros inline
+  clearFieldErr('uEmail'); clearFieldErr('uSenha');
+  var errS=document.getElementById('uSenhaErr'); if(errS)errS.style.display='none';
+  updateSenhaCounter();
   renderPermGrid(defaultPerms);
   openModal('modalUsuario');
 }
@@ -1571,12 +2118,25 @@ function salvarUsuario() {
   var senha  = gv('uSenha');
   var perfil = document.getElementById('uPerfil').value;
   if (!nome || !email) { toast('Preencha nome e e-mail.','er'); return; }
-  if (!editId && !senha) { toast('Defina uma senha para o novo usuário.','er'); return; }
-  if (senha && senha.length < 6) { toast('Senha deve ter ao menos 6 caracteres.','er'); return; }
+  if (!editId && !senha) {
+    var errS=document.getElementById('uSenhaErr');
+    if(errS){errS.textContent='Defina uma senha para o novo usuário.';errS.style.display='block';}
+    _setFieldErr('uSenha');
+    return;
+  }
+  if (senha && senha.length < 6) {
+    var errS2=document.getElementById('uSenhaErr');
+    if(errS2){errS2.textContent='Senha deve ter ao menos 6 caracteres.';errS2.style.display='block';}
+    _setFieldErr('uSenha');
+    return;
+  }
   var users = lsArr('users');
   if (!editId) {
     if (users.find(function(u){return u.email===email;})) {
-      toast('Este e-mail já está cadastrado.','er'); return;
+      var errE=document.getElementById('uEmailErr');
+      if(errE){errE.textContent='Este e-mail já está cadastrado.';errE.style.display='block';}
+      _setFieldErr('uEmail');
+      return;
     }
   }
   var perms = getPermGridValues();
