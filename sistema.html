@@ -555,9 +555,8 @@ tr:hover td{background:rgba(0,48,135,.02)}
 // ══════════════════════════════════════════════════════════
 //  CONFIGURAÇÃO SUPABASE
 // ══════════════════════════════════════════════════════════
-var SUPABASE_URL = localStorage.getItem('sb_url') || '';
-var SUPABASE_KEY = localStorage.getItem('sb_key') || '';
-
+var SUPABASE_URL = 'https://ivxjetctxmsqrkmlyznz.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml2eGpldGN0eG1zcXJrbWx5em56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NTI2NjksImV4cCI6MjA5MTIyODY2OX0.K5uuj7qY_RpTqgQZ1YojloxbVpnw2lZ4CDXbQocX4Z8';
 var sb = null;
 
 function initSupabase(url, key) {
@@ -570,9 +569,7 @@ function initSupabase(url, key) {
   var s = document.createElement('script');
   s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
   s.onload = function() {
-    var u = localStorage.getItem('sb_url');
-    var k = localStorage.getItem('sb_key');
-    if (u && k) { SUPABASE_URL = u; SUPABASE_KEY = k; initSupabase(u, k); }
+    initSupabase(SUPABASE_URL, SUPABASE_KEY);
   };
   document.head.appendChild(s);
 })();
