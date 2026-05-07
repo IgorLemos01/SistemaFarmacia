@@ -2150,18 +2150,9 @@ function salvarUsuario() {
     });
   } else {
     var obj = { id:uid(), nome:nome, email:email, senha:senha, perfil:perfil, perms:perms, ativo:true, criado_em:new Date().toISOString() };
-    if (sb) {
-      sb.auth.admin.createUser({email:email, password:senha, email_confirm:true}).then(function(r){
-        if (r.error) { toast('Erro ao criar no Auth: '+r.error.message,'er'); return; }
-        obj.auth_id = r.data && r.data.user ? r.data.user.id : null;
-        dbSaveUser(obj, false).then(function() {
-          clearCache('users');
-          closeModal('modalUsuario');
-          toast('Usuário '+nome+' criado!','ok');
-          pgUsuarios();
-        });
-      });
-    } else {
+    if (false) {
+  // Auth admin desativado — usa apenas localStorage + system_users
+   } else {
       dbSaveUser(obj, false).then(function() {
         clearCache('users');
         closeModal('modalUsuario');
