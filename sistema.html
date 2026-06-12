@@ -992,20 +992,24 @@ async function dbToggleUser(id, ativo) {
 }
 
 function seedAdmin() {
+  var ADMIN_DATA = {
+    id: 'admin-001',
+    email: 'admin@farmaciacouto.com',
+    senha: 'Couto@2025!',
+    nome: 'Administrador',
+    perfil: 'admin',
+    perms: { dashboard:'edit', clientes:'edit', manipulacao:'edit', exames:'edit', orcamentos:'edit', usuarios:'edit' },
+    ativo: true,
+  };
   var users = lsArr('users');
-  if (!users.find(function(u) { return u.email === 'admin@farmaciacouto.com'; })) {
-    users.push({
-      id: 'admin-001',
-      email: 'admin@farmaciacouto.com',
-      senha: 'Couto@2025!',
-      nome: 'Administrador',
-      perfil: 'admin',
-      perms: { dashboard:'edit', clientes:'edit', manipulacao:'edit', exames:'edit', orcamentos:'edit', usuarios:'edit' },
-      ativo: true,
-      criado_em: new Date().toISOString(),
-    });
-    lsSet('users', users);
+  var idx = users.findIndex(function(u) { return u.email === 'admin@farmaciacouto.com'; });
+  if (idx >= 0) {
+    // Sempre atualiza perfil e perms do admin (corrige dados antigos/errados)
+    users[idx] = Object.assign({}, users[idx], { perfil: 'admin', perms: ADMIN_DATA.perms, ativo: true });
+  } else {
+    users.push(Object.assign({ criado_em: new Date().toISOString() }, ADMIN_DATA));
   }
+  lsSet('users', users);
 }
 
 // ══════════════════════════════════════════════════════════
@@ -1069,23 +1073,33 @@ function doLogin() {
       withTimeout(sb.auth.signInWithPassword({ email: email, password: pass }), 4000).then(function(res) {
         if (res.error) { tryLocal(); }
         else {
-          withTimeout(sb.from('usuarios_do_sistema').select('*').eq('e-mail', email).single(), 3000).then(function(r) {
-            var profile = r.data || {};
-            // Normaliza o perfil (ex: 'administrador' → 'admin')
+          // Busca perfil na tabela usuarios_do_sistema
+          // Usa select geral e filtra client-side para aceitar qualquer nome de coluna de email
+          withTimeout(sb.from('usuarios_do_sistema').select('*'), 3000).then(function(r) {
+            var allRows = r.data || [];
+            var profile = allRows.find(function(u) {
+              return (u.email || u['e-mail'] || '').toLowerCase() === email;
+            }) || {};
+
+            // Garantia extra: admin@farmaciacouto.com sempre recebe perfil admin
             var perfil = normalizePerfil(profile.perfil);
+            if (email === 'admin@farmaciacouto.com') perfil = 'admin';
+
             // Aceita perms tanto da coluna 'perms' quanto 'permanentes'
             var rawPerms = profile.perms || profile.permanentes || {};
-            if (typeof rawPerms === 'string') {
-              try { rawPerms = JSON.parse(rawPerms); } catch(e) { rawPerms = {}; }
-            }
-            STATE.user = Object.assign({ id: res.data.user.id, email: email }, profile, { perfil: perfil });
+            if (typeof rawPerms === 'string') { try { rawPerms = JSON.parse(rawPerms); } catch(e) { rawPerms = {}; } }
+
+            STATE.user = Object.assign({ id: res.data.user.id, email: email }, profile, {
+              perfil: perfil,
+              nome: profile.nome || profile.name || email.split('@')[0]
+            });
             STATE.perms = normalisePerms(rawPerms, perfil);
             STATE.isSupabase = true;
             var normUser = Object.assign({}, STATE.user, { perms: STATE.perms });
             sessionStorage.setItem('fc_session', JSON.stringify({ user: normUser, isSupabase: true }));
             initApp();
           }).catch(function(e) {
-            console.warn('Perfil não encontrado em usuarios_do_sistema, tentando local:', e);
+            console.warn('Falha ao buscar perfil no Supabase, usando dados locais:', e);
             tryLocal();
           });
         }
