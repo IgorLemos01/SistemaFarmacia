@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Sistema — Farmácia Couto</title>
+<title>Sistema â€” FarmÃ¡cia Couto</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-/* ═══════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    RESET & TOKENS
-═══════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --red:#C8102E;--red-d:#9B0D22;--red-l:rgba(200,16,46,.1);
@@ -33,9 +33,9 @@ button{font-family:'Inter',sans-serif;cursor:pointer}
 input,select,textarea{font-family:'Inter',sans-serif}
 a{text-decoration:none;color:inherit}
 
-/* ═══════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    LOGIN PAGE
-═══════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 #loginPage{
   min-height:100vh;display:flex;align-items:center;justify-content:center;
   background:linear-gradient(160deg,#001a4d 0%,#002d7a 40%,#003899 70%,#001F5E 100%);
@@ -81,9 +81,9 @@ a{text-decoration:none;color:inherit}
 .login-btn:disabled{opacity:.6;transform:none;cursor:not-allowed}
 .login-note{text-align:center;margin-top:1.5rem;font-size:.78rem;color:var(--tx3)}
 
-/* ═══════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    APP SHELL
-═══════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 #app{display:none;min-height:100vh}
 #app.on{display:flex}
 
@@ -134,9 +134,9 @@ a{text-decoration:none;color:inherit}
 .topbar-clock{font-size:.8rem;color:var(--tx3);font-weight:500}
 .content{padding:1.75rem;flex:1}
 
-/* ═══════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    COMPONENTS
-═══════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .card{background:#fff;border-radius:var(--rl);border:1px solid var(--border);box-shadow:var(--ss);padding:1.5rem}
 .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
 .card-title{font-size:.95rem;font-weight:700;color:var(--tx)}
@@ -280,14 +280,14 @@ tr:hover td{background:rgba(0,48,135,.02)}
 </head>
 <body>
 
-<!-- ════════════════════ LOGIN ════════════════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• LOGIN â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <div id="loginPage">
   <div class="login-card">
     <div class="login-brand">
-      <div class="login-brand-ico">⚕️</div>
+      <div class="login-brand-ico">âš•ï¸</div>
       <div>
-        <div class="login-brand-name">Farmácia Couto</div>
-        <div class="login-brand-sub">Sistema de Gestão</div>
+        <div class="login-brand-name">FarmÃ¡cia Couto</div>
+        <div class="login-brand-sub">Sistema de GestÃ£o</div>
       </div>
     </div>
     <h2 class="login-title">Bem-vindo de volta</h2>
@@ -299,43 +299,43 @@ tr:hover td{background:rgba(0,48,135,.02)}
     </div>
     <div class="lf-group">
       <label>Senha</label>
-      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/>
+      <input type="password" id="loginPass" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/>
     </div>
     <button class="login-btn" id="btnLogin" onclick="doLogin()">Entrar no sistema</button>
-    <p class="login-note">Acesso restrito — Farmácia Couto © 2025</p>
+    <p class="login-note">Acesso restrito â€” FarmÃ¡cia Couto Â© 2025</p>
     <a href="index.html" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:1rem;font-size:.8rem;color:var(--tx3);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--tx3)'">
-      ← Voltar ao site
+      â† Voltar ao site
     </a>
   </div>
 </div>
 
-<!-- ════════════════════ APP ════════════════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• APP â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <div id="app">
   <aside class="sidebar" id="sidebar">
     <div class="sb-brand">
-      <div class="sb-ico">⚕️</div>
-      <div><div class="sb-name">Farmácia Couto</div><div class="sb-tag">Sistema de Gestão</div></div>
+      <div class="sb-ico">âš•ï¸</div>
+      <div><div class="sb-name">FarmÃ¡cia Couto</div><div class="sb-tag">Sistema de GestÃ£o</div></div>
     </div>
     <div class="sb-user">
       <div class="sb-avatar" id="sbAvatar">?</div>
-      <div><div class="sb-uname" id="sbName">—</div><div class="sb-urole" id="sbRole">—</div></div>
+      <div><div class="sb-uname" id="sbName">â€”</div><div class="sb-urole" id="sbRole">â€”</div></div>
     </div>
     <nav class="sb-nav">
       <div class="sb-section">Principal</div>
-      <div class="sb-item active" onclick="goTo('dashboard')" data-page="dashboard"><span class="ico">🏠</span> Dashboard</div>
-      <div class="sb-item" onclick="goTo('clientes')" data-page="clientes"><span class="ico">👥</span> Clientes</div>
-      <div class="sb-section">Serviços</div>
-      <div class="sb-item" onclick="goTo('manipulacao')" data-page="manipulacao"><span class="ico">⚗️</span> Manipulação</div>
-      <div class="sb-item" onclick="goTo('exames')" data-page="exames"><span class="ico">🔬</span> Exames</div>
+      <div class="sb-item active" onclick="goTo('dashboard')" data-page="dashboard"><span class="ico">ðŸ </span> Dashboard</div>
+      <div class="sb-item" onclick="goTo('clientes')" data-page="clientes"><span class="ico">ðŸ‘¥</span> Clientes</div>
+      <div class="sb-section">ServiÃ§os</div>
+      <div class="sb-item" onclick="goTo('manipulacao')" data-page="manipulacao"><span class="ico">âš—ï¸</span> ManipulaÃ§Ã£o</div>
+      <div class="sb-item" onclick="goTo('exames')" data-page="exames"><span class="ico">ðŸ”¬</span> Exames</div>
       <div class="sb-section">Financeiro</div>
-      <div class="sb-item" onclick="goTo('orcamentos')" data-page="orcamentos"><span class="ico">📋</span> Orçamentos</div>
+      <div class="sb-item" onclick="goTo('orcamentos')" data-page="orcamentos"><span class="ico">ðŸ“‹</span> OrÃ§amentos</div>
       <div class="sb-section" id="adminSection" style="display:none">Admin</div>
-      <div class="sb-item" id="menuUsuarios" onclick="goTo('usuarios')" data-page="usuarios" style="display:none"><span class="ico">🛡️</span> Usuários</div>
+      <div class="sb-item" id="menuUsuarios" onclick="goTo('usuarios')" data-page="usuarios" style="display:none"><span class="ico">ðŸ›¡ï¸</span> UsuÃ¡rios</div>
     </nav>
     <div class="sb-logout">
-      <button onclick="doLogout()">⬅ Sair do sistema</button>
+      <button onclick="doLogout()">â¬… Sair do sistema</button>
       <a href="index.html" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:.6rem;padding:.5rem;color:rgba(255,255,255,.45);text-decoration:none;font-size:.78rem;border-radius:var(--r);transition:all .2s" onmouseover="this.style.background='rgba(255,255,255,.07)';this.style.color='rgba(255,255,255,.8)'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,.45)'">
-        🌐 Ver site público
+        ðŸŒ Ver site pÃºblico
       </a>
     </div>
   </aside>
@@ -344,7 +344,7 @@ tr:hover td{background:rgba(0,48,135,.02)}
     <div class="topbar">
       <div>
         <div class="page-title" id="pageTitle">Dashboard</div>
-        <div class="page-sub" id="pageSub">Visão geral do sistema</div>
+        <div class="page-sub" id="pageSub">VisÃ£o geral do sistema</div>
       </div>
       <div class="topbar-right">
         <span class="topbar-clock" id="clock"></span>
@@ -358,43 +358,43 @@ tr:hover td{background:rgba(0,48,135,.02)}
 <!-- TOAST CONTAINER -->
 <div id="toasts"></div>
 
-<!-- ════════════════════ MODALS ════════════════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• MODALS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 
 <!-- MODAL: CLIENTE -->
 <div class="modal-bg h" id="modalCliente">
   <div class="modal modal-lg">
     <div class="modal-head">
       <div><div class="modal-title" id="mClienteTitle">Novo Cliente</div><div class="modal-sub">Preencha os dados do paciente</div></div>
-      <button class="modal-close" onclick="closeModal('modalCliente')">✕</button>
+      <button class="modal-close" onclick="closeModal('modalCliente')">âœ•</button>
     </div>
     <div class="form-grid">
-      <div class="fg"><label>Nome Completo *</label><input id="cNome" placeholder="João da Silva"/></div>
+      <div class="fg"><label>Nome Completo *</label><input id="cNome" placeholder="JoÃ£o da Silva"/></div>
       <div class="fg"><label>Data de Nascimento</label><input id="cNasc" type="date"/></div>
-      <div class="fg"><label>Sexo</label><select id="cSexo"><option value="">—</option><option>Masculino</option><option>Feminino</option><option>Outro</option></select></div>
+      <div class="fg"><label>Sexo</label><select id="cSexo"><option value="">â€”</option><option>Masculino</option><option>Feminino</option><option>Outro</option></select></div>
       <div class="fg">
         <label>WhatsApp *</label>
         <input id="cTel" placeholder="(75) 99999-9999" maxlength="15" oninput="mPhone(this);clearFieldErr('cTel')"/>
         <span id="cTelErr" style="display:none;color:var(--red);font-size:.75rem;margin-top:.2rem"></span>
       </div>
       <div class="fg"><label>E-mail</label><input id="cEmail" type="email" placeholder="joao@email.com"/></div>
-      <div class="fg full"><label>Endereço</label><input id="cEnd" placeholder="Rua, número, bairro, cidade"/></div>
-      <div class="fg full"><label>Alergias</label><input id="cAlergias" placeholder="Ex: Penicilina, Dipirona, Látex..."/></div>
-      <div class="fg full"><label>Médico de Referência</label><input id="cMedico" placeholder="Dr. Nome Sobrenome — CRM 12345"/></div>
-      <div class="fg full"><label>Observações</label><textarea id="cObs" placeholder="Informações adicionais sobre o paciente..."></textarea></div>
+      <div class="fg full"><label>EndereÃ§o</label><input id="cEnd" placeholder="Rua, nÃºmero, bairro, cidade"/></div>
+      <div class="fg full"><label>Alergias</label><input id="cAlergias" placeholder="Ex: Penicilina, Dipirona, LÃ¡tex..."/></div>
+      <div class="fg full"><label>MÃ©dico de ReferÃªncia</label><input id="cMedico" placeholder="Dr. Nome Sobrenome â€” CRM 12345"/></div>
+      <div class="fg full"><label>ObservaÃ§Ãµes</label><textarea id="cObs" placeholder="InformaÃ§Ãµes adicionais sobre o paciente..."></textarea></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="cancelarModalCliente()">Cancelar</button>
-      <button class="btn btn-primary" onclick="salvarCliente()">💾 Salvar Cliente</button>
+      <button class="btn btn-primary" onclick="salvarCliente()">ðŸ’¾ Salvar Cliente</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL: ATENDIMENTO / SERVIÇO -->
+<!-- MODAL: ATENDIMENTO / SERVIÃ‡O -->
 <div class="modal-bg h" id="modalServico">
   <div class="modal modal-lg">
     <div class="modal-head">
-      <div><div class="modal-title">Registrar Serviço</div><div class="modal-sub" id="mServicoSub">—</div></div>
-      <button class="modal-close" onclick="closeModal('modalServico')">✕</button>
+      <div><div class="modal-title">Registrar ServiÃ§o</div><div class="modal-sub" id="mServicoSub">â€”</div></div>
+      <button class="modal-close" onclick="closeModal('modalServico')">âœ•</button>
     </div>
     <div class="form-grid">
       <div class="fg full">
@@ -405,19 +405,19 @@ tr:hover td{background:rgba(0,48,135,.02)}
         <div id="sClienteSelected" style="display:none;padding:.5rem .75rem;background:var(--blue-l);border-radius:var(--r);font-size:.83rem;margin-top:.4rem;align-items:center;justify-content:space-between"></div>
       </div>
       <div class="fg">
-        <label>Tipo de Serviço *</label>
+        <label>Tipo de ServiÃ§o *</label>
         <select id="sTipo" onchange="onTipoChange()">
           <option value="">Selecione...</option>
-          <option value="manipulacao">⚗️ Manipulação</option>
-          <option value="exame">🔬 Exame</option>
-          <option value="produto">💊 Produto/Venda</option>
+          <option value="manipulacao">âš—ï¸ ManipulaÃ§Ã£o</option>
+          <option value="exame">ðŸ”¬ Exame</option>
+          <option value="produto">ðŸ’Š Produto/Venda</option>
         </select>
       </div>
       <div class="fg"><label>Data *</label><input id="sData" type="date"/></div>
       <div class="fg full" id="fManip" style="display:none">
-        <label>Fórmula / Composição *</label>
-        <textarea id="sFormula" placeholder="Descreva os componentes, concentrações e forma farmacêutica..."></textarea>
-        <span id="sFormulaHint" style="display:none;font-size:.75rem;color:var(--tx3);margin-top:.3rem">💡 Informe os componentes, concentrações e forma farmacêutica (ex: Retinol 0,05% + Vitamina C 5% em gel)</span>
+        <label>FÃ³rmula / ComposiÃ§Ã£o *</label>
+        <textarea id="sFormula" placeholder="Descreva os componentes, concentraÃ§Ãµes e forma farmacÃªutica..."></textarea>
+        <span id="sFormulaHint" style="display:none;font-size:.75rem;color:var(--tx3);margin-top:.3rem">ðŸ’¡ Informe os componentes, concentraÃ§Ãµes e forma farmacÃªutica (ex: Retinol 0,05% + Vitamina C 5% em gel)</span>
       </div>
       <div class="fg" id="fPrazo" style="display:none">
         <label>Prazo de Entrega</label>
@@ -432,8 +432,8 @@ tr:hover td{background:rgba(0,48,135,.02)}
         <textarea id="sResultadoExame" placeholder="Informe o resultado (opcional)..."></textarea>
       </div>
       <div class="fg" id="fLaboratorio" style="display:none">
-        <label>Laboratório Responsável</label>
-        <input id="sLaboratorio" placeholder="Nome do laboratório..."/>
+        <label>LaboratÃ³rio ResponsÃ¡vel</label>
+        <input id="sLaboratorio" placeholder="Nome do laboratÃ³rio..."/>
       </div>
       <div class="fg full" id="fProduto" style="display:none">
         <label>Produto(s) *</label>
@@ -444,18 +444,18 @@ tr:hover td{background:rgba(0,48,135,.02)}
         <label>Forma de Pagamento *</label>
         <select id="sPagamento">
           <option value="">Selecione...</option>
-          <option value="dinheiro">💵 Dinheiro</option>
-          <option value="pix">📲 Pix</option>
-          <option value="debito">💳 Débito</option>
-          <option value="credito">💳 Crédito</option>
-          <option value="pendente">⏳ A receber</option>
+          <option value="dinheiro">ðŸ’µ Dinheiro</option>
+          <option value="pix">ðŸ“² Pix</option>
+          <option value="debito">ðŸ’³ DÃ©bito</option>
+          <option value="credito">ðŸ’³ CrÃ©dito</option>
+          <option value="pendente">â³ A receber</option>
         </select>
       </div>
-      <div class="fg full"><label>Observações</label><textarea id="sObs" placeholder="Informações adicionais sobre este serviço..."></textarea></div>
+      <div class="fg full"><label>ObservaÃ§Ãµes</label><textarea id="sObs" placeholder="InformaÃ§Ãµes adicionais sobre este serviÃ§o..."></textarea></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="cancelarModalServico()">Cancelar</button>
-      <button class="btn btn-primary" onclick="salvarServico()">💾 Registrar Serviço</button>
+      <button class="btn btn-primary" onclick="salvarServico()">ðŸ’¾ Registrar ServiÃ§o</button>
     </div>
   </div>
 </div>
@@ -464,8 +464,8 @@ tr:hover td{background:rgba(0,48,135,.02)}
 <div class="modal-bg h" id="modalUsuario">
   <div class="modal">
     <div class="modal-head">
-      <div><div class="modal-title" id="mUsuarioTitle">Novo Usuário</div><div class="modal-sub">Defina acesso e permissões</div></div>
-      <button class="modal-close" onclick="closeModal('modalUsuario')">✕</button>
+      <div><div class="modal-title" id="mUsuarioTitle">Novo UsuÃ¡rio</div><div class="modal-sub">Defina acesso e permissÃµes</div></div>
+      <button class="modal-close" onclick="closeModal('modalUsuario')">âœ•</button>
     </div>
     <div class="form-grid">
       <div class="fg"><label>Nome *</label><input id="uNome" placeholder="Nome completo"/></div>
@@ -476,7 +476,7 @@ tr:hover td{background:rgba(0,48,135,.02)}
       </div>
       <div class="fg">
         <label>Senha *</label>
-        <input id="uSenha" type="password" placeholder="Mínimo 6 caracteres" oninput="updateSenhaCounter()"/>
+        <input id="uSenha" type="password" placeholder="MÃ­nimo 6 caracteres" oninput="updateSenhaCounter()"/>
         <span id="uSenhaCounter" style="font-size:.72rem;color:var(--tx3);margin-top:.2rem">0 caracteres</span>
         <span id="uSenhaErr" style="display:none;color:var(--red);font-size:.75rem;margin-top:.2rem"></span>
       </div>
@@ -484,17 +484,17 @@ tr:hover td{background:rgba(0,48,135,.02)}
         <label>Perfil *</label>
         <select id="uPerfil" onchange="onPerfilChange()">
           <option value="atendente">Atendente</option>
-          <option value="farmaceutico">Farmacêutico</option>
+          <option value="farmaceutico">FarmacÃªutico</option>
           <option value="gerente">Gerente</option>
         </select>
       </div>
     </div>
     <div class="divider"></div>
-    <div style="margin-bottom:.75rem"><strong style="font-size:.85rem">Permissões detalhadas</strong><p style="font-size:.75rem;color:var(--tx3);margin-top:.2rem">Personalize o que este usuário pode fazer no sistema</p></div>
+    <div style="margin-bottom:.75rem"><strong style="font-size:.85rem">PermissÃµes detalhadas</strong><p style="font-size:.75rem;color:var(--tx3);margin-top:.2rem">Personalize o que este usuÃ¡rio pode fazer no sistema</p></div>
     <div class="perm-grid" id="permGrid"></div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modalUsuario')">Cancelar</button>
-      <button class="btn btn-primary" onclick="salvarUsuario()">💾 Criar Usuário</button>
+      <button class="btn btn-primary" onclick="salvarUsuario()">ðŸ’¾ Criar UsuÃ¡rio</button>
     </div>
   </div>
 </div>
@@ -503,36 +503,36 @@ tr:hover td{background:rgba(0,48,135,.02)}
 <div class="modal-bg h" id="modalDetalheCliente">
   <div class="modal modal-lg">
     <div class="modal-head">
-      <div><div class="modal-title" id="mdcNome">—</div><div class="modal-sub" id="mdcSub">—</div></div>
-      <button class="modal-close" onclick="closeModal('modalDetalheCliente')">✕</button>
+      <div><div class="modal-title" id="mdcNome">â€”</div><div class="modal-sub" id="mdcSub">â€”</div></div>
+      <button class="modal-close" onclick="closeModal('modalDetalheCliente')">âœ•</button>
     </div>
     <div id="mdcBody"></div>
   </div>
 </div>
 
-<!-- MODAL: DETALHES ORÇAMENTO -->
+<!-- MODAL: DETALHES ORÃ‡AMENTO -->
 <div class="modal-bg h" id="modalOrc">
   <div class="modal">
     <div class="modal-head">
-      <div><div class="modal-title">Detalhes do Orçamento</div><div class="modal-sub" id="mOrcSub">—</div></div>
-      <button class="modal-close" onclick="closeModal('modalOrc')">✕</button>
+      <div><div class="modal-title">Detalhes do OrÃ§amento</div><div class="modal-sub" id="mOrcSub">â€”</div></div>
+      <button class="modal-close" onclick="closeModal('modalOrc')">âœ•</button>
     </div>
     <div id="mOrcBody"></div>
     <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modalOrc')">Fechar</button></div>
   </div>
 </div>
 
-<!-- ════════ MODAL: CONFIRMAÇÃO PÓS-SERVIÇO ════════ -->
+<!-- â•â•â•â•â•â•â•â• MODAL: CONFIRMAÃ‡ÃƒO PÃ“S-SERVIÃ‡O â•â•â•â•â•â•â•â• -->
 <div class="modal-bg h" id="modalConfirmServico">
   <div class="modal" style="max-width:480px">
     <div class="modal-head">
       <div>
         <div class="modal-title" style="display:flex;align-items:center;gap:.5rem">
-          <span style="font-size:1.3rem">✅</span> Serviço Registrado!
+          <span style="font-size:1.3rem">âœ…</span> ServiÃ§o Registrado!
         </div>
-        <div class="modal-sub">Orçamento gerado com sucesso</div>
+        <div class="modal-sub">OrÃ§amento gerado com sucesso</div>
       </div>
-      <button class="modal-close" onclick="closeModal('modalConfirmServico')">✕</button>
+      <button class="modal-close" onclick="closeModal('modalConfirmServico')">âœ•</button>
     </div>
 
     <!-- Resumo preenchido dinamicamente -->
@@ -543,7 +543,7 @@ tr:hover td{background:rgba(0,48,135,.02)}
       <button class="btn btn-primary"
         style="width:100%;justify-content:center;padding:.875rem;font-size:.93rem;letter-spacing:.01em;background:linear-gradient(135deg,#003087,#0046AD);box-shadow:0 6px 20px rgba(0,48,135,.3)"
         onclick="gerarPDFServicoAtual()">
-        📄 Gerar PDF do Orçamento
+        ðŸ“„ Gerar PDF do OrÃ§amento
       </button>
       <button class="btn btn-ghost" onclick="closeModal('modalConfirmServico')" style="width:100%;justify-content:center">
         Fechar
@@ -553,11 +553,11 @@ tr:hover td{background:rgba(0,48,135,.02)}
 </div>
 
 <script>
-// ══════════════════════════════════════════════════════════
-//  CONFIGURAÇÃO SUPABASE
-// ══════════════════════════════════════════════════════════
-var SUPABASE_URL = localStorage.getItem('sb_url') || '';
-var SUPABASE_KEY = localStorage.getItem('sb_key') || '';
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+//  CONFIGURAÃ‡ÃƒO SUPABASE
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+var SUPABASE_URL = 'https://ivxjetctxmsqrkmlyznz.supabase.co';
+var SUPABASE_KEY = 'sb_publishable_IYY46_75S-rQQcsXsPD1xQ_ta987Zu6';
 
 var sb = null;
 
@@ -584,14 +584,12 @@ function withTimeout(promise, ms) {
   });
 }
 
-// Inicializa imediatamente com valores salvos se disponíveis
-if (SUPABASE_URL && SUPABASE_KEY) {
-  initSupabase(SUPABASE_URL, SUPABASE_KEY);
-}
+// Inicializa imediatamente â€” credenciais fixas, funciona em qualquer mÃ¡quina
+initSupabase(SUPABASE_URL, SUPABASE_KEY);
 
-// ══════════════════════════════════════════════════════════
-//  ESTADO DA APLICAÇÃO
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+//  ESTADO DA APLICAÃ‡ÃƒO
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 var STATE = {
   user: null,
   page: 'dashboard',
@@ -599,12 +597,12 @@ var STATE = {
 };
 
 var MODULOS = [
-  { key: 'dashboard',    label: 'Dashboard',    ico: '🏠', sub: 'Visão geral, KPIs e últimos serviços' },
-  { key: 'clientes',     label: 'Clientes',     ico: '👥', sub: 'Cadastro e histórico de pacientes' },
-  { key: 'manipulacao',  label: 'Manipulação',  ico: '⚗️', sub: 'Receituários e fórmulas manipuladas' },
-  { key: 'exames',       label: 'Exames',       ico: '🔬', sub: 'Registro e histórico de exames' },
-  { key: 'orcamentos',   label: 'Orçamentos',   ico: '📋', sub: 'Relatório financeiro e geração de PDF' },
-  { key: 'usuarios',     label: 'Usuários',     ico: '🛡️', sub: 'Criar e gerenciar usuários do sistema' },
+  { key: 'dashboard',    label: 'Dashboard',    ico: 'ðŸ ', sub: 'VisÃ£o geral, KPIs e Ãºltimos serviÃ§os' },
+  { key: 'clientes',     label: 'Clientes',     ico: 'ðŸ‘¥', sub: 'Cadastro e histÃ³rico de pacientes' },
+  { key: 'manipulacao',  label: 'ManipulaÃ§Ã£o',  ico: 'âš—ï¸', sub: 'ReceituÃ¡rios e fÃ³rmulas manipuladas' },
+  { key: 'exames',       label: 'Exames',       ico: 'ðŸ”¬', sub: 'Registro e histÃ³rico de exames' },
+  { key: 'orcamentos',   label: 'OrÃ§amentos',   ico: 'ðŸ“‹', sub: 'RelatÃ³rio financeiro e geraÃ§Ã£o de PDF' },
+  { key: 'usuarios',     label: 'UsuÃ¡rios',     ico: 'ðŸ›¡ï¸', sub: 'Criar e gerenciar usuÃ¡rios do sistema' },
 ];
 
 var PERFIS = {
@@ -612,7 +610,7 @@ var PERFIS = {
     perms: { dashboard:'edit', clientes:'edit', manipulacao:'edit', exames:'edit', orcamentos:'edit', usuarios:'edit' } },
   gerente:      { label: 'Gerente',       cor: 'badge-purple',
     perms: { dashboard:'read', clientes:'edit', manipulacao:'edit', exames:'edit', orcamentos:'edit', usuarios:'none' } },
-  farmaceutico: { label: 'Farmacêutico',  cor: 'badge-blue',
+  farmaceutico: { label: 'FarmacÃªutico',  cor: 'badge-blue',
     perms: { dashboard:'read', clientes:'edit', manipulacao:'edit', exames:'read', orcamentos:'read', usuarios:'none' } },
   atendente:    { label: 'Atendente',     cor: 'badge-gray',
     perms: { dashboard:'read', clientes:'edit', manipulacao:'read', exames:'read', orcamentos:'none', usuarios:'none' } },
@@ -641,9 +639,9 @@ function can(perm) {
   return canView(mod);
 }
 
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  CAMADA DE DADOS
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 var CACHE = { clientes: null, servicos: null, users: null, lastFetch: {} };
 var CACHE_TTL = 30000;
 
@@ -798,7 +796,7 @@ async function dbSaveCliente(obj, isEdit) {
     return true;
   } catch(e) {
     console.error('dbSaveCliente error:', e);
-    toast('Salvo localmente. Sincronizará quando a conexão for restabelecida.','yw');
+    toast('Salvo localmente. SincronizarÃ¡ quando a conexÃ£o for restabelecida.','yw');
     return true;
   }
 }
@@ -891,7 +889,7 @@ async function dbSaveServico(obj) {
     return nextNum;
   } catch(e) {
     console.error('dbSaveServico error:', e);
-    toast('Salvo localmente. Sincronizará quando a conexão for restabelecida.','yw');
+    toast('Salvo localmente. SincronizarÃ¡ quando a conexÃ£o for restabelecida.','yw');
     return nextNum;
   }
 }
@@ -919,7 +917,7 @@ async function dbUpdateServico(id, changes) {
     clearCache('servicos');
   } catch(e) {
     console.error('dbUpdateServico error:', e);
-    toast('Atualizado localmente. Sincronizará quando a conexão for restabelecida.','yw');
+    toast('Atualizado localmente. SincronizarÃ¡ quando a conexÃ£o for restabelecida.','yw');
   }
   return updated.orcNum || existing.orcNum;
 }
@@ -939,7 +937,7 @@ async function dbGetUsers() {
     FETCH_LOCK.users = true;
     (async function() {
       try {
-        var res = await withTimeout(sb.from('system_users').select('*').order('criado_em'), 1500);
+        var res = await withTimeout(sb.from('usuarios_do_sistema').select('*').order('criado_em'), 1500);
         if (!res.error && res.data && res.data.length) {
           var merged = res.data.map(function(dbU) {
             var localU = cached.find(function(l){return l.email===dbU.email;}) || {};
@@ -974,8 +972,8 @@ async function dbSaveUser(obj, isEdit) {
   if (sb && STATE.isSupabase) {
     var dbRow = { id:obj.id, nome:obj.nome, email:obj.email, perfil:obj.perfil, perms:obj.perms, ativo:obj.ativo };
     try {
-      if (isEdit) { await withTimeout(sb.from('system_users').update(dbRow).eq('id', obj.id), 3000); }
-      else { await withTimeout(sb.from('system_users').insert([dbRow]), 3000); }
+      if (isEdit) { await withTimeout(sb.from('usuarios_do_sistema').update(dbRow).eq('id', obj.id), 3000); }
+      else { await withTimeout(sb.from('usuarios_do_sistema').insert([dbRow]), 3000); }
     } catch(e) { console.warn('dbSaveUser:', e.message); }
   }
 }
@@ -986,7 +984,7 @@ async function dbToggleUser(id, ativo) {
   if (idx>=0) local[idx].ativo = ativo;
   setCache('users', local);
   localStorage.setItem('fc_users', JSON.stringify(local));
-  if (sb && STATE.isSupabase) { try { await withTimeout(sb.from('system_users').update({ativo:ativo}).eq('id',id), 3000); } catch(e){} }
+  if (sb && STATE.isSupabase) { try { await withTimeout(sb.from('usuarios_do_sistema').update({ativo:ativo}).eq('id',id), 3000); } catch(e){} }
 }
 
 function seedAdmin() {
@@ -1006,9 +1004,9 @@ function seedAdmin() {
   }
 }
 
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  AUTH
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 function doLogin() {
   var email = document.getElementById('loginEmail').value.trim().toLowerCase();
   var pass  = document.getElementById('loginPass').value;
@@ -1049,7 +1047,7 @@ function doLogin() {
       withTimeout(sb.auth.signInWithPassword({ email: email, password: pass }), 4000).then(function(res) {
         if (res.error) { tryLocal(); }
         else {
-          withTimeout(sb.from('system_users').select('*').eq('email', email).single(), 3000).then(function(r) {
+          withTimeout(sb.from('usuarios_do_sistema').select('*').eq('email', email).single(), 3000).then(function(r) {
             var profile = r.data || {};
             STATE.user = Object.assign({ id: res.data.user.id, email: email }, profile);
             STATE.perms = profile.perms || PERFIS[profile.perfil || 'atendente'].perms;
@@ -1108,7 +1106,7 @@ function initApp() {
   var initials = (STATE.user.nome || STATE.user.email || '?').split(' ').slice(0,2).map(function(w){return w[0];}).join('').toUpperCase();
   document.getElementById('sbAvatar').textContent = initials;
   document.getElementById('sbName').textContent = STATE.user.nome || STATE.user.email;
-  document.getElementById('sbRole').textContent = (PERFIS[STATE.user.perfil] || {}).label || 'Usuário';
+  document.getElementById('sbRole').textContent = (PERFIS[STATE.user.perfil] || {}).label || 'UsuÃ¡rio';
   STATE.perms = normalisePerms(STATE.perms, STATE.user.perfil);
   if (canEdit('usuarios')) {
     document.getElementById('adminSection').style.display = '';
@@ -1118,16 +1116,16 @@ function initApp() {
   startClock();
 }
 
-// ══════════════════════════════════════════════════════════
-//  NAVEGAÇÃO
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+//  NAVEGAÃ‡ÃƒO
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 var PAGE_TITLES = {
-  dashboard:   ['Dashboard', 'Visão geral do sistema'],
+  dashboard:   ['Dashboard', 'VisÃ£o geral do sistema'],
   clientes:    ['Clientes', 'Gerenciar cadastros de pacientes'],
-  manipulacao: ['Manipulação', 'Histórico de manipulações farmacêuticas'],
-  exames:      ['Exames', 'Histórico de exames realizados'],
-  orcamentos:  ['Orçamentos', 'Relatório financeiro e orçamentos'],
-  usuarios:    ['Usuários', 'Gerenciar acessos e permissões'],
+  manipulacao: ['ManipulaÃ§Ã£o', 'HistÃ³rico de manipulaÃ§Ãµes farmacÃªuticas'],
+  exames:      ['Exames', 'HistÃ³rico de exames realizados'],
+  orcamentos:  ['OrÃ§amentos', 'RelatÃ³rio financeiro e orÃ§amentos'],
+  usuarios:    ['UsuÃ¡rios', 'Gerenciar acessos e permissÃµes'],
 };
 
 function goTo(page) {
@@ -1141,9 +1139,9 @@ function goTo(page) {
   renderPage(page);
 }
 
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  PAGES
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 function renderPage(page) {
   var btn = document.getElementById('topActionBtn');
   btn.style.display = 'none';
@@ -1158,10 +1156,10 @@ function renderPage(page) {
   if (pages[page]) pages[page]();
 }
 
-// ─── DASHBOARD ───────────────────────────────────────────
+// â”€â”€â”€ DASHBOARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function pgDashboard() {
-  if (!canView('dashboard')) { set('content','<div class="alert alert-red" style="margin-top:1rem">⛔ Você não tem permissão para visualizar o dashboard.</div>'); return; }
-  set('content','<div style="text-align:center;padding:3rem;color:var(--tx3)"><span style="font-size:2rem">⏳</span><p style="margin-top:.5rem">Carregando...</p></div>');
+  if (!canView('dashboard')) { set('content','<div class="alert alert-red" style="margin-top:1rem">â›” VocÃª nÃ£o tem permissÃ£o para visualizar o dashboard.</div>'); return; }
+  set('content','<div style="text-align:center;padding:3rem;color:var(--tx3)"><span style="font-size:2rem">â³</span><p style="margin-top:.5rem">Carregando...</p></div>');
   Promise.all([dbGetClientes(), dbGetServicos()]).then(function(results) {
     var clientes = results[0], servicos = results[1];
     var hoje = new Date().toISOString().split('T')[0];
@@ -1189,10 +1187,10 @@ function pgDashboard() {
     // Alertas
     var alertas = [];
     if (manipAtrasadas.length > 0) {
-      alertas.push(manipAtrasadas.length + ' manipula' + (manipAtrasadas.length===1?'ção':'ções') + ' com prazo vencido — <a href="#" onclick="goTo(\'manipulacao\');return false;" style="color:inherit;font-weight:700;text-decoration:underline">Ver manipulações</a>');
+      alertas.push(manipAtrasadas.length + ' manipula' + (manipAtrasadas.length===1?'Ã§Ã£o':'Ã§Ãµes') + ' com prazo vencido â€” <a href="#" onclick="goTo(\'manipulacao\');return false;" style="color:inherit;font-weight:700;text-decoration:underline">Ver manipulaÃ§Ãµes</a>');
     }
     if (aReceber > 0) {
-      alertas.push(fmt(aReceber) + ' a receber no total — <a href="#" onclick="goTo(\'orcamentos\');return false;" style="color:inherit;font-weight:700;text-decoration:underline">Ver orçamentos</a>');
+      alertas.push(fmt(aReceber) + ' a receber no total â€” <a href="#" onclick="goTo(\'orcamentos\');return false;" style="color:inherit;font-weight:700;text-decoration:underline">Ver orÃ§amentos</a>');
     }
     // Distribuicao por tipo
     var totalSrv = servicos.length;
@@ -1206,24 +1204,24 @@ function pgDashboard() {
         return '<div style="margin-bottom:.6rem"><div style="display:flex;justify-content:space-between;margin-bottom:.25rem"><span>'+tipoBadge(x.t)+'</span><span style="font-size:.75rem;font-weight:600">'+x.pct+'% ('+x.n+')</span></div><div style="background:var(--bg);border-radius:4px;height:8px"><div style="width:'+x.pct+'%;height:100%;background:var(--blue);border-radius:4px"></div></div></div>';
       }).join('');
     set('content',
-      (nomeUser ? '<p style="font-size:.85rem;color:var(--tx3);margin-bottom:1rem">'+saudacao+', <strong>'+esc(nomeUser)+'</strong>! 👋</p>' : '') +
-      (alertas.length ? '<div class="alert alert-yellow" style="margin-bottom:1.25rem">⚠️ <div><strong>Atenção:</strong> '+alertas.join(' &nbsp;·&nbsp; ')+'</div></div>' : '') +
+      (nomeUser ? '<p style="font-size:.85rem;color:var(--tx3);margin-bottom:1rem">'+saudacao+', <strong>'+esc(nomeUser)+'</strong>! ðŸ‘‹</p>' : '') +
+      (alertas.length ? '<div class="alert alert-yellow" style="margin-bottom:1.25rem">âš ï¸ <div><strong>AtenÃ§Ã£o:</strong> '+alertas.join(' &nbsp;Â·&nbsp; ')+'</div></div>' : '') +
       '<div class="stats-grid">' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">👥</div><div><div class="stat-val">'+clientes.length+'</div><div class="stat-lbl">Clientes cadastrados</div></div></div>' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">📋</div><div><div class="stat-val">'+hojeSrv.length+'</div><div class="stat-lbl">Atendimentos hoje</div></div></div>' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--purple-l)">⚗️</div><div><div class="stat-val">'+manip.length+'</div><div class="stat-lbl">Manipulações total</div></div></div>' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">🔬</div><div><div class="stat-val">'+exames.length+'</div><div class="stat-lbl">Exames total</div></div></div>' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">💰</div><div><div class="stat-val">'+fmt(receita)+'</div><div class="stat-lbl">Receita total</div><div class="stat-chg chg-up">+'+fmt(receitaHoje)+' hoje</div></div></div>' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">⏳</div><div><div class="stat-val">'+fmt(aReceber)+'</div><div class="stat-lbl">A receber</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">ðŸ‘¥</div><div><div class="stat-val">'+clientes.length+'</div><div class="stat-lbl">Clientes cadastrados</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">ðŸ“‹</div><div><div class="stat-val">'+hojeSrv.length+'</div><div class="stat-lbl">Atendimentos hoje</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--purple-l)">âš—ï¸</div><div><div class="stat-val">'+manip.length+'</div><div class="stat-lbl">ManipulaÃ§Ãµes total</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">ðŸ”¬</div><div><div class="stat-val">'+exames.length+'</div><div class="stat-lbl">Exames total</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">ðŸ’°</div><div><div class="stat-val">'+fmt(receita)+'</div><div class="stat-lbl">Receita total</div><div class="stat-chg chg-up">+'+fmt(receitaHoje)+' hoje</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">â³</div><div><div class="stat-val">'+fmt(aReceber)+'</div><div class="stat-lbl">A receber</div></div></div>' +
       '</div>' +
       '<div style="display:grid;grid-template-columns:1.6fr 1fr;gap:1.25rem">' +
         '<div class="card">' +
-          '<div class="card-head"><div><div class="card-title">Últimos Serviços</div><div class="card-sub">Registros mais recentes</div></div></div>' +
-          (servicos.length===0 ? '<div class="empty"><span class="empty-ico">📋</span><p class="empty-txt">Nenhum serviço registrado</p></div>' :
+          '<div class="card-head"><div><div class="card-title">Ãšltimos ServiÃ§os</div><div class="card-sub">Registros mais recentes</div></div></div>' +
+          (servicos.length===0 ? '<div class="empty"><span class="empty-ico">ðŸ“‹</span><p class="empty-txt">Nenhum serviÃ§o registrado</p></div>' :
           '<div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Tipo</th><th>Atendente</th><th>Valor</th><th>Pagamento</th><th>Data</th></tr></thead><tbody>' +
           servicos.slice(0,8).map(function(s){
             var cl=clientes.find(function(c){return c.id===s.clienteId;});
-            return '<tr><td class="td-name">'+(cl?esc(cl.nome):'—')+'</td><td>'+tipoBadge(s.tipo)+'</td><td class="td-muted">'+esc(s.criadoPor||'—')+'</td><td style="font-weight:600">'+fmt(s.valor)+'</td><td>'+pagBadge(s.pagamento)+'</td><td class="td-muted">'+fmtDate(s.data)+'</td></tr>';
+            return '<tr><td class="td-name">'+(cl?esc(cl.nome):'â€”')+'</td><td>'+tipoBadge(s.tipo)+'</td><td class="td-muted">'+esc(s.criadoPor||'â€”')+'</td><td style="font-weight:600">'+fmt(s.valor)+'</td><td>'+pagBadge(s.pagamento)+'</td><td class="td-muted">'+fmtDate(s.data)+'</td></tr>';
           }).join('')+'</tbody></table></div>') +
         '</div>' +
         '<div style="display:flex;flex-direction:column;gap:1.25rem">' +
@@ -1238,7 +1236,7 @@ function pgDashboard() {
             '</div>' +
           '</div>' +
           '<div class="card">' +
-            '<div class="card-head"><div class="card-title">Por Tipo de Serviço</div></div>' +
+            '<div class="card-head"><div class="card-title">Por Tipo de ServiÃ§o</div></div>' +
             distribHTML +
           '</div>' +
         '</div>' +
@@ -1247,18 +1245,18 @@ function pgDashboard() {
   });
 }
 
-// ─── CLIENTES ────────────────────────────────────────────
+// â”€â”€â”€ CLIENTES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function pgClientes() {
-  if (!canView('clientes')) { set('content','<div class="alert alert-red">⛔ Você não tem permissão para acessar esta área.</div>'); return; }
+  if (!canView('clientes')) { set('content','<div class="alert alert-red">â›” VocÃª nÃ£o tem permissÃ£o para acessar esta Ã¡rea.</div>'); return; }
   var btn = document.getElementById('topActionBtn');
-  if (canEdit('clientes')) { btn.style.display=''; btn.textContent='＋ Novo Cliente'; }
+  if (canEdit('clientes')) { btn.style.display=''; btn.textContent='ï¼‹ Novo Cliente'; }
   set('content',
     '<div class="card">' +
       '<div class="card-head">' +
-        '<div class="search-bar"><span class="ico">🔍</span><input placeholder="Buscar por nome, telefone, e-mail..." oninput="filterClientes(this.value)" id="clienteFilter"/></div>' +
-        (canEdit('clientes') ? '<button class="btn btn-primary" onclick="openModalCliente()">＋ Novo Cliente</button>' : '') +
+        '<div class="search-bar"><span class="ico">ðŸ”</span><input placeholder="Buscar por nome, telefone, e-mail..." oninput="filterClientes(this.value)" id="clienteFilter"/></div>' +
+        (canEdit('clientes') ? '<button class="btn btn-primary" onclick="openModalCliente()">ï¼‹ Novo Cliente</button>' : '') +
       '</div>' +
-      '<div id="clientesTable"><div class="empty"><span class="empty-ico">⏳</span><p class="empty-txt">Carregando...</p></div></div>' +
+      '<div id="clientesTable"><div class="empty"><span class="empty-ico">â³</span><p class="empty-txt">Carregando...</p></div></div>' +
     '</div>'
   );
   Promise.all([dbGetClientes(), dbGetServicos()]).then(function(r) {
@@ -1285,14 +1283,14 @@ function renderClientesTable(clientes, servicos, q) {
     var lastB = srvB.length ? Math.max.apply(null, srvB.map(function(s){return s.orcNum||0;})) : -1;
     return lastB - lastA;
   });
-  if (!list.length) return '<div class="empty"><span class="empty-ico">👥</span><p class="empty-txt">'+(q?'Nenhum cliente encontrado':'Nenhum cliente cadastrado')+'</p>'+(q?'':(canEdit('clientes')?'<p class="empty-sub">Clique em "+ Novo Cliente" para começar</p><button class="btn btn-primary" style="margin-top:1rem" onclick="openModalCliente()">＋ Novo Cliente</button>':'<p class="empty-sub">Nenhum cliente cadastrado ainda</p>'))+'</div>';
-  return '<div class="table-wrap"><table><thead><tr><th>#</th><th>Nome</th><th>WhatsApp</th><th>Atendimentos</th><th>Último atend.</th><th>Ações</th></tr></thead><tbody>'+
+  if (!list.length) return '<div class="empty"><span class="empty-ico">ðŸ‘¥</span><p class="empty-txt">'+(q?'Nenhum cliente encontrado':'Nenhum cliente cadastrado')+'</p>'+(q?'':(canEdit('clientes')?'<p class="empty-sub">Clique em "+ Novo Cliente" para comeÃ§ar</p><button class="btn btn-primary" style="margin-top:1rem" onclick="openModalCliente()">ï¼‹ Novo Cliente</button>':'<p class="empty-sub">Nenhum cliente cadastrado ainda</p>'))+'</div>';
+  return '<div class="table-wrap"><table><thead><tr><th>#</th><th>Nome</th><th>WhatsApp</th><th>Atendimentos</th><th>Ãšltimo atend.</th><th>AÃ§Ãµes</th></tr></thead><tbody>'+
     list.map(function(c,i){
       var srvCliente = servicos.filter(function(s){return s.clienteId===c.id;});
       var total = srvCliente.length;
       var lastSrv = srvCliente.slice().sort(function(a,b){return (b.orcNum||0)-(a.orcNum||0);})[0];
-      var lastDate = lastSrv ? fmtDate(lastSrv.data) : '<span class="td-muted">—</span>';
-      return '<tr><td class="td-muted">'+(i+1)+'</td><td class="td-name">'+esc(c.nome)+'</td><td>'+esc(c.tel||'—')+'</td><td><span class="badge badge-blue">'+total+' atend.</span></td><td class="td-muted">'+lastDate+'</td><td style="display:flex;gap:.4rem"><button class="btn btn-sm btn-ghost" onclick="verCliente(\''+c.id+'\')">👁 Ver</button>'+(canEdit('manipulacao')||canEdit('exames')?'<button class="btn btn-sm btn-primary" onclick="openModalServico(\''+c.id+'\')">＋ Serviço</button>':'')+'</td></tr>';
+      var lastDate = lastSrv ? fmtDate(lastSrv.data) : '<span class="td-muted">â€”</span>';
+      return '<tr><td class="td-muted">'+(i+1)+'</td><td class="td-name">'+esc(c.nome)+'</td><td>'+esc(c.tel||'â€”')+'</td><td><span class="badge badge-blue">'+total+' atend.</span></td><td class="td-muted">'+lastDate+'</td><td style="display:flex;gap:.4rem"><button class="btn btn-sm btn-ghost" onclick="verCliente(\''+c.id+'\')">ðŸ‘ Ver</button>'+(canEdit('manipulacao')||canEdit('exames')?'<button class="btn btn-sm btn-primary" onclick="openModalServico(\''+c.id+'\')">ï¼‹ ServiÃ§o</button>':'')+'</td></tr>';
     }).join('')+'</tbody></table></div>';
 }
 
@@ -1311,22 +1309,22 @@ function verCliente(id) {
       '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1.25rem">' +
         '<div style="background:var(--blue-l);border-radius:var(--r);padding:.875rem;text-align:center"><div style="font-size:1.4rem;font-weight:700;color:var(--blue)">'+servicos.length+'</div><div style="font-size:.75rem;color:var(--tx3)">Atendimentos</div></div>' +
         '<div style="background:var(--green-l);border-radius:var(--r);padding:.875rem;text-align:center"><div style="font-size:1.4rem;font-weight:700;color:var(--green)">'+fmt(receita)+'</div><div style="font-size:.75rem;color:var(--tx3)">Total gasto</div></div>' +
-        '<div style="background:var(--yellow-l);border-radius:var(--r);padding:.875rem;text-align:center"><div style="font-size:1.4rem;font-weight:700;color:var(--yellow)">'+servicos.filter(function(s){return s.tipo==='manipulacao';}).length+'</div><div style="font-size:.75rem;color:var(--tx3)">Manipulações</div></div>' +
+        '<div style="background:var(--yellow-l);border-radius:var(--r);padding:.875rem;text-align:center"><div style="font-size:1.4rem;font-weight:700;color:var(--yellow)">'+servicos.filter(function(s){return s.tipo==='manipulacao';}).length+'</div><div style="font-size:.75rem;color:var(--tx3)">ManipulaÃ§Ãµes</div></div>' +
       '</div>' +
       '<div class="divider"></div>' +
-      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem"><div style="font-size:.85rem;font-weight:600">Dados Cadastrais</div>'+(canEdit('clientes')?'<button class="btn btn-sm btn-ghost" onclick="closeModal(\'modalDetalheCliente\');openModalCliente(\''+c.id+'\')">✏️ Editar</button>':'')+'</div>' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem"><div style="font-size:.85rem;font-weight:600">Dados Cadastrais</div>'+(canEdit('clientes')?'<button class="btn btn-sm btn-ghost" onclick="closeModal(\'modalDetalheCliente\');openModalCliente(\''+c.id+'\')">âœï¸ Editar</button>':'')+'</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1.25rem;font-size:.83rem">' +
-        '<div><span style="color:var(--tx3)">Endereço: </span>'+esc(c.endereco||'—')+'</div>' +
-        '<div><span style="color:var(--tx3)">E-mail: </span>'+esc(c.email||'—')+'</div>' +
-        '<div><span style="color:var(--tx3)">Nascimento: </span>'+(c.nasc?fmtDate(c.nasc):'—')+'</div>' +
-        '<div><span style="color:var(--tx3)">Sexo: </span>'+esc(c.sexo||'—')+'</div>' +
-        (medicoVal?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">Médico de referência: </span>'+esc(medicoVal)+'</div>':'') +
+        '<div><span style="color:var(--tx3)">EndereÃ§o: </span>'+esc(c.endereco||'â€”')+'</div>' +
+        '<div><span style="color:var(--tx3)">E-mail: </span>'+esc(c.email||'â€”')+'</div>' +
+        '<div><span style="color:var(--tx3)">Nascimento: </span>'+(c.nasc?fmtDate(c.nasc):'â€”')+'</div>' +
+        '<div><span style="color:var(--tx3)">Sexo: </span>'+esc(c.sexo||'â€”')+'</div>' +
+        (medicoVal?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">MÃ©dico de referÃªncia: </span>'+esc(medicoVal)+'</div>':'') +
       '</div>' +
-      (alergiasVal?'<div class="alert alert-yellow" style="margin-bottom:.75rem">⚠️ <div><strong>Alergias:</strong> '+esc(alergiasVal)+'</div></div>':'') +
+      (alergiasVal?'<div class="alert alert-yellow" style="margin-bottom:.75rem">âš ï¸ <div><strong>Alergias:</strong> '+esc(alergiasVal)+'</div></div>':'') +
       (c.obs?'<div style="background:var(--yellow-l);border-radius:var(--r);padding:.75rem;font-size:.8rem;margin-bottom:1.25rem"><strong>Obs:</strong> '+esc(c.obs)+'</div>':'') +
       '<div class="divider"></div>' +
-      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem"><div style="font-size:.85rem;font-weight:600">Histórico de Serviços</div></div>' +
-      '<div class="tabs" style="margin-bottom:1rem" id="tlTabs"><button class="tab active" onclick="filtrarTL(\'todos\',\''+c.id+'\')">Todos</button><button class="tab" onclick="filtrarTL(\'manipulacao\',\''+c.id+'\')">Manipulação</button><button class="tab" onclick="filtrarTL(\'exame\',\''+c.id+'\')">Exames</button><button class="tab" onclick="filtrarTL(\'outro\',\''+c.id+'\')">Outros</button></div>' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem"><div style="font-size:.85rem;font-weight:600">HistÃ³rico de ServiÃ§os</div></div>' +
+      '<div class="tabs" style="margin-bottom:1rem" id="tlTabs"><button class="tab active" onclick="filtrarTL(\'todos\',\''+c.id+'\')">Todos</button><button class="tab" onclick="filtrarTL(\'manipulacao\',\''+c.id+'\')">ManipulaÃ§Ã£o</button><button class="tab" onclick="filtrarTL(\'exame\',\''+c.id+'\')">Exames</button><button class="tab" onclick="filtrarTL(\'outro\',\''+c.id+'\')">Outros</button></div>' +
       '<div id="tlBody">'+renderTimeline(servicos,'todos')+'</div>'
     );
     openModal('modalDetalheCliente');
@@ -1338,7 +1336,7 @@ function renderTimeline(servicos, filtro) {
     filtro==='outro' ? servicos.filter(function(s){return s.tipo!=='manipulacao'&&s.tipo!=='exame';}) :
     servicos.filter(function(s){return s.tipo===filtro;});
   list = list.slice().sort(function(a,b){return (b.orcNum||0)-(a.orcNum||0);});
-  if(!list.length) return '<div class="empty" style="padding:1.5rem"><span class="empty-ico">📋</span><p class="empty-txt">Nenhum serviço nesta categoria</p></div>';
+  if(!list.length) return '<div class="empty" style="padding:1.5rem"><span class="empty-ico">ðŸ“‹</span><p class="empty-txt">Nenhum serviÃ§o nesta categoria</p></div>';
   return '<div class="timeline">'+list.map(function(s){
     var canEditSrv = canEdit('manipulacao')||canEdit('exames');
     var tipoModal = s.tipo==='manipulacao' ? 'verManipulacao' : s.tipo==='exame' ? 'verExame' : 'verOrcamento';
@@ -1347,13 +1345,13 @@ function renderTimeline(servicos, filtro) {
         +'<div class="tl-dot" style="background:'+(s.tipo==='manipulacao'?'var(--purple)':s.tipo==='exame'?'var(--blue)':'var(--green)')+';margin-top:.3rem;flex-shrink:0"></div>'
         +'<div style="min-width:0">'
           +'<div class="tl-title">'+tipoBadge(s.tipo)+' <span style="font-weight:600">'+esc(getServicoDesc(s))+'</span> <span class="orc-num" style="font-size:.75rem">#'+padNum(s.orcNum)+'</span></div>'
-          +'<div class="tl-meta">'+fmtDate(s.data)+' · '+fmt(s.valor)+' · '+pagBadge(s.pagamento)+'</div>'
+          +'<div class="tl-meta">'+fmtDate(s.data)+' Â· '+fmt(s.valor)+' Â· '+pagBadge(s.pagamento)+'</div>'
           +(s.obs?'<div class="tl-meta" style="font-style:italic">'+esc(s.obs)+'</div>':'')
         +'</div>'
       +'</div>'
       +'<div style="display:flex;gap:.3rem;flex-shrink:0;padding-top:.1rem">'
-        +'<button class="btn btn-icon btn-sm" title="Ver detalhes" onclick="'+tipoModal+'(\''+s.id+'\')">👁</button>'
-        +(canEditSrv?'<button class="btn btn-icon btn-sm" title="Editar pedido" onclick="closeModal(\'modalDetalheCliente\');openModalServico(null,null,\''+s.id+'\')">✏️</button>':'')
+        +'<button class="btn btn-icon btn-sm" title="Ver detalhes" onclick="'+tipoModal+'(\''+s.id+'\')">ðŸ‘</button>'
+        +(canEditSrv?'<button class="btn btn-icon btn-sm" title="Editar pedido" onclick="closeModal(\'modalDetalheCliente\');openModalServico(null,null,\''+s.id+'\')">âœï¸</button>':'')
       +'</div>'
     +'</div>';
   }).join('')+'</div>';
@@ -1369,12 +1367,12 @@ function filtrarTL(filtro, clienteId) {
   });
 }
 
-// ─── MANIPULAÇÃO ─────────────────────────────────────────
+// â”€â”€â”€ MANIPULAÃ‡ÃƒO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function pgManipulacao() {
-  if (!canView('manipulacao')) { set('content','<div class="alert alert-red">⛔ Você não tem permissão para acessar esta área.</div>'); return; }
+  if (!canView('manipulacao')) { set('content','<div class="alert alert-red">â›” VocÃª nÃ£o tem permissÃ£o para acessar esta Ã¡rea.</div>'); return; }
   var btn = document.getElementById('topActionBtn');
-  if (canEdit('manipulacao')) { btn.style.display=''; btn.textContent='＋ Nova Manipulação'; }
-  set('content','<div class="card"><div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div></div>');
+  if (canEdit('manipulacao')) { btn.style.display=''; btn.textContent='ï¼‹ Nova ManipulaÃ§Ã£o'; }
+  set('content','<div class="card"><div style="text-align:center;padding:2rem;color:var(--tx3)">â³ Carregando...</div></div>');
   Promise.all([dbGetServicos(), dbGetClientes()]).then(function(r) {
     var hoje = new Date().toISOString().split('T')[0];
     var servicos = r[0].filter(function(s){return s.tipo==='manipulacao';}).sort(function(a,b){return (b.orcNum||0)-(a.orcNum||0);}), clientes = r[1];
@@ -1382,29 +1380,29 @@ function pgManipulacao() {
     var pendentes = servicos.filter(function(s){return !s.dataEntregaReal && (!s.prazo||s.prazo>=hoje);}).length;
     var atrasadas = servicos.filter(function(s){return !s.dataEntregaReal && s.prazo && s.prazo<hoje;}).length;
     function statusBadge(s) {
-      if(s.dataEntregaReal) return '<span class="badge badge-green">🟢 Entregue</span>';
-      if(!s.prazo) return '<span class="badge badge-gray">— Sem prazo</span>';
-      return s.prazo < hoje ? '<span class="badge badge-red">🔴 Atrasado</span>' : '<span class="badge badge-yellow">🟡 Pendente</span>';
+      if(s.dataEntregaReal) return '<span class="badge badge-green">ðŸŸ¢ Entregue</span>';
+      if(!s.prazo) return '<span class="badge badge-gray">â€” Sem prazo</span>';
+      return s.prazo < hoje ? '<span class="badge badge-red">ðŸ”´ Atrasado</span>' : '<span class="badge badge-yellow">ðŸŸ¡ Pendente</span>';
     }
     set('content',
       '<div class="stats-grid" style="margin-bottom:1.25rem">' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--purple-l)">⚗️</div><div><div class="stat-val">'+servicos.length+'</div><div class="stat-lbl">Manipulações</div></div></div>' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">💰</div><div><div class="stat-val">'+fmt(valTotal)+'</div><div class="stat-lbl">Valor total</div></div></div>' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">⏳</div><div><div class="stat-val">'+pendentes+'</div><div class="stat-lbl">Pendentes de entrega</div></div></div>' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--red-l)">🔴</div><div><div class="stat-val">'+atrasadas+'</div><div class="stat-lbl">Atrasadas</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--purple-l)">âš—ï¸</div><div><div class="stat-val">'+servicos.length+'</div><div class="stat-lbl">ManipulaÃ§Ãµes</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">ðŸ’°</div><div><div class="stat-val">'+fmt(valTotal)+'</div><div class="stat-lbl">Valor total</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">â³</div><div><div class="stat-val">'+pendentes+'</div><div class="stat-lbl">Pendentes de entrega</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--red-l)">ðŸ”´</div><div><div class="stat-val">'+atrasadas+'</div><div class="stat-lbl">Atrasadas</div></div></div>' +
       '</div>' +
       '<div class="card" style="margin-bottom:1.25rem">' +
         '<div style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap">' +
           '<div class="fg"><label>De</label><input type="date" id="mDe" style="width:150px"/></div>' +
-          '<div class="fg"><label>Até</label><input type="date" id="mAte" style="width:150px"/></div>' +
+          '<div class="fg"><label>AtÃ©</label><input type="date" id="mAte" style="width:150px"/></div>' +
           '<div class="fg"><label>Status</label><select id="mStatus" style="width:150px"><option value="">Todos</option><option value="entregue">Entregue</option><option value="pendente">Pendente</option><option value="atrasado">Atrasado</option></select></div>' +
-          '<div class="fg"><label>Pagamento</label><select id="mPag" style="width:150px"><option value="">Todos</option><option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="debito">Débito</option><option value="credito">Crédito</option><option value="pendente">A receber</option></select></div>' +
-          '<button class="btn btn-primary" onclick="filtrarManipulacoes()">🔍 Filtrar</button>' +
-          (canEdit('manipulacao')?'<button class="btn btn-primary" onclick="openModalServico(null,\'manipulacao\')">＋ Nova Manipulação</button>':'') +
+          '<div class="fg"><label>Pagamento</label><select id="mPag" style="width:150px"><option value="">Todos</option><option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="debito">DÃ©bito</option><option value="credito">CrÃ©dito</option><option value="pendente">A receber</option></select></div>' +
+          '<button class="btn btn-primary" onclick="filtrarManipulacoes()">ðŸ” Filtrar</button>' +
+          (canEdit('manipulacao')?'<button class="btn btn-primary" onclick="openModalServico(null,\'manipulacao\')">ï¼‹ Nova ManipulaÃ§Ã£o</button>':'') +
         '</div>' +
       '</div>' +
       '<div class="card" id="manipResult">' +
-        '<div class="card-head"><div class="card-title">Histórico de Manipulações</div></div>' +
+        '<div class="card-head"><div class="card-title">HistÃ³rico de ManipulaÃ§Ãµes</div></div>' +
         renderManipTable(servicos, clientes, hoje) +
       '</div>'
     );
@@ -1413,27 +1411,27 @@ function pgManipulacao() {
 }
 
 function renderManipTable(servicos, clientes, hoje) {
-  if(!servicos.length) return '<div class="empty"><span class="empty-ico">⚗️</span><p class="empty-txt">Nenhuma manipulação registrada</p>'+(canEdit('manipulacao')?'<button class="btn btn-primary" style="margin-top:1rem" onclick="openModalServico(null,\'manipulacao\')">＋ Nova Manipulação</button>':'')+'</div>';
+  if(!servicos.length) return '<div class="empty"><span class="empty-ico">âš—ï¸</span><p class="empty-txt">Nenhuma manipulaÃ§Ã£o registrada</p>'+(canEdit('manipulacao')?'<button class="btn btn-primary" style="margin-top:1rem" onclick="openModalServico(null,\'manipulacao\')">ï¼‹ Nova ManipulaÃ§Ã£o</button>':'')+'</div>';
   function statusBadge(s) {
-    if(s.dataEntregaReal) return '<span class="badge badge-green">🟢 Entregue</span>';
-    if(!s.prazo) return '<span class="badge badge-gray">— Sem prazo</span>';
-    return s.prazo < hoje ? '<span class="badge badge-red">🔴 Atrasado</span>' : '<span class="badge badge-yellow">🟡 Pendente</span>';
+    if(s.dataEntregaReal) return '<span class="badge badge-green">ðŸŸ¢ Entregue</span>';
+    if(!s.prazo) return '<span class="badge badge-gray">â€” Sem prazo</span>';
+    return s.prazo < hoje ? '<span class="badge badge-red">ðŸ”´ Atrasado</span>' : '<span class="badge badge-yellow">ðŸŸ¡ Pendente</span>';
   }
-  return '<div class="table-wrap"><table><thead><tr><th>Orç#</th><th>Cliente</th><th>Fórmula</th><th>Entrega</th><th>Valor</th><th>Pagamento</th><th>Data</th><th></th></tr></thead><tbody>' +
+  return '<div class="table-wrap"><table><thead><tr><th>OrÃ§#</th><th>Cliente</th><th>FÃ³rmula</th><th>Entrega</th><th>Valor</th><th>Pagamento</th><th>Data</th><th></th></tr></thead><tbody>' +
     servicos.map(function(s){
       var cl=clientes.find(function(c){return c.id===s.clienteId;});
-      var formulaTrunc = (s.formula||'—').slice(0,50)+((s.formula||'').length>50?'…':'');
+      var formulaTrunc = (s.formula||'â€”').slice(0,50)+((s.formula||'').length>50?'â€¦':'');
       return '<tr><td><span class="orc-num" style="font-size:.9rem">#'+padNum(s.orcNum)+'</span></td>' +
-        '<td class="td-name">'+(cl?esc(cl.nome):'—')+'</td>' +
-        '<td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8rem" title="'+esc(s.formula||'—')+'">'+esc(formulaTrunc)+'</td>' +
+        '<td class="td-name">'+(cl?esc(cl.nome):'â€”')+'</td>' +
+        '<td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8rem" title="'+esc(s.formula||'â€”')+'">'+esc(formulaTrunc)+'</td>' +
         '<td>'+statusBadge(s)+'</td>' +
         '<td style="font-weight:600">'+fmt(s.valor)+'</td>' +
         '<td>'+pagBadge(s.pagamento)+'</td>' +
         '<td class="td-muted">'+fmtDate(s.data)+'</td>' +
         '<td style="display:flex;gap:.3rem">' +
-          '<button class="btn btn-icon btn-sm" title="Ver detalhes" onclick="verManipulacao(\''+s.id+'\')">👁</button>' +
-          (canEdit('manipulacao')?'<button class="btn btn-icon btn-sm" title="Editar" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\''+s.id+'\')">✏️</button>':'') +
-          (!s.dataEntregaReal&&canEdit('manipulacao')?'<button class="btn btn-sm btn-green" onclick="marcarEntregue(\''+s.id+'\')" style="font-size:.72rem;padding:.3rem .6rem" title="Marcar como entregue">✅</button>':'') +
+          '<button class="btn btn-icon btn-sm" title="Ver detalhes" onclick="verManipulacao(\''+s.id+'\')">ðŸ‘</button>' +
+          (canEdit('manipulacao')?'<button class="btn btn-icon btn-sm" title="Editar" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\''+s.id+'\')">âœï¸</button>':'') +
+          (!s.dataEntregaReal&&canEdit('manipulacao')?'<button class="btn btn-sm btn-green" onclick="marcarEntregue(\''+s.id+'\')" style="font-size:.72rem;padding:.3rem .6rem" title="Marcar como entregue">âœ…</button>':'') +
         '</td></tr>';
     }).join('')+'</tbody></table></div>';
 }
@@ -1458,16 +1456,16 @@ function verManipulacao(id) {
     var s=r[0].find(function(x){return x.id===id;});
     if(!s) return;
     var cl=r[1].find(function(c){return c.id===s.clienteId;});
-    document.getElementById('mOrcSub').textContent='Manipulação #'+padNum(s.orcNum);
+    document.getElementById('mOrcSub').textContent='ManipulaÃ§Ã£o #'+padNum(s.orcNum);
     set('mOrcBody',
       '<div style="text-align:center;padding:1rem 0 1.5rem"><div class="orc-num" style="font-size:2.5rem">#'+padNum(s.orcNum)+'</div><div style="font-size:.8rem;color:var(--tx3)">'+fmtDate(s.data)+'</div></div>' +
       '<div class="divider"></div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;font-size:.85rem;margin-bottom:1.25rem">' +
-        '<div><span style="color:var(--tx3)">Cliente:</span> <strong>'+(cl?esc(cl.nome):'—')+'</strong></div>' +
+        '<div><span style="color:var(--tx3)">Cliente:</span> <strong>'+(cl?esc(cl.nome):'â€”')+'</strong></div>' +
         '<div><span style="color:var(--tx3)">Pagamento:</span> '+pagBadge(s.pagamento)+'</div>' +
-        '<div><span style="color:var(--tx3)">Prazo:</span> '+(s.prazo?fmtDate(s.prazo):'—')+'</div>' +
-        '<div><span style="color:var(--tx3)">Entrega real:</span> '+(s.dataEntregaReal?fmtDate(s.dataEntregaReal):'Não entregue')+'</div>' +
-        '<div style="grid-column:1/-1"><span style="color:var(--tx3)">Fórmula:</span><div style="margin-top:.3rem;font-size:.82rem;background:var(--bg);padding:.75rem;border-radius:var(--r)">'+esc(s.formula||'—')+'</div></div>' +
+        '<div><span style="color:var(--tx3)">Prazo:</span> '+(s.prazo?fmtDate(s.prazo):'â€”')+'</div>' +
+        '<div><span style="color:var(--tx3)">Entrega real:</span> '+(s.dataEntregaReal?fmtDate(s.dataEntregaReal):'NÃ£o entregue')+'</div>' +
+        '<div style="grid-column:1/-1"><span style="color:var(--tx3)">FÃ³rmula:</span><div style="margin-top:.3rem;font-size:.82rem;background:var(--bg);padding:.75rem;border-radius:var(--r)">'+esc(s.formula||'â€”')+'</div></div>' +
         (s.obs?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">Obs:</span> '+esc(s.obs)+'</div>':'') +
       '</div>' +
       '<div class="divider"></div>' +
@@ -1476,8 +1474,8 @@ function verManipulacao(id) {
         '<span style="font-family:\'Playfair Display\',serif;font-size:1.6rem;font-weight:800;color:var(--blue)">'+fmt(s.valor)+'</span>' +
       '</div>' +
       '<div style="display:flex;gap:.75rem;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)">' +
-        (canEdit('manipulacao')?'<button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\''+s.id+'\')">✏️ Editar</button>':'') +
-        '<button class="btn btn-primary" style="flex:1;justify-content:center" onclick="gerarPDFServicoById(\''+s.id+'\')">📄 Gerar PDF</button>' +
+        (canEdit('manipulacao')?'<button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\''+s.id+'\')">âœï¸ Editar</button>':'') +
+        '<button class="btn btn-primary" style="flex:1;justify-content:center" onclick="gerarPDFServicoById(\''+s.id+'\')">ðŸ“„ Gerar PDF</button>' +
       '</div>'
 
     );
@@ -1491,19 +1489,19 @@ function marcarEntregue(id) {
   var idx = cached.findIndex(function(x){return x.id===id;});
   if(idx>=0){ cached[idx].dataEntregaReal=hoje; cached[idx].data_entrega_real=hoje; setCache('servicos',cached); }
   clearCache('servicos');
-  toast('Manipulação marcada como entregue!','ok');
+  toast('ManipulaÃ§Ã£o marcada como entregue!','ok');
   pgManipulacao();
 }
 
 
 
 
-// ─── EXAMES ──────────────────────────────────────────────
+// â”€â”€â”€ EXAMES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function pgExames() {
-  if (!canView('exames')) { set('content','<div class="alert alert-red">⛔ Você não tem permissão para acessar esta área.</div>'); return; }
+  if (!canView('exames')) { set('content','<div class="alert alert-red">â›” VocÃª nÃ£o tem permissÃ£o para acessar esta Ã¡rea.</div>'); return; }
   var btn = document.getElementById('topActionBtn');
-  if (canEdit('exames')) { btn.style.display=''; btn.textContent='＋ Novo Exame'; }
-  set('content','<div class="card"><div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div></div>');
+  if (canEdit('exames')) { btn.style.display=''; btn.textContent='ï¼‹ Novo Exame'; }
+  set('content','<div class="card"><div style="text-align:center;padding:2rem;color:var(--tx3)">â³ Carregando...</div></div>');
   Promise.all([dbGetServicos(), dbGetClientes()]).then(function(r) {
     var servicos = r[0].filter(function(s){return s.tipo==='exame';}).sort(function(a,b){return (b.orcNum||0)-(a.orcNum||0);}), clientes = r[1];
     var valTotal = servicos.reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
@@ -1511,22 +1509,22 @@ function pgExames() {
     var semResult = servicos.length - comResult;
     set('content',
       '<div class="stats-grid" style="margin-bottom:1.25rem">' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">🔬</div><div><div class="stat-val">'+servicos.length+'</div><div class="stat-lbl">Total de exames</div></div></div>' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">💰</div><div><div class="stat-val">'+fmt(valTotal)+'</div><div class="stat-lbl">Valor total</div></div></div>' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">✅</div><div><div class="stat-val">'+comResult+'</div><div class="stat-lbl">Com resultado</div></div></div>' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">⏳</div><div><div class="stat-val">'+semResult+'</div><div class="stat-lbl">Aguardando resultado</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">ðŸ”¬</div><div><div class="stat-val">'+servicos.length+'</div><div class="stat-lbl">Total de exames</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">ðŸ’°</div><div><div class="stat-val">'+fmt(valTotal)+'</div><div class="stat-lbl">Valor total</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">âœ…</div><div><div class="stat-val">'+comResult+'</div><div class="stat-lbl">Com resultado</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">â³</div><div><div class="stat-val">'+semResult+'</div><div class="stat-lbl">Aguardando resultado</div></div></div>' +
       '</div>' +
       '<div class="card" style="margin-bottom:1.25rem">' +
         '<div style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap">' +
           '<div class="fg"><label>De</label><input type="date" id="eDe" style="width:150px"/></div>' +
-          '<div class="fg"><label>Até</label><input type="date" id="eAte" style="width:150px"/></div>' +
-          '<div class="fg"><label>Pagamento</label><select id="ePag" style="width:150px"><option value="">Todos</option><option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="debito">Débito</option><option value="credito">Crédito</option><option value="pendente">A receber</option></select></div>' +
-          '<button class="btn btn-primary" onclick="filtrarExames()">🔍 Filtrar</button>' +
-          (canEdit('exames')?'<button class="btn btn-primary" onclick="openModalServico(null,\'exame\')">＋ Novo Exame</button>':'') +
+          '<div class="fg"><label>AtÃ©</label><input type="date" id="eAte" style="width:150px"/></div>' +
+          '<div class="fg"><label>Pagamento</label><select id="ePag" style="width:150px"><option value="">Todos</option><option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="debito">DÃ©bito</option><option value="credito">CrÃ©dito</option><option value="pendente">A receber</option></select></div>' +
+          '<button class="btn btn-primary" onclick="filtrarExames()">ðŸ” Filtrar</button>' +
+          (canEdit('exames')?'<button class="btn btn-primary" onclick="openModalServico(null,\'exame\')">ï¼‹ Novo Exame</button>':'') +
         '</div>' +
       '</div>' +
       '<div class="card" id="exameResult">' +
-        '<div class="card-head"><div class="card-title">Histórico de Exames</div></div>' +
+        '<div class="card-head"><div class="card-title">HistÃ³rico de Exames</div></div>' +
         renderExameTable(servicos, clientes) +
       '</div>'
     );
@@ -1535,21 +1533,21 @@ function pgExames() {
 }
 
 function renderExameTable(servicos, clientes) {
-  if(!servicos.length) return '<div class="empty"><span class="empty-ico">🔬</span><p class="empty-txt">Nenhum exame registrado</p>'+(canEdit('exames')?'<button class="btn btn-primary" style="margin-top:1rem" onclick="openModalServico(null,\'exame\')">＋ Novo Exame</button>':'')+'</div>';
-  return '<div class="table-wrap"><table><thead><tr><th>Orç#</th><th>Cliente</th><th>Tipo de Exame</th><th>Resultado</th><th>Valor</th><th>Pagamento</th><th>Data</th><th></th></tr></thead><tbody>' +
+  if(!servicos.length) return '<div class="empty"><span class="empty-ico">ðŸ”¬</span><p class="empty-txt">Nenhum exame registrado</p>'+(canEdit('exames')?'<button class="btn btn-primary" style="margin-top:1rem" onclick="openModalServico(null,\'exame\')">ï¼‹ Novo Exame</button>':'')+'</div>';
+  return '<div class="table-wrap"><table><thead><tr><th>OrÃ§#</th><th>Cliente</th><th>Tipo de Exame</th><th>Resultado</th><th>Valor</th><th>Pagamento</th><th>Data</th><th></th></tr></thead><tbody>' +
     servicos.map(function(s){
       var cl=clientes.find(function(c){return c.id===s.clienteId;});
       var temResult = !!(s.resultadoExame||s.resultado_exame);
       return '<tr><td><span class="orc-num" style="font-size:.9rem">#'+padNum(s.orcNum)+'</span></td>' +
-        '<td class="td-name">'+(cl?esc(cl.nome):'—')+'</td>' +
-        '<td>'+esc(s.tipoExame||'—')+'</td>' +
-        '<td>'+(temResult?'<span class="badge badge-green">✅ Com resultado</span>':'<span class="badge badge-yellow">⏳ Aguardando</span>')+'</td>' +
+        '<td class="td-name">'+(cl?esc(cl.nome):'â€”')+'</td>' +
+        '<td>'+esc(s.tipoExame||'â€”')+'</td>' +
+        '<td>'+(temResult?'<span class="badge badge-green">âœ… Com resultado</span>':'<span class="badge badge-yellow">â³ Aguardando</span>')+'</td>' +
         '<td style="font-weight:600">'+fmt(s.valor)+'</td>' +
         '<td>'+pagBadge(s.pagamento)+'</td>' +
         '<td class="td-muted">'+fmtDate(s.data)+'</td>' +
         '<td style="display:flex;gap:.3rem">' +
-          '<button class="btn btn-icon btn-sm" title="Ver detalhes" onclick="verExame(\''+s.id+'\')">👁</button>' +
-          (canEdit('exames')?'<button class="btn btn-icon btn-sm" title="Editar" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\''+s.id+'\')">✏️</button>':'') +
+          '<button class="btn btn-icon btn-sm" title="Ver detalhes" onclick="verExame(\''+s.id+'\')">ðŸ‘</button>' +
+          (canEdit('exames')?'<button class="btn btn-icon btn-sm" title="Editar" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\''+s.id+'\')">âœï¸</button>':'') +
         '</td>' +
       '</tr>';
     }).join('')+'</tbody></table></div>';
@@ -1578,10 +1576,10 @@ function verExame(id) {
       '<div style="text-align:center;padding:1rem 0 1.5rem"><div class="orc-num" style="font-size:2.5rem">#'+padNum(s.orcNum)+'</div><div style="font-size:.8rem;color:var(--tx3)">'+fmtDate(s.data)+'</div></div>' +
       '<div class="divider"></div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;font-size:.85rem;margin-bottom:1.25rem">' +
-        '<div><span style="color:var(--tx3)">Cliente:</span> <strong>'+(cl?esc(cl.nome):'—')+'</strong></div>' +
+        '<div><span style="color:var(--tx3)">Cliente:</span> <strong>'+(cl?esc(cl.nome):'â€”')+'</strong></div>' +
         '<div><span style="color:var(--tx3)">Pagamento:</span> '+pagBadge(s.pagamento)+'</div>' +
-        '<div style="grid-column:1/-1"><span style="color:var(--tx3)">Tipo de Exame:</span> <strong>'+esc(s.tipoExame||'—')+'</strong></div>' +
-        (lab?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">Laboratório:</span> '+esc(lab)+'</div>':'') +
+        '<div style="grid-column:1/-1"><span style="color:var(--tx3)">Tipo de Exame:</span> <strong>'+esc(s.tipoExame||'â€”')+'</strong></div>' +
+        (lab?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">LaboratÃ³rio:</span> '+esc(lab)+'</div>':'') +
         (resultado?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">Resultado:</span><div style="margin-top:.3rem;font-size:.82rem;background:var(--bg);padding:.75rem;border-radius:var(--r)">'+esc(resultado)+'</div></div>':'') +
         (s.obs?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">Obs:</span> '+esc(s.obs)+'</div>':'') +
       '</div>' +
@@ -1591,8 +1589,8 @@ function verExame(id) {
         '<span style="font-family:\'Playfair Display\',serif;font-size:1.6rem;font-weight:800;color:var(--blue)">'+fmt(s.valor)+'</span>' +
       '</div>' +
       '<div style="display:flex;gap:.75rem;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)">' +
-        (canEdit('exames')?'<button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\''+s.id+'\')">✏️ Editar</button>':'') +
-        '<button class="btn btn-primary" style="flex:1;justify-content:center" onclick="gerarPDFServicoById(\''+s.id+'\')">📄 Gerar PDF</button>' +
+        (canEdit('exames')?'<button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\''+s.id+'\')">âœï¸ Editar</button>':'') +
+        '<button class="btn btn-primary" style="flex:1;justify-content:center" onclick="gerarPDFServicoById(\''+s.id+'\')">ðŸ“„ Gerar PDF</button>' +
       '</div>'
 
     );
@@ -1601,10 +1599,10 @@ function verExame(id) {
 }
 
 
-// ─── ORÇAMENTOS ──────────────────────────────────────────
+// â”€â”€â”€ ORÃ‡AMENTOS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function pgOrcamentos() {
   if (!canView('orcamentos')) {
-    set('content','<div class="alert alert-red">⛔ Você não tem permissão para acessar esta área.</div>'); return;
+    set('content','<div class="alert alert-red">â›” VocÃª nÃ£o tem permissÃ£o para acessar esta Ã¡rea.</div>'); return;
   }
   var hoje = new Date().toISOString().split('T')[0];
   var mesInicio = hoje.slice(0,8)+'01';
@@ -1612,19 +1610,19 @@ function pgOrcamentos() {
     var userOpts = users.map(function(u){return '<option value="'+esc(u.nome)+'">'+esc(u.nome)+'</option>';}).join('');
     set('content',
       '<div class="card" style="margin-bottom:1.25rem">' +
-        '<div class="card-head"><div class="card-title">Filtrar Período</div></div>' +
+        '<div class="card-head"><div class="card-title">Filtrar PerÃ­odo</div></div>' +
         '<div style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap">' +
-          '<div class="fg"><label>Data Início</label><input type="date" id="orcDe" value="'+mesInicio+'" style="width:160px"/></div>' +
+          '<div class="fg"><label>Data InÃ­cio</label><input type="date" id="orcDe" value="'+mesInicio+'" style="width:160px"/></div>' +
           '<div class="fg"><label>Data Fim</label><input type="date" id="orcAte" value="'+hoje+'" style="width:160px"/></div>' +
-          '<div class="fg"><label>Tipo</label><select id="orcTipo" style="width:160px"><option value="">Todos</option><option value="manipulacao">Manipulação</option><option value="exame">Exame</option><option value="produto">Produto</option></select></div>' +
-          '<div class="fg"><label>Pagamento</label><select id="orcPag" style="width:160px"><option value="">Todos</option><option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="debito">Débito</option><option value="credito">Crédito</option><option value="pendente">A receber</option></select></div>' +
+          '<div class="fg"><label>Tipo</label><select id="orcTipo" style="width:160px"><option value="">Todos</option><option value="manipulacao">ManipulaÃ§Ã£o</option><option value="exame">Exame</option><option value="produto">Produto</option></select></div>' +
+          '<div class="fg"><label>Pagamento</label><select id="orcPag" style="width:160px"><option value="">Todos</option><option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="debito">DÃ©bito</option><option value="credito">CrÃ©dito</option><option value="pendente">A receber</option></select></div>' +
           '<div class="fg"><label>Atendente</label><select id="orcUser" style="width:160px"><option value="">Todos</option>'+userOpts+'</select></div>' +
-          '<button class="btn btn-primary" onclick="filtrarOrcamentos()">🔍 Filtrar</button>' +
-          '<button class="btn btn-ghost" onclick="limparFiltrosOrc()">✕ Limpar</button>' +
-          '<button class="btn btn-ghost" onclick="gerarPDFOrcamentos()" style="border-color:var(--red);color:var(--red)">📄 Exportar PDF</button>' +
+          '<button class="btn btn-primary" onclick="filtrarOrcamentos()">ðŸ” Filtrar</button>' +
+          '<button class="btn btn-ghost" onclick="limparFiltrosOrc()">âœ• Limpar</button>' +
+          '<button class="btn btn-ghost" onclick="gerarPDFOrcamentos()" style="border-color:var(--red);color:var(--red)">ðŸ“„ Exportar PDF</button>' +
         '</div>' +
       '</div>' +
-      '<div id="orcResult"><div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div></div>'
+      '<div id="orcResult"><div style="text-align:center;padding:2rem;color:var(--tx3)">â³ Carregando...</div></div>'
     );
     filtrarOrcamentos();
   });
@@ -1644,7 +1642,7 @@ function filtrarOrcamentos() {
   var tipo = gv('orcTipo');
   var pag  = gv('orcPag');
   var user = gv('orcUser')||'';
-  set('orcResult','<div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div>');
+  set('orcResult','<div style="text-align:center;padding:2rem;color:var(--tx3)">â³ Carregando...</div>');
   Promise.all([dbGetServicos({de:de,ate:ate,tipo:tipo,pag:pag}), dbGetClientes()]).then(function(r) {
     var list = r[0], clientes = r[1];
     if(user) list = list.filter(function(s){return (s.criadoPor||'')=== user;});
@@ -1665,35 +1663,35 @@ function filtrarOrcamentos() {
     var html =
       '<p style="font-size:.8rem;color:var(--tx3);margin-bottom:1rem">Exibindo '+list.length+' registro(s) de '+fmtDate(de||'...')+' a '+fmtDate(ate||'...')+'</p>' +
       '<div class="stats-grid" style="margin-bottom:1.25rem">' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">📋</div><div><div class="stat-val">'+list.length+'</div><div class="stat-lbl">Atendimentos no período</div></div></div>' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">💰</div><div><div class="stat-val">'+fmt(total)+'</div><div class="stat-lbl">Receita total</div></div></div>' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">⏳</div><div><div class="stat-val">'+fmt(pendente)+'</div><div class="stat-lbl">A receber</div></div></div>' +
-        '<div class="stat-card"><div class="stat-ico" style="background:var(--purple-l)">📊</div><div><div class="stat-val">'+fmt(total-pendente)+'</div><div class="stat-lbl">Recebido</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">ðŸ“‹</div><div><div class="stat-val">'+list.length+'</div><div class="stat-lbl">Atendimentos no perÃ­odo</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">ðŸ’°</div><div><div class="stat-val">'+fmt(total)+'</div><div class="stat-lbl">Receita total</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">â³</div><div><div class="stat-val">'+fmt(pendente)+'</div><div class="stat-lbl">A receber</div></div></div>' +
+        '<div class="stat-card"><div class="stat-ico" style="background:var(--purple-l)">ðŸ“Š</div><div><div class="stat-val">'+fmt(total-pendente)+'</div><div class="stat-lbl">Recebido</div></div></div>' +
       '</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;margin-bottom:1.25rem">' +
         '<div class="card"><div class="card-head"><div class="card-title">Por Forma de Pagamento</div></div><div style="display:flex;flex-direction:column;gap:.5rem">'+
           Object.entries(byPag).map(function(e){var pct=total>0?Math.round(e[1]/total*100):0;return '<div style="display:flex;align-items:center;gap:.75rem"><span style="font-size:.78rem;width:70px;flex-shrink:0">'+pagBadge(e[0])+'</span><div style="flex:1;background:var(--bg);border-radius:4px;height:8px"><div style="width:'+pct+'%;height:100%;background:var(--blue);border-radius:4px"></div></div><span style="font-size:.75rem;font-weight:600;width:72px;text-align:right">'+fmt(e[1])+'</span></div>';}).join('')||'<p style="color:var(--tx3);font-size:.83rem">Sem dados</p>'+
         '</div></div>' +
-        '<div class="card"><div class="card-head"><div class="card-title">Por Tipo de Serviço</div></div>'+
+        '<div class="card"><div class="card-head"><div class="card-title">Por Tipo de ServiÃ§o</div></div>'+
           ['manipulacao','exame','produto'].map(function(t){var v=list.filter(function(s){return s.tipo===t;}).reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);var n=list.filter(function(s){return s.tipo===t;}).length;if(!n)return'';return '<div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--border)"><div>'+tipoBadge(t)+'</div><div style="text-align:right"><div style="font-weight:600;font-size:.88rem">'+fmt(v)+'</div><div style="font-size:.72rem;color:var(--tx3)">'+n+' registro(s)</div></div></div>';}).join('')+
         '</div>' +
-        '<div class="card"><div class="card-head"><div class="card-title">🏆 Top 5 Clientes</div></div>'+
+        '<div class="card"><div class="card-head"><div class="card-title">ðŸ† Top 5 Clientes</div></div>'+
           (top5.length?top5.map(function(c,i){return '<div style="display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.83rem"><span>'+(i+1)+'. '+esc(c.nome)+'</span><strong>'+fmt(c.val)+'</strong></div>';}).join(''):'<p style="color:var(--tx3);font-size:.83rem">Sem dados</p>')+
         '</div>' +
       '</div>' +
       (diasArr.length?'<div class="card" style="margin-bottom:1.25rem"><div class="card-head"><div class="card-title">Receita por Dia</div></div><div style="display:flex;flex-direction:column;gap:.4rem">'+diasArr.map(function(d){var pct=maxV>0?Math.round(d.v/maxV*100):0;return '<div style="display:flex;align-items:center;gap:.75rem"><span style="font-size:.72rem;color:var(--tx3);width:50px;flex-shrink:0">'+fmtDate(d.d)+'</span><div style="flex:1;background:var(--bg);border-radius:4px;height:8px"><div style="width:'+pct+'%;height:100%;background:var(--blue);border-radius:4px"></div></div><span style="font-size:.72rem;font-weight:600;width:72px;text-align:right">'+fmt(d.v)+'</span></div>';}).join('')+'</div></div>':'') +
       '<div class="card">' +
-        '<div class="card-head"><div class="card-title">Detalhamento</div><div class="card-sub">'+list.length+' registro(s) no período</div></div>' +
-        (list.length===0?'<div class="empty"><span class="empty-ico">📋</span><p class="empty-txt">Nenhum registro no período selecionado</p></div>':
-        '<div class="table-wrap"><table><thead><tr><th>Orç#</th><th>Cliente</th><th>Tipo</th><th>Descrição</th><th>Valor</th><th>Pagamento</th><th>Data</th><th></th></tr></thead><tbody>' +
+        '<div class="card-head"><div class="card-title">Detalhamento</div><div class="card-sub">'+list.length+' registro(s) no perÃ­odo</div></div>' +
+        (list.length===0?'<div class="empty"><span class="empty-ico">ðŸ“‹</span><p class="empty-txt">Nenhum registro no perÃ­odo selecionado</p></div>':
+        '<div class="table-wrap"><table><thead><tr><th>OrÃ§#</th><th>Cliente</th><th>Tipo</th><th>DescriÃ§Ã£o</th><th>Valor</th><th>Pagamento</th><th>Data</th><th></th></tr></thead><tbody>' +
         list.map(function(s){
           var cl=clientes.find(function(c){return c.id===s.clienteId;});
           var isPend = s.pagamento==='pendente';
           var canEditSrv = canEdit('manipulacao')||canEdit('exames')||canEdit('orcamentos');
-          return '<tr><td><span class="orc-num" style="font-size:.9rem">#'+padNum(s.orcNum)+'</span></td><td class="td-name">'+(cl?esc(cl.nome):'—')+'</td><td>'+tipoBadge(s.tipo)+'</td><td style="font-size:.8rem;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(getServicoDesc(s))+'</td><td style="font-weight:600">'+fmt(s.valor)+'</td><td style="'+(isPend?'background:var(--yellow-l)':'')+'">'+pagBadge(s.pagamento)+'</td><td class="td-muted">'+fmtDate(s.data)+'</td>'
+          return '<tr><td><span class="orc-num" style="font-size:.9rem">#'+padNum(s.orcNum)+'</span></td><td class="td-name">'+(cl?esc(cl.nome):'â€”')+'</td><td>'+tipoBadge(s.tipo)+'</td><td style="font-size:.8rem;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(getServicoDesc(s))+'</td><td style="font-weight:600">'+fmt(s.valor)+'</td><td style="'+(isPend?'background:var(--yellow-l)':'')+'">'+pagBadge(s.pagamento)+'</td><td class="td-muted">'+fmtDate(s.data)+'</td>'
             +'<td style="display:flex;gap:.3rem">'
-            +'<button class="btn btn-icon btn-sm" title="Ver detalhes" onclick="verOrcamento(\''+s.id+'\')">👁</button>'
-            +(canEditSrv?'<button class="btn btn-icon btn-sm" title="Editar" onclick="openModalServico(null,null,\''+s.id+'\')">✏️</button>':'')
+            +'<button class="btn btn-icon btn-sm" title="Ver detalhes" onclick="verOrcamento(\''+s.id+'\')">ðŸ‘</button>'
+            +(canEditSrv?'<button class="btn btn-icon btn-sm" title="Editar" onclick="openModalServico(null,null,\''+s.id+'\')">âœï¸</button>':'')
             +'</td></tr>';
         }).join('')+
         '<tr style="background:var(--bg)"><td colspan="4" style="font-weight:700;text-align:right;font-size:.83rem">Total:</td><td style="font-weight:700;color:var(--blue)">'+fmt(total)+'</td><td colspan="3"></td></tr>'+
@@ -1716,36 +1714,36 @@ function gerarPDFOrcamentos() {
     var total    = list.reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
     var recebido = list.filter(function(s){return s.pagamento!=='pendente';}).reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
     var pendente = total - recebido;
-    var TIPO_LABEL  = { manipulacao:'Manipulação', exame:'Exame', produto:'Produto' };
-    var PAG_LABEL   = { dinheiro:'Dinheiro', pix:'Pix', debito:'Débito', credito:'Crédito', pendente:'A receber' };
-    var periodo = (de ? fmtDate(de) : '—') + ' a ' + (ate ? fmtDate(ate) : '—');
+    var TIPO_LABEL  = { manipulacao:'ManipulaÃ§Ã£o', exame:'Exame', produto:'Produto' };
+    var PAG_LABEL   = { dinheiro:'Dinheiro', pix:'Pix', debito:'DÃ©bito', credito:'CrÃ©dito', pendente:'A receber' };
+    var periodo = (de ? fmtDate(de) : 'â€”') + ' a ' + (ate ? fmtDate(ate) : 'â€”');
     var tipoStr = tipo ? TIPO_LABEL[tipo]||tipo : 'Todos';
     var pagStr  = pag  ? PAG_LABEL[pag]||pag   : 'Todos';
     function s_esc(x){ return String(x||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
     var rows = list.map(function(s) {
       var cl = clientes.find(function(c){return c.id===s.clienteId;});
-      var desc = s.tipo==='manipulacao' ? (s.formula||'—').slice(0,50)+(s.formula&&s.formula.length>50?'…':'')
-               : s.tipo==='exame'       ? (s.tipoExame||'—')
-               :                          (s.produtoDesc||'—');
+      var desc = s.tipo==='manipulacao' ? (s.formula||'â€”').slice(0,50)+(s.formula&&s.formula.length>50?'â€¦':'')
+               : s.tipo==='exame'       ? (s.tipoExame||'â€”')
+               :                          (s.produtoDesc||'â€”');
       return '<tr>'
         + '<td style="width:60px;font-weight:700;color:#003087">#'+padNum(s.orcNum)+'</td>'
-        + '<td style="width:160px">'+(cl ? s_esc(cl.nome) : '—')+'</td>'
+        + '<td style="width:160px">'+(cl ? s_esc(cl.nome) : 'â€”')+'</td>'
         + '<td style="width:90px">'+(TIPO_LABEL[s.tipo]||s.tipo)+'</td>'
         + '<td style="font-size:11px;color:#555">'+s_esc(desc)+'</td>'
         + '<td style="width:100px;text-align:right;font-weight:600">'+fmt(s.valor)+'</td>'
-        + '<td style="width:90px">'+(PAG_LABEL[s.pagamento]||s.pagamento||'—')+'</td>'
+        + '<td style="width:90px">'+(PAG_LABEL[s.pagamento]||s.pagamento||'â€”')+'</td>'
         + '<td style="width:80px;color:#666">'+fmtDate(s.data)+'</td>'
         +'</tr>';
     }).join('');
     var html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/>'
-      + '<title>Orçamentos — Farmácia Couto</title>'
+      + '<title>OrÃ§amentos â€” FarmÃ¡cia Couto</title>'
       + '<style>body{font-family:Arial,sans-serif;font-size:12px;color:#111;margin:0;padding:24px}.header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:3px solid #003087}.brand{font-size:20px;font-weight:800;color:#003087}.brand-sub{font-size:11px;color:#888;margin-top:2px}.report-title{font-size:15px;font-weight:700;color:#C8102E;margin-bottom:14px}.meta{background:#F0F2F7;border-radius:6px;padding:10px 14px;margin-bottom:16px;display:flex;gap:24px;flex-wrap:wrap}.meta span{font-size:11px;color:#555}.meta strong{color:#111}.summary{display:flex;gap:12px;margin-bottom:18px}.sum-box{flex:1;border:1px solid #ddd;border-radius:6px;padding:10px 14px;text-align:center}.sum-val{font-size:16px;font-weight:800;color:#003087}.sum-val.red{color:#C8102E}.sum-val.green{color:#059669}.sum-lbl{font-size:10px;color:#888;margin-top:2px}table{width:100%;border-collapse:collapse}thead tr{background:#003087;color:#fff}th{padding:7px 8px;text-align:left;font-size:11px;font-weight:600}td{padding:6px 8px;border-bottom:1px solid #eee;font-size:11px}tr:nth-child(even) td{background:#F7F9FC}tr:last-child td{border-bottom:none}.footer{margin-top:22px;padding-top:12px;border-top:1px solid #ddd;display:flex;justify-content:space-between;font-size:10px;color:#aaa}@media print{body{padding:12px}.no-print{display:none}}</style></head><body>'
-      + '<div class="header"><div><div class="brand">Farmácia Couto</div><div class="brand-sub">Sistema de Gestão — Relatório de Orçamentos</div></div><div style="text-align:right;font-size:11px;color:#888">Emitido em: '+new Date().toLocaleDateString('pt-BR')+' às '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+'<br>Por: '+(STATE.user?s_esc(STATE.user.nome):'—')+'</div></div>'
-      + '<div class="report-title">📋 Relatório de Orçamentos</div>'
-      + '<div class="meta"><span><strong>Período:</strong> '+periodo+'</span><span><strong>Tipo:</strong> '+tipoStr+'</span><span><strong>Pagamento:</strong> '+pagStr+'</span><span><strong>Total:</strong> '+list.length+' registros</span></div>'
+      + '<div class="header"><div><div class="brand">FarmÃ¡cia Couto</div><div class="brand-sub">Sistema de GestÃ£o â€” RelatÃ³rio de OrÃ§amentos</div></div><div style="text-align:right;font-size:11px;color:#888">Emitido em: '+new Date().toLocaleDateString('pt-BR')+' Ã s '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+'<br>Por: '+(STATE.user?s_esc(STATE.user.nome):'â€”')+'</div></div>'
+      + '<div class="report-title">ðŸ“‹ RelatÃ³rio de OrÃ§amentos</div>'
+      + '<div class="meta"><span><strong>PerÃ­odo:</strong> '+periodo+'</span><span><strong>Tipo:</strong> '+tipoStr+'</span><span><strong>Pagamento:</strong> '+pagStr+'</span><span><strong>Total:</strong> '+list.length+' registros</span></div>'
       + '<div class="summary"><div class="sum-box"><div class="sum-val">'+list.length+'</div><div class="sum-lbl">Atendimentos</div></div><div class="sum-box"><div class="sum-val green">'+fmt(recebido)+'</div><div class="sum-lbl">Recebido</div></div><div class="sum-box"><div class="sum-val red">'+fmt(pendente)+'</div><div class="sum-lbl">A receber</div></div><div class="sum-box"><div class="sum-val">'+fmt(total)+'</div><div class="sum-lbl">Total geral</div></div></div>'
-      + '<table><thead><tr><th>Orç#</th><th>Cliente</th><th>Tipo</th><th>Descrição</th><th style="text-align:right">Valor</th><th>Pagamento</th><th>Data</th></tr></thead><tbody>'+rows+'</tbody></table>'
-      + '<div class="footer"><span>Farmácia Couto — Relatório gerado automaticamente pelo sistema</span><span>Total: '+fmt(total)+'</span></div>'
+      + '<table><thead><tr><th>OrÃ§#</th><th>Cliente</th><th>Tipo</th><th>DescriÃ§Ã£o</th><th style="text-align:right">Valor</th><th>Pagamento</th><th>Data</th></tr></thead><tbody>'+rows+'</tbody></table>'
+      + '<div class="footer"><span>FarmÃ¡cia Couto â€” RelatÃ³rio gerado automaticamente pelo sistema</span><span>Total: '+fmt(total)+'</span></div>'
       + '</body></html>';
     var win = window.open('', '_blank', 'width=900,height=700');
     if (!win) { toast('Permita pop-ups para exportar o PDF.','yw'); return; }
@@ -1761,17 +1759,17 @@ function verOrcamento(id) {
     var s = r[0].find(function(x){return x.id===id;});
     if (!s) return;
     var cl = r[1].find(function(c){return c.id===s.clienteId;});
-    document.getElementById('mOrcSub').textContent = 'Orçamento #'+padNum(s.orcNum);
+    document.getElementById('mOrcSub').textContent = 'OrÃ§amento #'+padNum(s.orcNum);
     set('mOrcBody',
       '<div style="text-align:center;padding:1rem 0 1.5rem"><div class="orc-num" style="font-size:2.5rem">#'+padNum(s.orcNum)+'</div><div style="font-size:.8rem;color:var(--tx3)">Emitido em '+fmtDate(s.data)+'</div></div>' +
       '<div class="divider"></div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;font-size:.85rem;margin-bottom:1.25rem">' +
-        '<div><span style="color:var(--tx3)">Cliente:</span> <strong>'+(cl?esc(cl.nome):'—')+'</strong></div>' +
-        '<div><span style="color:var(--tx3)">Serviço:</span> '+tipoBadge(s.tipo)+'</div>' +
+        '<div><span style="color:var(--tx3)">Cliente:</span> <strong>'+(cl?esc(cl.nome):'â€”')+'</strong></div>' +
+        '<div><span style="color:var(--tx3)">ServiÃ§o:</span> '+tipoBadge(s.tipo)+'</div>' +
         '<div><span style="color:var(--tx3)">Pagamento:</span> '+pagBadge(s.pagamento)+'</div>' +
-        '<div><span style="color:var(--tx3)">Atendente:</span> '+esc(s.criadoPor||'—')+'</div>' +
-        (s.tipo==='manipulacao'?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">Fórmula:</span><div style="margin-top:.3rem;font-size:.82rem;background:var(--bg);padding:.75rem;border-radius:var(--r)">'+esc(s.formula||'—')+'</div></div>':'') +
-        (s.tipo==='exame'?'<div><span style="color:var(--tx3)">Exame:</span> '+esc(s.tipoExame||'—')+'</div>':'') +
+        '<div><span style="color:var(--tx3)">Atendente:</span> '+esc(s.criadoPor||'â€”')+'</div>' +
+        (s.tipo==='manipulacao'?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">FÃ³rmula:</span><div style="margin-top:.3rem;font-size:.82rem;background:var(--bg);padding:.75rem;border-radius:var(--r)">'+esc(s.formula||'â€”')+'</div></div>':'') +
+        (s.tipo==='exame'?'<div><span style="color:var(--tx3)">Exame:</span> '+esc(s.tipoExame||'â€”')+'</div>':'') +
         (s.obs?'<div style="grid-column:1/-1"><span style="color:var(--tx3)">Obs:</span> '+esc(s.obs)+'</div>':'') +
       '</div>' +
       '<div class="divider"></div>' +
@@ -1780,8 +1778,8 @@ function verOrcamento(id) {
         '<span style="font-family:\'Playfair Display\',serif;font-size:1.6rem;font-weight:800;color:var(--blue)">'+fmt(s.valor)+'</span>' +
       '</div>' +
       '<div style="display:flex;gap:.75rem;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)">' +
-        (canEdit('orcamentos')||canEdit('manipulacao')||canEdit('exames')?'<button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\''+s.id+'\')">✏️ Editar Orçamento</button>':'') +
-        '<button class="btn btn-primary" style="flex:1;justify-content:center" onclick="gerarPDFServicoById(\''+s.id+'\')">📄 Gerar PDF</button>' +
+        (canEdit('orcamentos')||canEdit('manipulacao')||canEdit('exames')?'<button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\''+s.id+'\')">âœï¸ Editar OrÃ§amento</button>':'') +
+        '<button class="btn btn-primary" style="flex:1;justify-content:center" onclick="gerarPDFServicoById(\''+s.id+'\')">ðŸ“„ Gerar PDF</button>' +
       '</div>'
 
     );
@@ -1789,24 +1787,24 @@ function verOrcamento(id) {
   });
 }
 
-// Gerar PDF a partir de um ID de serviço (usado no modal de detalhes)
+// Gerar PDF a partir de um ID de serviÃ§o (usado no modal de detalhes)
 function gerarPDFServicoById(id) {
   Promise.all([dbGetServicos(), dbGetClientes()]).then(function(r) {
     var s = r[0].find(function(x){return x.id===id;});
-    if (!s) { toast('Serviço não encontrado.','er'); return; }
+    if (!s) { toast('ServiÃ§o nÃ£o encontrado.','er'); return; }
     var cl = r[1].find(function(c){return c.id===s.clienteId;});
     gerarPDFServicoIndividual(s, cl, s.orcNum);
   });
 }
 
-// ─── USUÁRIOS ────────────────────────────────────────────
+// â”€â”€â”€ USUÃRIOS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function pgUsuarios() {
   if (!canEdit('usuarios')) {
-    set('content','<div class="alert alert-red">⛔ Acesso restrito a administradores.</div>'); return;
+    set('content','<div class="alert alert-red">â›” Acesso restrito a administradores.</div>'); return;
   }
   var btn = document.getElementById('topActionBtn');
-  btn.style.display=''; btn.textContent='＋ Novo Usuário';
-  set('content','<div class="card"><div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div></div>');
+  btn.style.display=''; btn.textContent='ï¼‹ Novo UsuÃ¡rio';
+  set('content','<div class="card"><div style="text-align:center;padding:2rem;color:var(--tx3)">â³ Carregando...</div></div>');
   dbGetUsers().then(function(users) {
     var ativos = users.filter(function(u){return u.ativo!==false;}).length;
     function permSummary(u) {
@@ -1814,23 +1812,23 @@ function pgUsuarios() {
         var v = (u.perms||{})[m.key] || 'none';
         if (v === 'none') return '';
         var cls = v === 'edit' ? 'pchip-edit' : 'pchip-read';
-        var lbl = v === 'edit' ? '✏️ '+m.label : '👁 '+m.label;
+        var lbl = v === 'edit' ? 'âœï¸ '+m.label : 'ðŸ‘ '+m.label;
         return '<span class="perm-chip '+cls+'">'+lbl+'</span>';
       }).join('');
     }
     set('content',
       '<div class="card">' +
-        '<div class="card-head"><div><div class="card-title">Usuários do Sistema</div><div class="card-sub">Gerencie acessos, perfis e permissões</div></div>' +
-          '<button class="btn btn-primary" onclick="openModalUsuario()">＋ Novo Usuário</button></div>' +
-        '<div class="alert alert-blue" style="margin-bottom:1.25rem">ℹ️ <div><strong>Admin:</strong> admin@farmaciacouto.com / Couto@2025!</div></div>' +
-        (ativos<=1?'<div class="alert alert-yellow" style="margin-bottom:1.25rem">⚠️ <div>Apenas <strong>1 usuário ativo</strong>. Crie mais para garantir continuidade de acesso.</div></div>':'') +
+        '<div class="card-head"><div><div class="card-title">UsuÃ¡rios do Sistema</div><div class="card-sub">Gerencie acessos, perfis e permissÃµes</div></div>' +
+          '<button class="btn btn-primary" onclick="openModalUsuario()">ï¼‹ Novo UsuÃ¡rio</button></div>' +
+        '<div class="alert alert-blue" style="margin-bottom:1.25rem">â„¹ï¸ <div><strong>Admin:</strong> admin@farmaciacouto.com / Couto@2025!</div></div>' +
+        (ativos<=1?'<div class="alert alert-yellow" style="margin-bottom:1.25rem">âš ï¸ <div>Apenas <strong>1 usuÃ¡rio ativo</strong>. Crie mais para garantir continuidade de acesso.</div></div>':'') +
         '<div class="table-wrap"><table>' +
-          '<thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Módulos</th><th>Status</th><th>Últ. acesso</th><th>Criado em</th><th>Ações</th></tr></thead>' +
+          '<thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>MÃ³dulos</th><th>Status</th><th>Ãšlt. acesso</th><th>Criado em</th><th>AÃ§Ãµes</th></tr></thead>' +
           '<tbody>' +
           users.map(function(u){
             var pf = PERFIS[u.perfil]||{label:'?', cor:'badge-gray'};
-            var ult = u.ultimoAcesso ? fmtDate(u.ultimoAcesso.split('T')[0]) : '—';
-            var cria = u.criado_em ? fmtDate(u.criado_em.split('T')[0]) : '—';
+            var ult = u.ultimoAcesso ? fmtDate(u.ultimoAcesso.split('T')[0]) : 'â€”';
+            var cria = u.criado_em ? fmtDate(u.criado_em.split('T')[0]) : 'â€”';
             return '<tr>' +
               '<td class="td-name">'+esc(u.nome)+'</td>' +
               '<td class="td-muted">'+esc(u.email)+'</td>' +
@@ -1840,8 +1838,8 @@ function pgUsuarios() {
               '<td class="td-muted">'+ult+'</td>' +
               '<td class="td-muted">'+cria+'</td>' +
               '<td style="display:flex;gap:.4rem;align-items:center">' +
-                (u.perfil!=='admin'?'<button class="btn btn-sm btn-ghost" onclick="openModalUsuario(\''+u.id+'\')">✏️</button><button class="btn btn-sm btn-ghost" onclick="toggleUser(\''+u.id+'\','+!(u.ativo!==false)+')">'+(u.ativo!==false?'Desativar':'Ativar')+'</button>':'<span style="font-size:.75rem;color:var(--tx3)">🔒</span>') +
-                '<button class="btn btn-sm btn-ghost" title="Atividade" onclick="verAtividadeUsuario(\''+u.id+'\')">📊</button>' +
+                (u.perfil!=='admin'?'<button class="btn btn-sm btn-ghost" onclick="openModalUsuario(\''+u.id+'\')">âœï¸</button><button class="btn btn-sm btn-ghost" onclick="toggleUser(\''+u.id+'\','+!(u.ativo!==false)+')">'+(u.ativo!==false?'Desativar':'Ativar')+'</button>':'<span style="font-size:.75rem;color:var(--tx3)">ðŸ”’</span>') +
+                '<button class="btn btn-sm btn-ghost" title="Atividade" onclick="verAtividadeUsuario(\''+u.id+'\')">ðŸ“Š</button>' +
               '</td>' +
             '</tr>';
           }).join('')+
@@ -1853,12 +1851,12 @@ function pgUsuarios() {
 
 
 function toggleUser(id, ativo) {
-  var msg = ativo ? 'Ativar este usuário?' : 'Desativar este usuário? Ele perderá acesso ao sistema.';
+  var msg = ativo ? 'Ativar este usuÃ¡rio?' : 'Desativar este usuÃ¡rio? Ele perderÃ¡ acesso ao sistema.';
   if(!confirm(msg)) return;
   dbToggleUser(id, ativo).then(function() {
     clearCache('users');
     pgUsuarios();
-    toast('Status do usuário atualizado.','ok');
+    toast('Status do usuÃ¡rio atualizado.','ok');
   });
 }
 
@@ -1869,9 +1867,9 @@ function verAtividadeUsuario(userId) {
     var srvs = r[0].filter(function(s){return (s.criadoPor||'')===(user.nome||'');}).slice(0,20);
     document.getElementById('mOrcSub').textContent='Atividade de '+esc(user.nome);
     set('mOrcBody',
-      '<p style="font-size:.83rem;color:var(--tx3);margin-bottom:1rem">Serviços registrados por este usuário</p>' +
-      (srvs.length===0?'<div class="empty"><span class="empty-ico">📋</span><p class="empty-txt">Nenhum serviço registrado por este usuário</p></div>':
-      '<div class="table-wrap"><table><thead><tr><th>Orç#</th><th>Tipo</th><th>Valor</th><th>Pagamento</th><th>Data</th></tr></thead><tbody>'+
+      '<p style="font-size:.83rem;color:var(--tx3);margin-bottom:1rem">ServiÃ§os registrados por este usuÃ¡rio</p>' +
+      (srvs.length===0?'<div class="empty"><span class="empty-ico">ðŸ“‹</span><p class="empty-txt">Nenhum serviÃ§o registrado por este usuÃ¡rio</p></div>':
+      '<div class="table-wrap"><table><thead><tr><th>OrÃ§#</th><th>Tipo</th><th>Valor</th><th>Pagamento</th><th>Data</th></tr></thead><tbody>'+
       srvs.map(function(s){return '<tr><td><span class="orc-num">#'+padNum(s.orcNum)+'</span></td><td>'+tipoBadge(s.tipo)+'</td><td style="font-weight:600">'+fmt(s.valor)+'</td><td>'+pagBadge(s.pagamento)+'</td><td class="td-muted">'+fmtDate(s.data)+'</td></tr>';}).join('')+
       '</tbody></table></div>')
     );
@@ -1879,9 +1877,9 @@ function verAtividadeUsuario(userId) {
   });
 }
 
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  MODAL HANDLERS
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 function openModalCliente(id) {
   var c = id ? lsArr('clientes').find(function(x){return x.id===id;}) : null;
   document.getElementById('mClienteTitle').textContent = c ? 'Editar Cliente' : 'Novo Cliente';
@@ -1898,11 +1896,11 @@ function openModalCliente(id) {
 function cancelarModalCliente() {
   var editId = document.getElementById('modalCliente').dataset.editId;
   if (!editId) {
-    // Modo criação: perguntar antes de descartar se campos preenchidos
+    // Modo criaÃ§Ã£o: perguntar antes de descartar se campos preenchidos
     var temDados = gv('cNome') || gv('cTel') || gv('cAlergias') || gv('cMedico') || gv('cObs');
     if (temDados && !confirm('Descartar os dados preenchidos?')) return;
   }
-  // Modo edição: fechar diretamente (campos foram preenchidos pelo sistema)
+  // Modo ediÃ§Ã£o: fechar diretamente (campos foram preenchidos pelo sistema)
   closeModal('modalCliente');
 }
 
@@ -1913,7 +1911,7 @@ function salvarCliente() {
   if(!nome){toast('Preencha o nome.','er');return;}
   if(numTel.length < 10){
     var err=document.getElementById('cTelErr');
-    if(err){err.textContent='Informe um WhatsApp válido (10 ou 11 dígitos).';err.style.display='block';}
+    if(err){err.textContent='Informe um WhatsApp vÃ¡lido (10 ou 11 dÃ­gitos).';err.style.display='block';}
     var inp=document.getElementById('cTel');
     if(inp) inp.style.borderColor='var(--red)';
     ok=false;
@@ -1940,14 +1938,14 @@ function clearFieldErr(id) {
   if(err) err.style.display='none';
 }
 
-// ID do serviço sendo editado (null = novo)
+// ID do serviÃ§o sendo editado (null = novo)
 var _editandoServicoId = null;
 
 function openModalServico(clienteId, tipo, servicoId) {
   _editandoServicoId = servicoId || null;
   var isEdit = !!servicoId;
 
-  // Modo edição: buscar serviço existente
+  // Modo ediÃ§Ã£o: buscar serviÃ§o existente
   if (isEdit) {
     var allSrv = fromCache('servicos') || [];
     var s = allSrv.find(function(x){return x.id===servicoId;});
@@ -1969,11 +1967,11 @@ function openModalServico(clienteId, tipo, servicoId) {
     var clientes = fromCache('clientes') || [];
     var cl = clientes.find(function(c){return c.id===clienteId;});
     if (cl) {
-      set('sClienteSelected','<strong>'+esc(cl.nome)+'</strong> — '+esc(cl.tel||'')+'<button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">✕</button>');
+      set('sClienteSelected','<strong>'+esc(cl.nome)+'</strong> â€” '+esc(cl.tel||'')+'<button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">âœ•</button>');
       document.getElementById('sClienteSelected').style.display='flex';
-      document.getElementById('mServicoSub').textContent='Editando orçamento #'+padNum(s.orcNum)+' — '+cl.nome;
+      document.getElementById('mServicoSub').textContent='Editando orÃ§amento #'+padNum(s.orcNum)+' â€” '+cl.nome;
     } else {
-      document.getElementById('mServicoSub').textContent='Editando orçamento #'+padNum(s.orcNum);
+      document.getElementById('mServicoSub').textContent='Editando orÃ§amento #'+padNum(s.orcNum);
     }
     setVal('sTipo', s.tipo||'');
     setVal('sData', s.data||new Date().toISOString().split('T')[0]);
@@ -1990,16 +1988,16 @@ function openModalServico(clienteId, tipo, servicoId) {
     setVal('sResultadoExame', s.resultadoExame||s.resultado_exame||'');
     setVal('sLaboratorio', s.laboratorio||'');
     onTipoChange();
-    // Mudar título e botão do modal
-    document.querySelector('#modalServico .modal-title').textContent = 'Editar Serviço';
-    document.querySelector('#modalServico .btn-primary[onclick="salvarServico()"]').textContent = '💾 Salvar Alterações';
+    // Mudar tÃ­tulo e botÃ£o do modal
+    document.querySelector('#modalServico .modal-title').textContent = 'Editar ServiÃ§o';
+    document.querySelector('#modalServico .btn-primary[onclick="salvarServico()"]').textContent = 'ðŸ’¾ Salvar AlteraÃ§Ãµes';
     openModal('modalServico');
     return;
   }
 
-  // Modo criação
-  document.querySelector('#modalServico .modal-title').textContent = 'Registrar Serviço';
-  document.querySelector('#modalServico .btn-primary[onclick="salvarServico()"]').textContent = '💾 Registrar Serviço';
+  // Modo criaÃ§Ã£o
+  document.querySelector('#modalServico .modal-title').textContent = 'Registrar ServiÃ§o';
+  document.querySelector('#modalServico .btn-primary[onclick="salvarServico()"]').textContent = 'ðŸ’¾ Registrar ServiÃ§o';
   document.getElementById('sClienteId').value = clienteId||'';
   document.getElementById('sClienteSearch').value = '';
   set('sClienteSelected','');
@@ -2009,7 +2007,7 @@ function openModalServico(clienteId, tipo, servicoId) {
     var clientes2 = fromCache('clientes') || [];
     var cl2=clientes2.find(function(c){return c.id===clienteId;});
     if(cl2){
-      set('sClienteSelected','<strong>'+esc(cl2.nome)+'</strong> — '+esc(cl2.tel||'')+'<button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">✕</button>');
+      set('sClienteSelected','<strong>'+esc(cl2.nome)+'</strong> â€” '+esc(cl2.tel||'')+'<button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">âœ•</button>');
       document.getElementById('sClienteSelected').style.display='flex';
       document.getElementById('mServicoSub').textContent='Cliente: '+cl2.nome;
     }
@@ -2090,7 +2088,7 @@ function selectClienteServico(id) {
   document.getElementById('sClienteId').value = id;
   document.getElementById('sClienteSearch').value = '';
   document.getElementById('sClienteResults').style.display='none';
-  set('sClienteSelected','<strong>'+esc(cl.nome)+'</strong> — '+esc(cl.tel||'')+'<button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">✕</button>');
+  set('sClienteSelected','<strong>'+esc(cl.nome)+'</strong> â€” '+esc(cl.tel||'')+'<button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">âœ•</button>');
   document.getElementById('sClienteSelected').style.display='flex';
   document.getElementById('mServicoSub').textContent='Cliente: '+cl.nome;
 }
@@ -2101,9 +2099,10 @@ function clearClienteServico() {
   document.getElementById('mServicoSub').textContent = 'Registrar atendimento para um cliente';
 }
 
-// ══════════════════════════════════════════════════════════
-//  SALVAR SERVIÇO — abre modal de confirmação com PDF
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+//  SALVAR SERVIÃ‡O â€” abre modal de confirmaÃ§Ã£o com PDF
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• 
 function _setFieldErr(id, msg) {
   var el = document.getElementById(id);
   if (el) { el.style.borderColor='var(--red)'; el.addEventListener('input', function(){ el.style.borderColor=''; }, {once:true}); }
@@ -2113,17 +2112,17 @@ function salvarServico() {
   var tipo=gv('sTipo'),data=gv('sData'),valor=gv('sValor'),pag=gv('sPagamento');
   var hasErr=false;
   if(!clienteId){toast('Selecione um cliente.','er');hasErr=true;}
-  if(!tipo){_setFieldErr('sTipo');toast('Selecione o tipo de serviço.','er');hasErr=true;}
+  if(!tipo){_setFieldErr('sTipo');toast('Selecione o tipo de serviÃ§o.','er');hasErr=true;}
   if(!data){_setFieldErr('sData');if(!hasErr)toast('Informe a data.','er');hasErr=true;}
   if(!valor){_setFieldErr('sValor');if(!hasErr)toast('Informe o valor.','er');hasErr=true;}
   if(!pag){_setFieldErr('sPagamento');if(!hasErr)toast('Selecione a forma de pagamento.','er');hasErr=true;}
-  if(tipo==='manipulacao'&&!gv('sFormula')){_setFieldErr('sFormula');if(!hasErr)toast('Informe a fórmula.','er');hasErr=true;}
+  if(tipo==='manipulacao'&&!gv('sFormula')){_setFieldErr('sFormula');if(!hasErr)toast('Informe a fÃ³rmula.','er');hasErr=true;}
   if(tipo==='exame'&&!gv('sTipoExame')){_setFieldErr('sTipoExame');if(!hasErr)toast('Informe o tipo de exame.','er');hasErr=true;}
   if(hasErr)return;
 
   var valorNum = parseFloat(valor.replace(/[R$\s\.]/g,'').replace(',','.'))||0;
 
-  // ─── MODO EDIÇÃO ────────────────────────────────────────
+  // â”€â”€â”€ MODO EDIÃ‡ÃƒO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (_editandoServicoId) {
     var editId = _editandoServicoId;
     var cached = fromCache('servicos') || [];
@@ -2141,8 +2140,8 @@ function salvarServico() {
     dbUpdateServico(editId, changes).then(function(num) {
       clearCache('servicos');
       renderPage(STATE.page);
-      toast('Orçamento #'+padNum(num||existing.orcNum)+' atualizado com sucesso!','ok');
-      // Mostrar modal de confirmação atualizado com opção de PDF
+      toast('OrÃ§amento #'+padNum(num||existing.orcNum)+' atualizado com sucesso!','ok');
+      // Mostrar modal de confirmaÃ§Ã£o atualizado com opÃ§Ã£o de PDF
       setTimeout(function(){
         var objFinal = Object.assign({}, existing, changes, {orcNum: num||existing.orcNum});
         abrirConfirmServico(objFinal, _clienteParaConfirm2, num||existing.orcNum);
@@ -2152,7 +2151,7 @@ function salvarServico() {
     return;
   }
 
-  // ─── MODO CRIAÇÃO ───────────────────────────────────────
+  // â”€â”€â”€ MODO CRIAÃ‡ÃƒO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   var obj={
     id:uid(), clienteId:clienteId, tipo:tipo, data:data,
     valor: valorNum,
@@ -2161,35 +2160,35 @@ function salvarServico() {
     tipoExame:gv('sTipoExame'), produtoDesc:gv('sProdutoDesc'),
     resultadoExame:gv('sResultadoExame')||null,
     laboratorio:gv('sLaboratorio')||null,
-    criadoPor:STATE.user?STATE.user.nome:'—',
+    criadoPor:STATE.user?STATE.user.nome:'â€”',
   };
 
   closeModal('modalServico');
 
-  // Guarda referência do cliente para o modal de confirmação
+  // Guarda referÃªncia do cliente para o modal de confirmaÃ§Ã£o
   var _clienteParaConfirm = (fromCache('clientes')||[]).find(function(c){return c.id===obj.clienteId;}) || null;
 
   dbSaveServico(obj).then(function(num) {
     clearCache('servicos');
     renderPage(STATE.page);
-    // Abre modal de confirmação com opção de gerar PDF imediatamente
+    // Abre modal de confirmaÃ§Ã£o com opÃ§Ã£o de gerar PDF imediatamente
     setTimeout(function(){
       abrirConfirmServico(obj, _clienteParaConfirm, num);
     }, 150);
   });
 }
 
-// ── MODAL USUÁRIO ─────────────────────────────────────────
+// â”€â”€ MODAL USUÃRIO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function openModalUsuario(editId) {
   var u = editId ? lsArr('users').find(function(x){return x.id===editId;}) : null;
-  document.getElementById('mUsuarioTitle').textContent = u ? 'Editar Usuário' : 'Novo Usuário';
+  document.getElementById('mUsuarioTitle').textContent = u ? 'Editar UsuÃ¡rio' : 'Novo UsuÃ¡rio';
   document.getElementById('modalUsuario').dataset.editId = editId || '';
   setVal('uNome',  u ? u.nome  : '');
   setVal('uEmail', u ? u.email : '');
   setVal('uSenha', '');
-  // Placeholder da senha: indica que é opcional na edição
+  // Placeholder da senha: indica que Ã© opcional na ediÃ§Ã£o
   var uSenhaEl = document.getElementById('uSenha');
-  if (uSenhaEl) uSenhaEl.placeholder = editId ? 'Deixe em branco para não alterar' : 'Mínimo 6 caracteres';
+  if (uSenhaEl) uSenhaEl.placeholder = editId ? 'Deixe em branco para nÃ£o alterar' : 'MÃ­nimo 6 caracteres';
   setVal('uPerfil', u ? u.perfil : 'atendente');
   var defaultPerms = u ? u.perms : (PERFIS.atendente.perms);
   // Limpar erros inline
@@ -2212,12 +2211,12 @@ function renderPermGrid(currentPerms) {
     var opts = m.key === 'usuarios'
       ? [
           { v:'none', lbl:'Sem acesso', cls:'active-none' },
-          { v:'edit', lbl:'✏️ Criar/Editar', cls:'active-edit' },
+          { v:'edit', lbl:'âœï¸ Criar/Editar', cls:'active-edit' },
         ]
       : [
           { v:'none', lbl:'Sem acesso', cls:'active-none' },
-          { v:'read', lbl:'👁 Só leitura', cls:'active-read' },
-          { v:'edit', lbl:'✏️ Ler e editar', cls:'active-edit' },
+          { v:'read', lbl:'ðŸ‘ SÃ³ leitura', cls:'active-read' },
+          { v:'edit', lbl:'âœï¸ Ler e editar', cls:'active-edit' },
         ];
     var btns = opts.map(function(o) {
       var active = val === o.v ? ' ' + o.cls : '';
@@ -2274,7 +2273,7 @@ function salvarUsuario() {
   if (!nome || !email) { toast('Preencha nome e e-mail.','er'); return; }
   if (!editId && !senha) {
     var errS=document.getElementById('uSenhaErr');
-    if(errS){errS.textContent='Defina uma senha para o novo usuário.';errS.style.display='block';}
+    if(errS){errS.textContent='Defina uma senha para o novo usuÃ¡rio.';errS.style.display='block';}
     _setFieldErr('uSenha');
     return;
   }
@@ -2288,7 +2287,7 @@ function salvarUsuario() {
   if (!editId) {
     if (users.find(function(u){return u.email===email;})) {
       var errE=document.getElementById('uEmailErr');
-      if(errE){errE.textContent='Este e-mail já está cadastrado.';errE.style.display='block';}
+      if(errE){errE.textContent='Este e-mail jÃ¡ estÃ¡ cadastrado.';errE.style.display='block';}
       _setFieldErr('uEmail');
       return;
     }
@@ -2302,22 +2301,31 @@ function salvarUsuario() {
     dbSaveUser(updated, true).then(function() {
       clearCache('users');
       closeModal('modalUsuario');
-      toast('Usuário '+nome+' atualizado!','ok');
+      toast('UsuÃ¡rio '+nome+' atualizado!','ok');
       pgUsuarios();
     });
   } else {
     var obj = { id:uid(), nome:nome, email:email, senha:senha, perfil:perfil, perms:perms, ativo:true, criado_em:new Date().toISOString() };
-    if (sb && STATE.isSupabase) {
-      sb.auth.admin.createUser({email:email, password:senha, email_confirm:true}).then(function(r){
+    if (sb) {
+      // signUp funciona com a chave publica (anon/publishable)
+      sb.auth.signUp({ email: email, password: senha }).then(function(r) {
         if (r.error) {
-          console.warn('Auth admin creation failed, saving profile only:', r.error.message);
-          toast('Aviso: Criado no banco de dados. Adicione o acesso no painel do Supabase se necessário.','yw');
+          console.warn('Auth signUp aviso:', r.error.message);
+          toast('Aviso ao criar no Auth: ' + r.error.message, 'yw');
         }
         obj.auth_id = r.data && r.data.user ? r.data.user.id : null;
         dbSaveUser(obj, false).then(function() {
           clearCache('users');
           closeModal('modalUsuario');
-          toast('Usuário '+nome+' criado!','ok');
+          toast('Usuario ' + nome + ' criado com sucesso!', 'ok');
+          pgUsuarios();
+        });
+      }).catch(function(e) {
+        console.error('Erro ao criar usuario:', e);
+        dbSaveUser(obj, false).then(function() {
+          clearCache('users');
+          closeModal('modalUsuario');
+          toast('Usuario ' + nome + ' salvo localmente.', 'yw');
           pgUsuarios();
         });
       });
@@ -2325,16 +2333,16 @@ function salvarUsuario() {
       dbSaveUser(obj, false).then(function() {
         clearCache('users');
         closeModal('modalUsuario');
-        toast('Usuário '+nome+' criado!','ok');
+        toast('Usuario ' + nome + ' criado!', 'ok');
         pgUsuarios();
       });
     }
   }
 }
 
-// ══════════════════════════════════════════════════════════
-//  CONFIRMAÇÃO PÓS-SERVIÇO + PDF INDIVIDUAL PROFISSIONAL
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+//  CONFIRMAÃ‡ÃƒO PÃ“S-SERVIÃ‡O + PDF INDIVIDUAL PROFISSIONAL
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 var _lastSavedServico = null;
 var _lastSavedCliente = null;
@@ -2346,15 +2354,15 @@ function abrirConfirmServico(servico, cliente, orcNum) {
   _lastSavedOrcNum  = orcNum;
 
   var desc = '';
-  if (servico.tipo === 'manipulacao')      desc = servico.formula || '—';
-  else if (servico.tipo === 'exame')       desc = servico.tipoExame || '—';
-  else                                     desc = servico.produtoDesc || '—';
+  if (servico.tipo === 'manipulacao')      desc = servico.formula || 'â€”';
+  else if (servico.tipo === 'exame')       desc = servico.tipoExame || 'â€”';
+  else                                     desc = servico.produtoDesc || 'â€”';
 
   var html =
     '<div style="background:linear-gradient(135deg,var(--blue-l),rgba(0,48,135,.04));border:1px solid rgba(0,48,135,.15);border-radius:var(--rl);padding:1.5rem;margin-bottom:1rem">' +
       '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem">' +
         '<div>' +
-          '<div style="font-size:.72rem;color:var(--tx3);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.25rem">Orçamento gerado</div>' +
+          '<div style="font-size:.72rem;color:var(--tx3);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.25rem">OrÃ§amento gerado</div>' +
           '<div style="font-family:\'Playfair Display\',serif;font-size:2.2rem;font-weight:800;color:var(--blue);line-height:1">#' + padNum(orcNum) + '</div>' +
         '</div>' +
         '<div style="text-align:right">' +
@@ -2364,9 +2372,9 @@ function abrirConfirmServico(servico, cliente, orcNum) {
       '</div>' +
       '<div style="height:1px;background:rgba(0,48,135,.12);margin:.875rem 0"></div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;font-size:.83rem">' +
-        '<div><div style="font-size:.7rem;color:var(--tx3);font-weight:700;text-transform:uppercase;letter-spacing:.08em">Cliente</div><div style="font-weight:600;margin-top:.15rem">' + esc(cliente ? cliente.nome : '—') + '</div></div>' +
-        '<div><div style="font-size:.7rem;color:var(--tx3);font-weight:700;text-transform:uppercase;letter-spacing:.08em">Serviço</div><div style="margin-top:.15rem">' + tipoBadge(servico.tipo) + '</div></div>' +
-        '<div style="grid-column:1/-1"><div style="font-size:.7rem;color:var(--tx3);font-weight:700;text-transform:uppercase;letter-spacing:.08em">Descrição</div><div style="font-size:.8rem;margin-top:.15rem;color:var(--tx2)">' + esc(desc.slice(0,80)) + (desc.length > 80 ? '…' : '') + '</div></div>' +
+        '<div><div style="font-size:.7rem;color:var(--tx3);font-weight:700;text-transform:uppercase;letter-spacing:.08em">Cliente</div><div style="font-weight:600;margin-top:.15rem">' + esc(cliente ? cliente.nome : 'â€”') + '</div></div>' +
+        '<div><div style="font-size:.7rem;color:var(--tx3);font-weight:700;text-transform:uppercase;letter-spacing:.08em">ServiÃ§o</div><div style="margin-top:.15rem">' + tipoBadge(servico.tipo) + '</div></div>' +
+        '<div style="grid-column:1/-1"><div style="font-size:.7rem;color:var(--tx3);font-weight:700;text-transform:uppercase;letter-spacing:.08em">DescriÃ§Ã£o</div><div style="font-size:.8rem;margin-top:.15rem;color:var(--tx2)">' + esc(desc.slice(0,80)) + (desc.length > 80 ? 'â€¦' : '') + '</div></div>' +
         '<div><div style="font-size:.7rem;color:var(--tx3);font-weight:700;text-transform:uppercase;letter-spacing:.08em">Pagamento</div><div style="margin-top:.15rem">' + pagBadge(servico.pagamento) + '</div></div>' +
         '<div><div style="font-size:.7rem;color:var(--tx3);font-weight:700;text-transform:uppercase;letter-spacing:.08em">Valor</div><div style="font-family:\'Playfair Display\',serif;font-size:1.3rem;font-weight:800;color:var(--blue);margin-top:.1rem">' + fmt(servico.valor) + '</div></div>' +
       '</div>' +
@@ -2377,19 +2385,19 @@ function abrirConfirmServico(servico, cliente, orcNum) {
 }
 
 function gerarPDFServicoAtual() {
-  if (!_lastSavedServico) { toast('Nenhum serviço em memória.','er'); return; }
+  if (!_lastSavedServico) { toast('Nenhum serviÃ§o em memÃ³ria.','er'); return; }
   gerarPDFServicoIndividual(_lastSavedServico, _lastSavedCliente, _lastSavedOrcNum);
 }
 
 function gerarPDFServicoIndividual(servico, cliente, orcNum) {
-  var TIPO_LABEL = { manipulacao: 'Manipulação Farmacêutica', exame: 'Exame Laboratorial', produto: 'Produto / Venda' };
-  var PAG_LABEL  = { dinheiro: 'Dinheiro', pix: 'Pix', debito: 'Cartão de Débito', credito: 'Cartão de Crédito', pendente: 'A receber' };
+  var TIPO_LABEL = { manipulacao: 'ManipulaÃ§Ã£o FarmacÃªutica', exame: 'Exame Laboratorial', produto: 'Produto / Venda' };
+  var PAG_LABEL  = { dinheiro: 'Dinheiro', pix: 'Pix', debito: 'CartÃ£o de DÃ©bito', credito: 'CartÃ£o de CrÃ©dito', pendente: 'A receber' };
   var PAG_COLOR  = { dinheiro: '#065F46', pix: '#1e40af', debito: '#374151', credito: '#92400E', pendente: '#991B1B' };
   var PAG_BG     = { dinheiro: '#D1FAE5', pix: '#DBEAFE', debito: '#F3F4F6', credito: '#FEF3C7', pendente: '#FEE2E2' };
 
-  var nomeAtendente = STATE.user ? STATE.user.nome : '—';
+  var nomeAtendente = STATE.user ? STATE.user.nome : 'â€”';
   var tipoLabel = TIPO_LABEL[servico.tipo] || servico.tipo;
-  var pagLabel  = PAG_LABEL[servico.pagamento]  || servico.pagamento || '—';
+  var pagLabel  = PAG_LABEL[servico.pagamento]  || servico.pagamento || 'â€”';
   var pagColor  = PAG_COLOR[servico.pagamento]  || '#374151';
   var pagBg     = PAG_BG[servico.pagamento]     || '#F3F4F6';
 
@@ -2398,17 +2406,17 @@ function gerarPDFServicoIndividual(servico, cliente, orcNum) {
   var desc = '';
   var extraRow = '';
   if (servico.tipo === 'manipulacao') {
-    desc = servico.formula || '—';
+    desc = servico.formula || 'â€”';
     if (servico.prazo) extraRow =
       '<tr style="background:#F8F9FF">' +
         '<td colspan="4" style="padding:9px 14px;font-size:11px;color:#555;border-bottom:1px solid #E8ECF4">' +
-          '<strong style="color:#003087">⏰ Prazo de Entrega:</strong> ' + fmtDate(servico.prazo) +
+          '<strong style="color:#003087">â° Prazo de Entrega:</strong> ' + fmtDate(servico.prazo) +
         '</td>' +
       '</tr>';
   } else if (servico.tipo === 'exame') {
-    desc = servico.tipoExame || '—';
+    desc = servico.tipoExame || 'â€”';
   } else {
-    desc = servico.produtoDesc || '—';
+    desc = servico.produtoDesc || 'â€”';
   }
 
   var dataEmissao  = new Date().toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
@@ -2418,7 +2426,7 @@ function gerarPDFServicoIndividual(servico, cliente, orcNum) {
 
   var html =
   '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/>' +
-  '<title>Orçamento #' + padNum(orcNum) + ' — Farmácia Couto</title>' +
+  '<title>OrÃ§amento #' + padNum(orcNum) + ' â€” FarmÃ¡cia Couto</title>' +
   '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>' +
   '<style>' +
   '*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}' +
@@ -2472,10 +2480,10 @@ function gerarPDFServicoIndividual(servico, cliente, orcNum) {
   '@page{margin:0;size:A4}' +
   '</style></head><body>' +
 
-  // Botões no-print
+  // BotÃµes no-print
   '<div class="no-print" style="position:fixed;top:20px;right:20px;z-index:999;display:flex;gap:8px">' +
-    '<button onclick="window.print()" style="background:#003087;color:#fff;border:none;padding:11px 24px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;box-shadow:0 4px 16px rgba(0,48,135,.4);letter-spacing:.02em">📥 Salvar PDF</button>' +
-    '<button onclick="window.close()" style="background:#fff;color:#374151;border:1px solid #E5E7EB;padding:11px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:\'Source Sans 3\',sans-serif">✕ Fechar</button>' +
+    '<button onclick="window.print()" style="background:#003087;color:#fff;border:none;padding:11px 24px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;box-shadow:0 4px 16px rgba(0,48,135,.4);letter-spacing:.02em">ðŸ“¥ Salvar PDF</button>' +
+    '<button onclick="window.close()" style="background:#fff;color:#374151;border:1px solid #E5E7EB;padding:11px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:\'Source Sans 3\',sans-serif">âœ• Fechar</button>' +
   '</div>' +
 
   '<div class="page">' +
@@ -2484,17 +2492,17 @@ function gerarPDFServicoIndividual(servico, cliente, orcNum) {
     // Header
     '<div class="header">' +
       '<div>' +
-        '<div class="brand-name">Farmácia Couto</div>' +
-        '<div class="brand-tag">Saúde &amp; Bem-estar</div>' +
+        '<div class="brand-name">FarmÃ¡cia Couto</div>' +
+        '<div class="brand-tag">SaÃºde &amp; Bem-estar</div>' +
         '<div class="brand-contact">' +
-          '<div>📞 <strong>(75) 99115-4571</strong></div>' +
-          '<div>📸 <strong>@farmaciacouto</strong></div>' +
+          '<div>ðŸ“ž <strong>(75) 99115-4571</strong></div>' +
+          '<div>ðŸ“¸ <strong>@farmaciacouto</strong></div>' +
         '</div>' +
       '</div>' +
       '<div class="orc-block">' +
-        '<div class="orc-label">Orçamento</div>' +
+        '<div class="orc-label">OrÃ§amento</div>' +
         '<div class="orc-number">#' + padNum(orcNum) + '</div>' +
-        '<div class="orc-date">' + xe(dataEmissao) + ' · ' + horaEmissao + '</div>' +
+        '<div class="orc-date">' + xe(dataEmissao) + ' Â· ' + horaEmissao + '</div>' +
         '<div class="orc-pill">Emitido</div>' +
       '</div>' +
     '</div>' +
@@ -2503,21 +2511,21 @@ function gerarPDFServicoIndividual(servico, cliente, orcNum) {
     '<div class="section">' +
       '<div class="section-label">Dados do Cliente</div>' +
       '<div class="client-card">' +
-        '<div><div class="cf-label">Nome</div><div class="cf-value">' + xe(cliente ? cliente.nome : '—') + '</div></div>' +
-        '<div><div class="cf-label">WhatsApp</div><div class="cf-value">' + xe(cliente && cliente.tel ? cliente.tel : '—') + '</div></div>' +
-        (cliente && cliente.endereco ? '<div style="grid-column:1/-1"><div class="cf-label">Endereço</div><div class="cf-value">' + xe(cliente.endereco) + '</div></div>' : '') +
+        '<div><div class="cf-label">Nome</div><div class="cf-value">' + xe(cliente ? cliente.nome : 'â€”') + '</div></div>' +
+        '<div><div class="cf-label">WhatsApp</div><div class="cf-value">' + xe(cliente && cliente.tel ? cliente.tel : 'â€”') + '</div></div>' +
+        (cliente && cliente.endereco ? '<div style="grid-column:1/-1"><div class="cf-label">EndereÃ§o</div><div class="cf-value">' + xe(cliente.endereco) + '</div></div>' : '') +
         '<div><div class="cf-label">Atendente</div><div class="cf-value">' + xe(nomeAtendente) + '</div></div>' +
-        '<div><div class="cf-label">Data do Serviço</div><div class="cf-value">' + fmtDate(servico.data) + '</div></div>' +
+        '<div><div class="cf-label">Data do ServiÃ§o</div><div class="cf-value">' + fmtDate(servico.data) + '</div></div>' +
       '</div>' +
     '</div>' +
 
     // Itens
     '<div class="items-section">' +
-      '<div class="section-label" style="margin-bottom:12px">Itens do Orçamento</div>' +
+      '<div class="section-label" style="margin-bottom:12px">Itens do OrÃ§amento</div>' +
       '<table class="items">' +
         '<thead><tr>' +
           '<th style="width:44px">#</th>' +
-          '<th>Descrição</th>' +
+          '<th>DescriÃ§Ã£o</th>' +
           '<th style="width:130px">Tipo</th>' +
           '<th class="r" style="width:120px">Valor</th>' +
         '</tr></thead>' +
@@ -2531,7 +2539,7 @@ function gerarPDFServicoIndividual(servico, cliente, orcNum) {
           extraRow +
           (servico.obs ?
             '<tr style="background:#FFFBEB"><td></td><td colspan="3" style="font-size:10.5px;color:#78350F;padding:9px 16px">' +
-              '<strong>📝 Observações:</strong> ' + xe(servico.obs) +
+              '<strong>ðŸ“ ObservaÃ§Ãµes:</strong> ' + xe(servico.obs) +
             '</td></tr>' : '') +
         '</tbody>' +
       '</table>' +
@@ -2541,7 +2549,7 @@ function gerarPDFServicoIndividual(servico, cliente, orcNum) {
     '<div class="total-section">' +
       '<div class="total-box">' +
         '<div>' +
-          '<div class="total-lbl">Total do Orçamento</div>' +
+          '<div class="total-lbl">Total do OrÃ§amento</div>' +
           '<div class="total-val">' + fmt(servico.valor) + '</div>' +
         '</div>' +
         '<div style="text-align:right">' +
@@ -2554,15 +2562,15 @@ function gerarPDFServicoIndividual(servico, cliente, orcNum) {
     // Footer
     '<div class="footer">' +
       '<div class="validity">' +
-        'Válido até <strong>' + xe(dataValidade) + '</strong><br>' +
-        'Farmácia Couto · (75) 99115-4571 · @farmaciacouto' +
+        'VÃ¡lido atÃ© <strong>' + xe(dataValidade) + '</strong><br>' +
+        'FarmÃ¡cia Couto Â· (75) 99115-4571 Â· @farmaciacouto' +
       '</div>' +
       '<div class="sig-block">' +
         '<div class="sig-line"></div>' +
         '<div class="sig-name">' + xe(nomeAtendente) + '</div>' +
-        '<div class="sig-role">Atendente Responsável</div>' +
+        '<div class="sig-role">Atendente ResponsÃ¡vel</div>' +
       '</div>' +
-      '<div class="footer-right">Orçamento #' + padNum(orcNum) + '<br>' + xe(dataEmissao) + '</div>' +
+      '<div class="footer-right">OrÃ§amento #' + padNum(orcNum) + '<br>' + xe(dataEmissao) + '</div>' +
     '</div>' +
 
   '</div>' + // .page
@@ -2575,9 +2583,9 @@ function gerarPDFServicoIndividual(servico, cliente, orcNum) {
   toast('PDF aberto! Clique em "Salvar PDF" na janela.','ok');
 }
 
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  HELPERS
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 function lsArr(k) { try { return JSON.parse(localStorage.getItem(getStorageKey(k)) || '[]'); } catch(e) { return []; } }
 function lsSet(key, value) { localStorage.setItem(getStorageKey(key), JSON.stringify(value)); }
 
@@ -2588,7 +2596,7 @@ function openTopAction() {
 }
 
 function getServicoDesc(s) {
-  if (s.tipo==='manipulacao') return (s.formula||'Manipulação').slice(0,40)+(s.formula&&s.formula.length>40?'…':'');
+  if (s.tipo==='manipulacao') return (s.formula||'ManipulaÃ§Ã£o').slice(0,40)+(s.formula&&s.formula.length>40?'â€¦':'');
   if (s.tipo==='exame') return s.tipoExame||'Exame';
   return s.produtoDesc||'Produto';
 }
@@ -2601,28 +2609,28 @@ function uid() { return Date.now().toString(36)+Math.random().toString(36).slice
 function padNum(n) { return String(n||0).padStart(4,'0'); }
 function fmt(v) { return 'R$ '+parseFloat(v||0).toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.'); }
 function fmtDate(d) {
-  if(!d)return'—';
+  if(!d)return'â€”';
   try { var dt=new Date(d+'T12:00:00'); return dt.toLocaleDateString('pt-BR'); } catch(e){return d;}
 }
 
 function tipoBadge(t) {
-  var map={manipulacao:'<span class="badge badge-purple">⚗️ Manipulação</span>',exame:'<span class="badge badge-blue">🔬 Exame</span>',produto:'<span class="badge badge-green">💊 Produto</span>'};
+  var map={manipulacao:'<span class="badge badge-purple">âš—ï¸ ManipulaÃ§Ã£o</span>',exame:'<span class="badge badge-blue">ðŸ”¬ Exame</span>',produto:'<span class="badge badge-green">ðŸ’Š Produto</span>'};
   return map[t]||'<span class="badge badge-gray">'+esc(t)+'</span>';
 }
 function pagBadge(p) {
-  var map={dinheiro:'<span class="badge badge-green">💵 Dinheiro</span>',pix:'<span class="badge badge-blue">📲 Pix</span>',debito:'<span class="badge badge-gray">💳 Débito</span>',credito:'<span class="badge badge-yellow">💳 Crédito</span>',pendente:'<span class="badge badge-red">⏳ A receber</span>'};
-  return map[p]||'<span class="badge badge-gray">'+esc(p||'—')+'</span>';
+  var map={dinheiro:'<span class="badge badge-green">ðŸ’µ Dinheiro</span>',pix:'<span class="badge badge-blue">ðŸ“² Pix</span>',debito:'<span class="badge badge-gray">ðŸ’³ DÃ©bito</span>',credito:'<span class="badge badge-yellow">ðŸ’³ CrÃ©dito</span>',pendente:'<span class="badge badge-red">â³ A receber</span>'};
+  return map[p]||'<span class="badge badge-gray">'+esc(p||'â€”')+'</span>';
 }
 
 function openModal(id) { document.getElementById(id).classList.remove('h'); }
 function closeModal(id) { document.getElementById(id).classList.add('h'); }
 
 function toast(msg,type) {
-  var icons={ok:'✅',er:'❌',yw:'⚠️'};
+  var icons={ok:'âœ…',er:'âŒ',yw:'âš ï¸'};
   var box=document.getElementById('toasts');
   var el=document.createElement('div');
   el.className='toast t-'+(type||'ok');
-  el.innerHTML='<span>'+(icons[type]||'ℹ️')+'</span> '+msg;
+  el.innerHTML='<span>'+(icons[type]||'â„¹ï¸')+'</span> '+msg;
   box.appendChild(el);
   setTimeout(function(){el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(function(){el.remove();},300);},4000);
 }
@@ -2637,33 +2645,15 @@ function startClock() {
   function tick() {
     var now=new Date();
     var el=document.getElementById('clock');
-    if(el) el.textContent=now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+' · '+now.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
+    if(el) el.textContent=now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+' Â· '+now.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
   }
   tick(); setInterval(tick,1000);
 }
 
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  SUPABASE SETUP CHECK
-// ══════════════════════════════════════════════════════════
-function checkSupabaseConfig() {
-  if (!localStorage.getItem('sb_url')) {
-    var banner = document.createElement('div');
-    banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:999;background:var(--yellow);color:#92400E;padding:.6rem 1.5rem;font-size:.82rem;font-weight:600;display:flex;align-items:center;justify-content:space-between';
-    banner.innerHTML='⚠️ Supabase não configurado — dados salvos apenas localmente. <button onclick="promptSupabase()" style="background:#92400E;color:#fff;border:none;padding:.3rem .9rem;border-radius:6px;font-size:.78rem;cursor:pointer;font-weight:600">Configurar agora</button>';
-    document.body.appendChild(banner);
-  }
-}
-
-function promptSupabase() {
-  var url=prompt('Supabase URL (ex: https://xxxx.supabase.co):');
-  if(!url)return;
-  var key=prompt('Supabase Anon Key:');
-  if(!key)return;
-  localStorage.setItem('sb_url',url.trim());
-  localStorage.setItem('sb_key',key.trim());
-  if(initSupabase(url.trim(),key.trim())) { toast('Supabase conectado!','ok'); location.reload(); }
-  else toast('Erro ao conectar. Verifique as credenciais.','er');
-}
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// Supabase configurado com credenciais fixas - funciona em qualquer maquina
 
 function migrateOldKeys() {
   try {
@@ -2676,9 +2666,9 @@ function migrateOldKeys() {
   } catch(e) { console.error('Migration error:', e); }
 }
 
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  INIT
-// ══════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 document.addEventListener('DOMContentLoaded',function(){
   migrateOldKeys();
   try {
@@ -2731,3 +2721,5 @@ document.addEventListener('DOMContentLoaded',function(){
 </script>
 </body>
 </html>
+
+
