@@ -618,17 +618,21 @@ var PERFIS = {
 
 function normalisePerms(p, perfil) {
   p = p || {};
+  // Normaliza aliases do perfil
+  if (perfil === 'administrador' || perfil === 'administrator') perfil = 'admin';
+  if (perfil === 'farmacêutico') perfil = 'farmaceutico';
   var hasNew = MODULOS.some(function(m){ return p[m.key] !== undefined; });
   if (!hasNew) {
     var base = (PERFIS[perfil] || PERFIS.atendente).perms;
     p = Object.assign({}, base, p);
   }
   if (perfil === 'admin') {
-    MODULOS.forEach(function(m){ if (!p[m.key]) p[m.key] = 'edit'; });
+    MODULOS.forEach(function(m){ p[m.key] = 'edit'; });
   }
   MODULOS.forEach(function(m){ if (p[m.key] === undefined) p[m.key] = 'none'; });
   return p;
 }
+
 
 function canView(mod)  { var v=STATE.perms&&STATE.perms[mod]; return v==='read'||v==='edit'; }
 function canEdit(mod)  { return !!(STATE.perms&&STATE.perms[mod]==='edit'); }
@@ -1015,15 +1019,33 @@ function doLogin() {
   err.style.display = 'none';
   if (!email || !pass) { showErr('Preencha e-mail e senha.'); return; }
   btn.disabled = true; btn.textContent = 'Entrando...';
+
+  // Normaliza o valor do perfil para a chave do objeto PERFIS
+  function normalizePerfil(p) {
+    if (!p) return 'atendente';
+    var map = {
+      'administrador': 'admin',
+      'administrator': 'admin',
+      'gerente': 'gerente',
+      'manager': 'gerente',
+      'farmaceutico': 'farmaceutico',
+      'farmacêutico': 'farmaceutico',
+      'atendente': 'atendente',
+      'attendant': 'atendente',
+      'admin': 'admin',
+    };
+    return map[p.toLowerCase()] || p.toLowerCase();
+  }
+
   function tryLocal() {
     seedAdmin();
     var users = lsArr('users');
     var user = users.find(function(u) { return u.email === email && u.senha === pass && u.ativo !== false; });
     if (user) {
-      // Salvar ultimo acesso
       var allUsers = lsArr('users');
       var idx = allUsers.findIndex(function(u){return u.id===user.id;});
       if(idx>=0){ allUsers[idx].ultimoAcesso = new Date().toISOString(); lsSet('users', allUsers); }
+      user.perfil = normalizePerfil(user.perfil);
       STATE.user = user;
       var p = user.perms || {};
       if (typeof p.clientes === 'undefined' && typeof p.clientes_w !== 'undefined') {
@@ -1047,18 +1069,27 @@ function doLogin() {
       withTimeout(sb.auth.signInWithPassword({ email: email, password: pass }), 4000).then(function(res) {
         if (res.error) { tryLocal(); }
         else {
-          withTimeout(sb.from('usuarios_do_sistema').select('*').eq('email', email).single(), 3000).then(function(r) {
+          withTimeout(sb.from('usuarios_do_sistema').select('*').eq('e-mail', email).single(), 3000).then(function(r) {
             var profile = r.data || {};
-            STATE.user = Object.assign({ id: res.data.user.id, email: email }, profile);
-            STATE.perms = profile.perms || PERFIS[profile.perfil || 'atendente'].perms;
+            // Normaliza o perfil (ex: 'administrador' → 'admin')
+            var perfil = normalizePerfil(profile.perfil);
+            // Aceita perms tanto da coluna 'perms' quanto 'permanentes'
+            var rawPerms = profile.perms || profile.permanentes || {};
+            if (typeof rawPerms === 'string') {
+              try { rawPerms = JSON.parse(rawPerms); } catch(e) { rawPerms = {}; }
+            }
+            STATE.user = Object.assign({ id: res.data.user.id, email: email }, profile, { perfil: perfil });
+            STATE.perms = normalisePerms(rawPerms, perfil);
             STATE.isSupabase = true;
-            sessionStorage.setItem('fc_session', JSON.stringify({ user: STATE.user, isSupabase: true }));
+            var normUser = Object.assign({}, STATE.user, { perms: STATE.perms });
+            sessionStorage.setItem('fc_session', JSON.stringify({ user: normUser, isSupabase: true }));
             initApp();
-          }).catch(function(err) {
+          }).catch(function(e) {
+            console.warn('Perfil não encontrado em usuarios_do_sistema, tentando local:', e);
             tryLocal();
           });
         }
-      }).catch(function(err) {
+      }).catch(function(e) {
         tryLocal();
       });
     } else {
@@ -1066,6 +1097,7 @@ function doLogin() {
     }
   }, 400);
 }
+
 
 function doLogout() {
   STATE.user = null;
