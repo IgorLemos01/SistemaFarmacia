@@ -1135,15 +1135,25 @@ function restoreSession() {
 function initApp() {
   document.getElementById('loginPage').style.display = 'none';
   document.getElementById('app').classList.add('on');
+
+  // Garante que o perfil do usuário está normalizado
+  if (STATE.user.perfil === 'administrador' || STATE.user.perfil === 'administrator') STATE.user.perfil = 'admin';
+  if (STATE.user.perfil === 'farmacêutico') STATE.user.perfil = 'farmaceutico';
+
   var initials = (STATE.user.nome || STATE.user.email || '?').split(' ').slice(0,2).map(function(w){return w[0];}).join('').toUpperCase();
   document.getElementById('sbAvatar').textContent = initials;
   document.getElementById('sbName').textContent = STATE.user.nome || STATE.user.email;
   document.getElementById('sbRole').textContent = (PERFIS[STATE.user.perfil] || {}).label || 'Usuário';
+
+  // Reavalia as permissões com o perfil já normalizado
   STATE.perms = normalisePerms(STATE.perms, STATE.user.perfil);
+
+  // Exibe seção Admin e Orçamentos conforme permissões
   if (canEdit('usuarios')) {
     document.getElementById('adminSection').style.display = '';
     document.getElementById('menuUsuarios').style.display = '';
   }
+
   goTo('dashboard');
   startClock();
 }
