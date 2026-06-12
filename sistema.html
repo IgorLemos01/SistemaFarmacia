@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Sistema — Farmácia Couto</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 /* ═══════════════════════════════════════════
    RESET & TOKENS
@@ -555,24 +556,38 @@ tr:hover td{background:rgba(0,48,135,.02)}
 // ══════════════════════════════════════════════════════════
 //  CONFIGURAÇÃO SUPABASE
 // ══════════════════════════════════════════════════════════
-var SUPABASE_URL = 'https://ivxjetctxmsqrkmlyznz.supabase.co';
-var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml2eGpldGN0eG1zcXJrbWx5em56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NTI2NjksImV4cCI6MjA5MTIyODY2OX0.K5uuj7qY_RpTqgQZ1YojloxbVpnw2lZ4CDXbQocX4Z8';
+var SUPABASE_URL = localStorage.getItem('sb_url') || '';
+var SUPABASE_KEY = localStorage.getItem('sb_key') || '';
+
 var sb = null;
 
 function initSupabase(url, key) {
   if (!url || !key) return false;
-  try { sb = window.supabase.createClient(url, key); return true; }
-  catch(e) { console.error(e); return false; }
+  try {
+    if (window.supabase) {
+      sb = window.supabase.createClient(url, key);
+      return true;
+    }
+  } catch(e) { console.error(e); }
+  return false;
 }
 
-(function() {
-  var s = document.createElement('script');
-  s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-  s.onload = function() {
-    initSupabase(SUPABASE_URL, SUPABASE_KEY);
-  };
-  document.head.appendChild(s);
-})();
+function withTimeout(promise, ms) {
+  return new Promise(function(resolve, reject) {
+    var timer = setTimeout(function() {
+      reject(new Error("Timeout"));
+    }, ms);
+    promise.then(
+      function(res) { clearTimeout(timer); resolve(res); },
+      function(err) { clearTimeout(timer); reject(err); }
+    );
+  });
+}
+
+// Inicializa imediatamente com valores salvos se disponíveis
+if (SUPABASE_URL && SUPABASE_KEY) {
+  initSupabase(SUPABASE_URL, SUPABASE_KEY);
+}
 
 // ══════════════════════════════════════════════════════════
 //  ESTADO DA APLICAÇÃO
@@ -632,33 +647,135 @@ function can(perm) {
 var CACHE = { clientes: null, servicos: null, users: null, lastFetch: {} };
 var CACHE_TTL = 30000;
 
+function getStorageKey(key) {
+  if (key === 'clientes' || key === 'servicos') {
+    var prefix = STATE.isSupabase ? 'fc_sb_' : 'fc_local_';
+    return prefix + key;
+  }
+  return 'fc_' + key;
+}
+
 function cacheValid(key) {
   return CACHE[key] !== null && (Date.now() - (CACHE.lastFetch[key]||0)) < CACHE_TTL;
 }
 function setCache(key, data) {
   CACHE[key] = data;
   CACHE.lastFetch[key] = Date.now();
-  try { localStorage.setItem('fc_'+key, JSON.stringify(data)); } catch(e) {}
+  try { localStorage.setItem(getStorageKey(key), JSON.stringify(data)); } catch(e) {}
 }
 function clearCache(key) { CACHE[key] = null; CACHE.lastFetch[key] = 0; }
 
 function fromCache(key) {
   if (CACHE[key]) return CACHE[key];
-  try { var v = localStorage.getItem('fc_'+key); return v ? JSON.parse(v) : []; } catch(e) { return []; }
+  try { var v = localStorage.getItem(getStorageKey(key)); return v ? JSON.parse(v) : []; } catch(e) { return []; }
+}
+
+var FETCH_LOCK = { clientes: false, servicos: false, users: false };
+
+function triggerUIRefresh() {
+  if (!STATE.user) return; // Not logged in yet
+  
+  var page = STATE.page;
+  if (page === 'dashboard') {
+    pgDashboard();
+  } else if (page === 'clientes') {
+    var filterEl = document.getElementById('clienteFilter');
+    if (filterEl) {
+      var filterVal = filterEl.value;
+      Promise.all([dbGetClientes(), dbGetServicos()]).then(function(r) {
+        set('clientesTable', renderClientesTable(r[0], r[1], filterVal));
+      });
+    } else {
+      pgClientes();
+    }
+  } else if (page === 'manipulacao') {
+    var de = document.getElementById('mDe');
+    if (de) {
+      Promise.all([dbGetServicos(), dbGetClientes()]).then(function(r) {
+        window._manipServicos = r[0].filter(function(s){return s.tipo==='manipulacao';}).sort(function(a,b){return (b.orcNum||0)-(a.orcNum||0);});
+        window._manipClientes = r[1];
+        filtrarManipulacoes();
+        
+        var statsVals = document.querySelectorAll('.stat-val');
+        if (statsVals.length >= 4) {
+          var hoje = new Date().toISOString().split('T')[0];
+          var valTotal = window._manipServicos.reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
+          var pendentes = window._manipServicos.filter(function(s){return !s.dataEntregaReal && (!s.prazo||s.prazo>=hoje);}).length;
+          var atrasadas = window._manipServicos.filter(function(s){return !s.dataEntregaReal && s.prazo && s.prazo<hoje;}).length;
+          
+          statsVals[0].textContent = window._manipServicos.length;
+          statsVals[1].textContent = fmt(valTotal);
+          statsVals[2].textContent = pendentes;
+          statsVals[3].textContent = atrasadas;
+        }
+      });
+    } else {
+      pgManipulacao();
+    }
+  } else if (page === 'exames') {
+    var de = document.getElementById('eDe');
+    if (de) {
+      Promise.all([dbGetServicos(), dbGetClientes()]).then(function(r) {
+        window._exameServicos = r[0].filter(function(s){return s.tipo==='exame';}).sort(function(a,b){return (b.orcNum||0)-(a.orcNum||0);});
+        window._exameClientes = r[1];
+        filtrarExames();
+        
+        var statsVals = document.querySelectorAll('.stat-val');
+        if (statsVals.length >= 4) {
+          var valTotal = window._exameServicos.reduce(function(a,s){return a+(parseFloat(s.valor)||0);},0);
+          var comResult = window._exameServicos.filter(function(s){return !!s.resultadoExame;}).length;
+          var semResult = window._exameServicos.length - comResult;
+          
+          statsVals[0].textContent = window._exameServicos.length;
+          statsVals[1].textContent = fmt(valTotal);
+          statsVals[2].textContent = comResult;
+          statsVals[3].textContent = semResult;
+        }
+      });
+    } else {
+      pgExames();
+    }
+  } else if (page === 'orcamentos') {
+    var de = document.getElementById('orcDe');
+    if (de) {
+      filtrarOrcamentos();
+    } else {
+      pgOrcamentos();
+    }
+  } else if (page === 'usuarios') {
+    pgUsuarios();
+  }
 }
 
 async function dbGetClientes() {
-  if (cacheValid('clientes')) return CACHE.clientes;
-  if (!sb) { var d = fromCache('clientes'); setCache('clientes',d); return d; }
-  try {
-    var res = await sb.from('clientes').select('*').eq('ativo',true).order('nome');
-    if (res.error) throw res.error;
-    setCache('clientes', res.data || []);
-    return CACHE.clientes;
-  } catch(e) {
-    console.warn('Supabase clientes fallback:', e.message);
-    return fromCache('clientes');
+  var cached = fromCache('clientes') || [];
+  
+  if (cacheValid('clientes') && cached && cached.length) {
+    return cached;
   }
+  
+  if (sb && STATE.isSupabase && !FETCH_LOCK.clientes) {
+    FETCH_LOCK.clientes = true;
+    (async function() {
+      try {
+        var res = await withTimeout(sb.from('clientes').select('*').eq('ativo',true).order('nome'), 1500);
+        if (!res.error && res.data) {
+          var oldStr = JSON.stringify(cached);
+          var newStr = JSON.stringify(res.data);
+          setCache('clientes', res.data);
+          if (oldStr !== newStr) {
+            triggerUIRefresh();
+          }
+        }
+      } catch(e) {
+        console.warn('Supabase clientes background fetch error:', e.message);
+      } finally {
+        FETCH_LOCK.clientes = false;
+      }
+    })();
+  }
+  
+  return cached;
 }
 
 async function dbSaveCliente(obj, isEdit) {
@@ -673,9 +790,9 @@ async function dbSaveCliente(obj, isEdit) {
     if (idx>=0) cached[idx] = Object.assign(cached[idx], row); else cached.push(row);
   } else { cached.push(row); }
   setCache('clientes', cached);
-  if (!sb) return true;
+  if (!sb || !STATE.isSupabase) return true;
   try {
-    var res = await sb.from('clientes').upsert([row]);
+    var res = await withTimeout(sb.from('clientes').upsert([row]), 3000);
     if (res.error) throw res.error;
     clearCache('clientes');
     return true;
@@ -688,24 +805,31 @@ async function dbSaveCliente(obj, isEdit) {
 
 async function dbGetServicos(filters) {
   filters = filters || {};
-  if (cacheValid('servicos') && !Object.keys(filters).length) return CACHE.servicos;
-  if (!sb) { var d = fromCache('servicos'); if(!filters||!Object.keys(filters).length)setCache('servicos',d); return d; }
-  try {
-    var q = sb.from('servicos').select('*').order('orc_num', {ascending:false});
-    if (filters.de)   q = q.gte('data', filters.de);
-    if (filters.ate)  q = q.lte('data', filters.ate);
-    if (filters.tipo) q = q.eq('tipo', filters.tipo);
-    if (filters.pag)  q = q.eq('pagamento', filters.pag);
-    var res = await q;
-    if (res.error) throw res.error;
-    var data = (res.data||[]).map(normaliseServico);
-    if (!Object.keys(filters).length) setCache('servicos', data);
-    return data;
-  } catch(e) {
-    console.warn('Supabase servicos fallback:', e.message);
-    var local = fromCache('servicos');
-    return applyFilters(local, filters);
+  var cached = fromCache('servicos') || [];
+  
+  if (sb && STATE.isSupabase && !cacheValid('servicos') && !FETCH_LOCK.servicos) {
+    FETCH_LOCK.servicos = true;
+    (async function() {
+      try {
+        var res = await withTimeout(sb.from('servicos').select('*').order('orc_num', {ascending:false}), 1500);
+        if (!res.error && res.data) {
+          var data = res.data.map(normaliseServico);
+          var oldStr = JSON.stringify(cached);
+          var newStr = JSON.stringify(data);
+          setCache('servicos', data);
+          if (oldStr !== newStr) {
+            triggerUIRefresh();
+          }
+        }
+      } catch(e) {
+        console.warn('Supabase servicos background fetch error:', e.message);
+      } finally {
+        FETCH_LOCK.servicos = false;
+      }
+    })();
   }
+  
+  return applyFilters(cached, filters);
 }
 
 function normaliseServico(s) {
@@ -734,9 +858,9 @@ function applyFilters(list, f) {
 
 async function dbSaveServico(obj) {
   var nextNum;
-  if (sb) {
+  if (sb && STATE.isSupabase) {
     try {
-      var r = await sb.rpc('next_orc_num');
+      var r = await withTimeout(sb.rpc('next_orc_num'), 2000);
       if (!r.error) nextNum = r.data;
     } catch(e) {}
   }
@@ -759,9 +883,9 @@ async function dbSaveServico(obj) {
   var cached = fromCache('servicos');
   cached.unshift(normed);
   setCache('servicos', cached);
-  if (!sb) return nextNum;
+  if (!sb || !STATE.isSupabase) return nextNum;
   try {
-    var res = await sb.from('servicos').insert([row]);
+    var res = await withTimeout(sb.from('servicos').insert([row]), 3000);
     if (res.error) throw res.error;
     clearCache('servicos');
     return nextNum;
@@ -779,7 +903,7 @@ async function dbUpdateServico(id, changes) {
   var updated = Object.assign({}, existing, changes);
   if (idx >= 0) cached[idx] = updated; else cached.unshift(updated);
   setCache('servicos', cached);
-  if (!sb) return updated.orcNum || existing.orcNum;
+  if (!sb || !STATE.isSupabase) return updated.orcNum || existing.orcNum;
   try {
     var dbRow = {
       cliente_id: changes.clienteId, tipo: changes.tipo,
@@ -790,7 +914,7 @@ async function dbUpdateServico(id, changes) {
       resultado_exame: changes.resultadoExame||null,
       laboratorio: changes.laboratorio||null,
     };
-    var res = await sb.from('servicos').update(dbRow).eq('id', id);
+    var res = await withTimeout(sb.from('servicos').update(dbRow).eq('id', id), 3000);
     if (res.error) throw res.error;
     clearCache('servicos');
   } catch(e) {
@@ -801,24 +925,42 @@ async function dbUpdateServico(id, changes) {
 }
 
 async function dbGetUsers() {
-  if (cacheValid('users')) return CACHE.users;
   seedAdmin();
-  var local = fromCache('users') || lsArr('users');
-  if (sb) {
-    try {
-      var res = await sb.from('system_users').select('*').order('criado_em');
-      if (!res.error && res.data && res.data.length) {
-        var merged = res.data.map(function(dbU) {
-          var localU = local.find(function(l){return l.email===dbU.email;}) || {};
-          return Object.assign({}, localU, dbU, { perms: dbU.perms || localU.perms || {} });
-        });
-        setCache('users', merged);
-        return merged;
-      }
-    } catch(e) { console.warn('dbGetUsers fallback'); }
+  var cached = fromCache('users');
+  if (!cached || !cached.length) {
+    cached = lsArr('users') || [];
   }
-  setCache('users', local);
-  return local;
+  
+  if (cacheValid('users') && cached && cached.length) {
+    return cached;
+  }
+  
+  if (sb && STATE.isSupabase && !FETCH_LOCK.users) {
+    FETCH_LOCK.users = true;
+    (async function() {
+      try {
+        var res = await withTimeout(sb.from('system_users').select('*').order('criado_em'), 1500);
+        if (!res.error && res.data && res.data.length) {
+          var merged = res.data.map(function(dbU) {
+            var localU = cached.find(function(l){return l.email===dbU.email;}) || {};
+            return Object.assign({}, localU, dbU, { perms: dbU.perms || localU.perms || {} });
+          });
+          var oldStr = JSON.stringify(cached);
+          var newStr = JSON.stringify(merged);
+          setCache('users', merged);
+          if (oldStr !== newStr) {
+            triggerUIRefresh();
+          }
+        }
+      } catch(e) {
+        console.warn('Supabase users background fetch error:', e.message);
+      } finally {
+        FETCH_LOCK.users = false;
+      }
+    })();
+  }
+  
+  return cached;
 }
 
 async function dbSaveUser(obj, isEdit) {
@@ -829,11 +971,11 @@ async function dbSaveUser(obj, isEdit) {
   } else { local.push(obj); }
   setCache('users', local);
   localStorage.setItem('fc_users', JSON.stringify(local));
-  if (sb) {
+  if (sb && STATE.isSupabase) {
     var dbRow = { id:obj.id, nome:obj.nome, email:obj.email, perfil:obj.perfil, perms:obj.perms, ativo:obj.ativo };
     try {
-      if (isEdit) { await sb.from('system_users').update(dbRow).eq('id', obj.id); }
-      else { await sb.from('system_users').insert([dbRow]); }
+      if (isEdit) { await withTimeout(sb.from('system_users').update(dbRow).eq('id', obj.id), 3000); }
+      else { await withTimeout(sb.from('system_users').insert([dbRow]), 3000); }
     } catch(e) { console.warn('dbSaveUser:', e.message); }
   }
 }
@@ -844,7 +986,7 @@ async function dbToggleUser(id, ativo) {
   if (idx>=0) local[idx].ativo = ativo;
   setCache('users', local);
   localStorage.setItem('fc_users', JSON.stringify(local));
-  if (sb) { try { await sb.from('system_users').update({ativo:ativo}).eq('id',id); } catch(e){} }
+  if (sb && STATE.isSupabase) { try { await withTimeout(sb.from('system_users').update({ativo:ativo}).eq('id',id), 3000); } catch(e){} }
 }
 
 function seedAdmin() {
@@ -892,8 +1034,9 @@ function doLogin() {
               usuarios: p.usuarios_w?'edit':'none' };
       }
       STATE.perms = normalisePerms(p, user.perfil);
+      STATE.isSupabase = false;
       var normUser = Object.assign({},user,{perms:STATE.perms});
-      sessionStorage.setItem('fc_session', JSON.stringify({ user: normUser }));
+      sessionStorage.setItem('fc_session', JSON.stringify({ user: normUser, isSupabase: false }));
       initApp();
     } else {
       showErr('E-mail ou senha incorretos.');
@@ -903,17 +1046,22 @@ function doLogin() {
   function showErr(msg) { err.textContent = msg; err.style.display = 'block'; }
   setTimeout(function() {
     if (sb) {
-      sb.auth.signInWithPassword({ email: email, password: pass }).then(function(res) {
+      withTimeout(sb.auth.signInWithPassword({ email: email, password: pass }), 4000).then(function(res) {
         if (res.error) { tryLocal(); }
         else {
-          sb.from('system_users').select('*').eq('email', email).single().then(function(r) {
+          withTimeout(sb.from('system_users').select('*').eq('email', email).single(), 3000).then(function(r) {
             var profile = r.data || {};
             STATE.user = Object.assign({ id: res.data.user.id, email: email }, profile);
             STATE.perms = profile.perms || PERFIS[profile.perfil || 'atendente'].perms;
-            sessionStorage.setItem('fc_session', JSON.stringify({ user: STATE.user }));
+            STATE.isSupabase = true;
+            sessionStorage.setItem('fc_session', JSON.stringify({ user: STATE.user, isSupabase: true }));
             initApp();
+          }).catch(function(err) {
+            tryLocal();
           });
         }
+      }).catch(function(err) {
+        tryLocal();
       });
     } else {
       tryLocal();
@@ -922,7 +1070,15 @@ function doLogin() {
 }
 
 function doLogout() {
-  STATE.user = null; STATE.perms = {};
+  STATE.user = null;
+  STATE.perms = {};
+  STATE.isSupabase = false;
+  // Clear in-memory cache to ensure clean slate for the next account
+  CACHE.clientes = null;
+  CACHE.servicos = null;
+  CACHE.users = null;
+  CACHE.lastFetch = {};
+
   sessionStorage.removeItem('fc_session');
   if (sb) sb.auth.signOut();
   document.getElementById('app').classList.remove('on');
@@ -936,6 +1092,7 @@ function restoreSession() {
     try {
       var data = JSON.parse(s);
       STATE.user = data.user;
+      STATE.isSupabase = !!data.isSupabase;
       var p = data.user.perms || (PERFIS[data.user.perfil] || PERFIS.atendente).perms;
       STATE.perms = normalisePerms(p, data.user.perfil);
       initApp();
@@ -2150,9 +2307,21 @@ function salvarUsuario() {
     });
   } else {
     var obj = { id:uid(), nome:nome, email:email, senha:senha, perfil:perfil, perms:perms, ativo:true, criado_em:new Date().toISOString() };
-    if (false) {
-  // Auth admin desativado — usa apenas localStorage + system_users
-   } else {
+    if (sb && STATE.isSupabase) {
+      sb.auth.admin.createUser({email:email, password:senha, email_confirm:true}).then(function(r){
+        if (r.error) {
+          console.warn('Auth admin creation failed, saving profile only:', r.error.message);
+          toast('Aviso: Criado no banco de dados. Adicione o acesso no painel do Supabase se necessário.','yw');
+        }
+        obj.auth_id = r.data && r.data.user ? r.data.user.id : null;
+        dbSaveUser(obj, false).then(function() {
+          clearCache('users');
+          closeModal('modalUsuario');
+          toast('Usuário '+nome+' criado!','ok');
+          pgUsuarios();
+        });
+      });
+    } else {
       dbSaveUser(obj, false).then(function() {
         clearCache('users');
         closeModal('modalUsuario');
@@ -2409,8 +2578,8 @@ function gerarPDFServicoIndividual(servico, cliente, orcNum) {
 // ══════════════════════════════════════════════════════════
 //  HELPERS
 // ══════════════════════════════════════════════════════════
-function lsArr(k) { try { return JSON.parse(localStorage.getItem('fc_'+k) || '[]'); } catch(e) { return []; } }
-function lsSet(key, value) { localStorage.setItem('fc_' + key, JSON.stringify(value)); }
+function lsArr(k) { try { return JSON.parse(localStorage.getItem(getStorageKey(k)) || '[]'); } catch(e) { return []; } }
+function lsSet(key, value) { localStorage.setItem(getStorageKey(key), JSON.stringify(value)); }
 
 function openTopAction() {
   if (STATE.page === 'clientes') openModalCliente();
@@ -2496,10 +2665,22 @@ function promptSupabase() {
   else toast('Erro ao conectar. Verifique as credenciais.','er');
 }
 
+function migrateOldKeys() {
+  try {
+    if (localStorage.getItem('fc_clientes') && !localStorage.getItem('fc_local_clientes')) {
+      localStorage.setItem('fc_local_clientes', localStorage.getItem('fc_clientes'));
+    }
+    if (localStorage.getItem('fc_servicos') && !localStorage.getItem('fc_local_servicos')) {
+      localStorage.setItem('fc_local_servicos', localStorage.getItem('fc_servicos'));
+    }
+  } catch(e) { console.error('Migration error:', e); }
+}
+
 // ══════════════════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',function(){
+  migrateOldKeys();
   try {
     var users = JSON.parse(localStorage.getItem('fc_users')||'[]');
     var changed = false;
@@ -2527,6 +2708,7 @@ document.addEventListener('DOMContentLoaded',function(){
     bg.addEventListener('click',function(e){ if(e.target===bg) bg.classList.add('h'); });
   });
 });
+
 /*
   CREDENCIAIS DO ADMINISTRADOR
   E-mail: admin@farmaciacouto.com
