@@ -485,14 +485,15 @@ function seedAdmin() {
     perms: { dashboard: 'edit', clientes: 'edit', manipulacao: 'edit', exames: 'edit', orcamentos: 'edit', usuarios: 'edit' },
     ativo: true,
   };
-  var users = fromCache('users') || lsArr('users') || [];
+  var users = lsArr('users');
   var idx = users.findIndex(function (u) { return u.email === 'admin@farmaciacouto.com'; });
   if (idx >= 0) {
+    // Sempre atualiza perfil e perms do admin (corrige dados antigos/errados)
     users[idx] = Object.assign({}, users[idx], { perfil: 'admin', perms: ADMIN_DATA.perms, ativo: true });
   } else {
     users.push(Object.assign({ criado_em: new Date().toISOString() }, ADMIN_DATA));
   }
-  setCache('users', users);
+  lsSet('users', users);
 }
 
 // ══════════════════════════════════════════════════════════
