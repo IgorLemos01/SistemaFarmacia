@@ -458,6 +458,21 @@ async function dbToggleUser(id, ativo) {
   if (sb && STATE.isSupabase) { try { await withTimeout(sb.from('system_users').update({ ativo: ativo }).eq('id', id), 3000); } catch (e) { } }
 }
 
+async function dbDeleteUser(id) {
+  var local = fromCache('users') || lsArr('users');
+  var idx = local.findIndex(function (u) { return u.id === id; });
+  if (idx >= 0) local.splice(idx, 1);
+  setCache('users', local);
+  localStorage.setItem('fc_users', JSON.stringify(local));
+  if (sb && STATE.isSupabase) {
+    try {
+      await withTimeout(sb.from('system_users').delete().eq('id', id), 3000);
+    } catch (e) {
+      console.error('Erro ao excluir usuário no Supabase:', e);
+    }
+  }
+}
+
 function seedAdmin() {
   var ADMIN_DATA = {
     id: 'admin-001',
@@ -1349,7 +1364,7 @@ function pgUsuarios() {
           '<td class="td-muted">' + ult + '</td>' +
           '<td class="td-muted">' + cria + '</td>' +
           '<td style="display:flex;gap:.4rem;align-items:center">' +
-          (u.perfil !== 'admin' ? '<button class="btn btn-sm btn-ghost" onclick="openModalUsuario(\'' + u.id + '\')">✏️</button><button class="btn btn-sm btn-ghost" onclick="toggleUser(\'' + u.id + '\',' + !(u.ativo !== false) + ')">' + (u.ativo !== false ? 'Desativar' : 'Ativar') + '</button>' : '<span style="font-size:.75rem;color:var(--tx3)">🔒</span>') +
+          (u.perfil !== 'admin' ? '<button class="btn btn-sm btn-ghost" onclick="openModalUsuario(\'' + u.id + '\')" title="Editar">✏️</button><button class="btn btn-sm btn-ghost" onclick="toggleUser(\'' + u.id + '\',' + !(u.ativo !== false) + ')">' + (u.ativo !== false ? 'Desativar' : 'Ativar') + '</button><button class="btn btn-sm btn-ghost" onclick="excluirUsuario(\'' + u.id + '\')" title="Excluir">🗑️</button>' : '<span style="font-size:.75rem;color:var(--tx3)">🔒</span>') +
           '<button class="btn btn-sm btn-ghost" title="Atividade" onclick="verAtividadeUsuario(\'' + u.id + '\')">📊</button>' +
           '</td>' +
           '</tr>';
@@ -1367,6 +1382,15 @@ function toggleUser(id, ativo) {
     clearCache('users');
     pgUsuarios();
     toast('Status do usuário atualizado.', 'ok');
+  });
+}
+
+function excluirUsuario(id) {
+  if (!confirm('Tem certeza que deseja excluir permanentemente este usuário? Esta ação não pode ser desfeita.')) return;
+  dbDeleteUser(id).then(function () {
+    clearCache('users');
+    pgUsuarios();
+    toast('Usuário excluído com sucesso.', 'ok');
   });
 }
 
