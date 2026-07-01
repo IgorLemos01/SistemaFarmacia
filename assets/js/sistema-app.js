@@ -424,26 +424,30 @@ async function dbGetUsers() {
 }
 
 async function dbSaveUser(obj, isEdit) {
+  // Garantia de segurança: remover a senha do objeto de dados antes de salvar no cache local
+  var cleanObj = Object.assign({}, obj);
+  delete cleanObj.senha;
+
   var local = fromCache('users') || lsArr('users');
   if (isEdit) {
-    var idx = local.findIndex(function (u) { return u.id === obj.id; });
-    if (idx >= 0) local[idx] = Object.assign(local[idx], obj); else local.push(obj);
-  } else { local.push(obj); }
+    var idx = local.findIndex(function (u) { return u.id === cleanObj.id; });
+    if (idx >= 0) local[idx] = Object.assign(local[idx], cleanObj); else local.push(cleanObj);
+  } else { local.push(cleanObj); }
   setCache('users', local);
   localStorage.setItem('fc_users', JSON.stringify(local));
   if (sb && STATE.isSupabase) {
     var dbRow = {
-      id: obj.id,
-      nome: obj.nome,
-      email: obj.email,
-      perfil: obj.perfil,
-      perms: obj.perms,
-      ativo: obj.ativo,
-      auth_id: obj.auth_id || null,
-      criado_em: obj.criado_em || new Date().toISOString()
+      id: cleanObj.id,
+      nome: cleanObj.nome,
+      email: cleanObj.email,
+      perfil: cleanObj.perfil,
+      perms: cleanObj.perms,
+      ativo: cleanObj.ativo,
+      auth_id: cleanObj.auth_id || null,
+      criado_em: cleanObj.criado_em || new Date().toISOString()
     };
     try {
-      if (isEdit) { await withTimeout(sb.from('system_users').update(dbRow).eq('id', obj.id), 3000); }
+      if (isEdit) { await withTimeout(sb.from('system_users').update(dbRow).eq('id', cleanObj.id), 3000); }
       else { await withTimeout(sb.from('system_users').insert([dbRow]), 3000); }
     } catch (e) { console.warn('dbSaveUser:', e.message); }
   }
@@ -463,7 +467,6 @@ async function dbDeleteUser(id) {
   var idx = local.findIndex(function (u) { return u.id === id; });
   if (idx >= 0) local.splice(idx, 1);
   setCache('users', local);
-  localStorage.setItem('fc_users', JSON.stringify(local));
   if (sb && STATE.isSupabase) {
     try {
       await withTimeout(sb.from('system_users').delete().eq('id', id), 3000);
@@ -477,21 +480,19 @@ function seedAdmin() {
   var ADMIN_DATA = {
     id: 'admin-001',
     email: 'admin@farmaciacouto.com',
-    senha: 'Couto@2025!',
     nome: 'Administrador',
     perfil: 'admin',
     perms: { dashboard: 'edit', clientes: 'edit', manipulacao: 'edit', exames: 'edit', orcamentos: 'edit', usuarios: 'edit' },
     ativo: true,
   };
-  var users = lsArr('users');
+  var users = fromCache('users') || lsArr('users') || [];
   var idx = users.findIndex(function (u) { return u.email === 'admin@farmaciacouto.com'; });
   if (idx >= 0) {
-    // Sempre atualiza perfil e perms do admin (corrige dados antigos/errados)
     users[idx] = Object.assign({}, users[idx], { perfil: 'admin', perms: ADMIN_DATA.perms, ativo: true });
   } else {
     users.push(Object.assign({ criado_em: new Date().toISOString() }, ADMIN_DATA));
   }
-  lsSet('users', users);
+  setCache('users', users);
 }
 
 // ══════════════════════════════════════════════════════════
@@ -506,7 +507,6 @@ function doLogin() {
   if (!email || !pass) { showErr('Preencha e-mail e senha.'); return; }
   btn.disabled = true; btn.textContent = 'Entrando...';
 
-  // Normaliza o valor do perfil para a chave do objeto PERFIS
   function normalizePerfil(p) {
     if (!p) return 'atendente';
     var map = {
@@ -523,53 +523,24 @@ function doLogin() {
     return map[p.toLowerCase()] || p.toLowerCase();
   }
 
-  function tryLocal() {
-    seedAdmin();
-    var users = lsArr('users');
-    var user = users.find(function (u) { return u.email === email && u.senha === pass && u.ativo !== false; });
-    if (user) {
-      var allUsers = lsArr('users');
-      var idx = allUsers.findIndex(function (u) { return u.id === user.id; });
-      if (idx >= 0) { allUsers[idx].ultimoAcesso = new Date().toISOString(); lsSet('users', allUsers); }
-      user.perfil = normalizePerfil(user.perfil);
-      STATE.user = user;
-      var p = user.perms || {};
-      if (typeof p.clientes === 'undefined' && typeof p.clientes_w !== 'undefined') {
-        p = {
-          clientes: p.clientes_w ? 'edit' : 'none', manipulacao: p.servicos_w ? 'edit' : 'none',
-          exames: p.servicos_w ? 'edit' : 'none', orcamentos: p.orcamentos_r ? 'read' : 'none',
-          usuarios: p.usuarios_w ? 'edit' : 'none'
-        };
-      }
-      STATE.perms = normalisePerms(p, user.perfil);
-      STATE.isSupabase = false;
-      var normUser = Object.assign({}, user, { perms: STATE.perms });
-      sessionStorage.setItem('fc_session', JSON.stringify({ user: normUser, isSupabase: false }));
-      initApp();
-    } else {
-      showErr('E-mail ou senha incorretos.');
-      btn.disabled = false; btn.textContent = 'Entrar no sistema';
-    }
-  }
   function showErr(msg) { err.textContent = msg; err.style.display = 'block'; }
   setTimeout(function () {
     if (sb) {
       withTimeout(sb.auth.signInWithPassword({ email: email, password: pass }), 4000).then(function (res) {
-        if (res.error) { tryLocal(); }
+        if (res.error) {
+          showErr(res.error.message === 'Invalid login credentials' ? 'E-mail ou senha incorretos.' : 'Erro de login: ' + res.error.message);
+          btn.disabled = false; btn.textContent = 'Entrar no sistema';
+        }
         else {
-          // Busca perfil na tabela system_users
-          // Usa select geral e filtra client-side para aceitar qualquer nome de coluna de email
           withTimeout(sb.from('system_users').select('*'), 3000).then(function (r) {
             var allRows = r.data || [];
             var profile = allRows.find(function (u) {
               return (u.email || u['e-mail'] || '').toLowerCase() === email;
             }) || {};
 
-            // Garantia extra: admin@farmaciacouto.com sempre recebe perfil admin
             var perfil = normalizePerfil(profile.perfil);
             if (email === 'admin@farmaciacouto.com') perfil = 'admin';
 
-            // Aceita perms tanto da coluna 'perms' quanto 'permanentes'
             var rawPerms = profile.perms || profile.permanentes || {};
             if (typeof rawPerms === 'string') { try { rawPerms = JSON.parse(rawPerms); } catch (e) { rawPerms = {}; } }
 
@@ -583,8 +554,12 @@ function doLogin() {
             sessionStorage.setItem('fc_session', JSON.stringify({ user: normUser, isSupabase: true }));
             initApp();
           }).catch(function (e) {
-            console.warn('Falha ao buscar perfil no Supabase, usando dados locais:', e);
-            tryLocal();
+            STATE.user = { id: res.data.user.id, email: email, perfil: email === 'admin@farmaciacouto.com' ? 'admin' : 'atendente', nome: email.split('@')[0] };
+            STATE.perms = normalisePerms({}, STATE.user.perfil);
+            STATE.isSupabase = true;
+            var normUser = Object.assign({}, STATE.user, { perms: STATE.perms });
+            sessionStorage.setItem('fc_session', JSON.stringify({ user: normUser, isSupabase: true }));
+            initApp();
           });
         }
       }).catch(function (e) {
@@ -1346,7 +1321,6 @@ function pgUsuarios() {
       '<div class="card">' +
       '<div class="card-head"><div><div class="card-title">Usuários do Sistema</div><div class="card-sub">Gerencie acessos, perfis e permissões</div></div>' +
       '<button class="btn btn-primary" onclick="openModalUsuario()">＋ Novo Usuário</button></div>' +
-      '<div class="alert alert-blue" style="margin-bottom:1.25rem">ℹ️ <div><strong>Admin:</strong> admin@farmaciacouto.com / Couto@2025!</div></div>' +
       (ativos <= 1 ? '<div class="alert alert-yellow" style="margin-bottom:1.25rem">⚠️ <div>Apenas <strong>1 usuário ativo</strong>. Crie mais para garantir continuidade de acesso.</div></div>' : '') +
       '<div class="table-wrap"><table>' +
       '<thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Módulos</th><th>Status</th><th>Últ. acesso</th><th>Criado em</th><th>Ações</th></tr></thead>' +
@@ -1707,9 +1681,20 @@ function openModalUsuario(editId) {
   document.getElementById('modalUsuario').dataset.editId = editId || '';
   setVal('uNome', u ? u.nome : '');
   setVal('uEmail', u ? u.email : '');
-  setVal('uSenha', '');
+  
   var uSenhaEl = document.getElementById('uSenha');
-  if (uSenhaEl) uSenhaEl.placeholder = editId ? 'Deixe em branco para não alterar' : 'Mínimo 6 caracteres';
+  if (uSenhaEl) {
+    if (editId) {
+      uSenhaEl.disabled = true;
+      uSenhaEl.placeholder = 'Alteração indisponível por segurança';
+      uSenhaEl.value = '';
+    } else {
+      uSenhaEl.disabled = false;
+      uSenhaEl.placeholder = 'Mínimo 6 caracteres';
+      uSenhaEl.value = '';
+    }
+  }
+
   setVal('uPerfil', u ? u.perfil : 'atendente');
   var defaultPerms = u ? u.perms : (PERFIS.atendente.perms);
   clearFieldErr('uEmail'); clearFieldErr('uSenha');
@@ -1817,11 +1802,10 @@ function salvarUsuario() {
     var existing = fromCache('users') || [];
     var found = existing.find(function (u) { return u.id === editId; });
     var updated = Object.assign({}, found, { nome: nome, email: email, perfil: perfil, perms: perms });
-    if (senha) updated.senha = senha;
     dbSaveUser(updated, true).then(function () {
       clearCache('users');
       closeModal('modalUsuario');
-      toast('Usuário ' + nome + ' updated!', 'ok');
+      toast('Usuário ' + nome + ' atualizado!', 'ok');
       pgUsuarios();
     });
   } else {
@@ -2191,6 +2175,11 @@ document.addEventListener('DOMContentLoaded', function () {
     users = users.map(function (u) {
       if (u.perms && u.perms.dashboard === undefined) {
         u.perms = normalisePerms(u.perms, u.perfil);
+        changed = true;
+      }
+      // Garantia de segurança: limpar senhas legadas salvas no localStorage
+      if (typeof u.senha !== 'undefined') {
+        delete u.senha;
         changed = true;
       }
       return u;
