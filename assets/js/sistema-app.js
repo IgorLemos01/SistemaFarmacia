@@ -399,7 +399,7 @@ async function dbGetUsers() {
     FETCH_LOCK.users = true;
     (async function () {
       try {
-        var res = await withTimeout(sb.from('usuarios_do_sistema').select('*').order('criado_em'), 1500);
+        var res = await withTimeout(sb.from('system_users').select('*').order('criado_em'), 1500);
         if (!res.error && res.data && res.data.length) {
           var merged = res.data.map(function (dbU) {
             var localU = cached.find(function (l) { return l.email === dbU.email; }) || {};
@@ -432,10 +432,19 @@ async function dbSaveUser(obj, isEdit) {
   setCache('users', local);
   localStorage.setItem('fc_users', JSON.stringify(local));
   if (sb && STATE.isSupabase) {
-    var dbRow = { id: obj.id, nome: obj.nome, email: obj.email, perfil: obj.perfil, perms: obj.perms, ativo: obj.ativo };
+    var dbRow = {
+      id: obj.id,
+      nome: obj.nome,
+      email: obj.email,
+      perfil: obj.perfil,
+      perms: obj.perms,
+      ativo: obj.ativo,
+      auth_id: obj.auth_id || null,
+      criado_em: obj.criado_em || new Date().toISOString()
+    };
     try {
-      if (isEdit) { await withTimeout(sb.from('usuarios_do_sistema').update(dbRow).eq('id', obj.id), 3000); }
-      else { await withTimeout(sb.from('usuarios_do_sistema').insert([dbRow]), 3000); }
+      if (isEdit) { await withTimeout(sb.from('system_users').update(dbRow).eq('id', obj.id), 3000); }
+      else { await withTimeout(sb.from('system_users').insert([dbRow]), 3000); }
     } catch (e) { console.warn('dbSaveUser:', e.message); }
   }
 }
@@ -446,7 +455,7 @@ async function dbToggleUser(id, ativo) {
   if (idx >= 0) local[idx].ativo = ativo;
   setCache('users', local);
   localStorage.setItem('fc_users', JSON.stringify(local));
-  if (sb && STATE.isSupabase) { try { await withTimeout(sb.from('usuarios_do_sistema').update({ ativo: ativo }).eq('id', id), 3000); } catch (e) { } }
+  if (sb && STATE.isSupabase) { try { await withTimeout(sb.from('system_users').update({ ativo: ativo }).eq('id', id), 3000); } catch (e) { } }
 }
 
 function seedAdmin() {
@@ -533,9 +542,9 @@ function doLogin() {
       withTimeout(sb.auth.signInWithPassword({ email: email, password: pass }), 4000).then(function (res) {
         if (res.error) { tryLocal(); }
         else {
-          // Busca perfil na tabela usuarios_do_sistema
+          // Busca perfil na tabela system_users
           // Usa select geral e filtra client-side para aceitar qualquer nome de coluna de email
-          withTimeout(sb.from('usuarios_do_sistema').select('*'), 3000).then(function (r) {
+          withTimeout(sb.from('system_users').select('*'), 3000).then(function (r) {
             var allRows = r.data || [];
             var profile = allRows.find(function (u) {
               return (u.email || u['e-mail'] || '').toLowerCase() === email;
