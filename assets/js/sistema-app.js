@@ -1,4 +1,4 @@
-// ══════════════════════════════════════════════════════════
+﻿// ══════════════════════════════════════════════════════════
 //  SISTEMA FARMÁCIA COUTO — sistema-app.js
 // ══════════════════════════════════════════════════════════
 
@@ -50,6 +50,7 @@ var MODULOS = [
   { key: 'clientes', label: 'Clientes', ico: '👥', sub: 'Cadastro e histórico de pacientes' },
   { key: 'manipulacao', label: 'Manipulação', ico: '⚗️', sub: 'Receituários e fórmulas manipuladas' },
   { key: 'exames', label: 'Exames', ico: '🔬', sub: 'Registro e histórico de exames' },
+  { key: 'receitas', label: 'Receitas', ico: '📜', sub: 'Receitas médicas e medicamentos' },
   { key: 'orcamentos', label: 'Orçamentos', ico: '📋', sub: 'Relatório financeiro e geração de PDF' },
   { key: 'usuarios', label: 'Usuários', ico: '🛡️', sub: 'Criar e gerenciar usuários do sistema' },
 ];
@@ -57,19 +58,19 @@ var MODULOS = [
 var PERFIS = {
   admin: {
     label: 'Administrador', cor: 'badge-red',
-    perms: { dashboard: 'edit', clientes: 'edit', manipulacao: 'edit', exames: 'edit', orcamentos: 'edit', usuarios: 'edit' }
+    perms: { dashboard: 'edit', clientes: 'edit', manipulacao: 'edit', exames: 'edit', receitas: 'edit', orcamentos: 'edit', usuarios: 'edit' }
   },
   gerente: {
     label: 'Gerente', cor: 'badge-purple',
-    perms: { dashboard: 'read', clientes: 'edit', manipulacao: 'edit', exames: 'edit', orcamentos: 'edit', usuarios: 'none' }
+    perms: { dashboard: 'read', clientes: 'edit', manipulacao: 'edit', exames: 'edit', receitas: 'edit', orcamentos: 'edit', usuarios: 'none' }
   },
   farmaceutico: {
     label: 'Farmacêutico', cor: 'badge-blue',
-    perms: { dashboard: 'read', clientes: 'edit', manipulacao: 'edit', exames: 'read', orcamentos: 'read', usuarios: 'none' }
+    perms: { dashboard: 'read', clientes: 'edit', manipulacao: 'edit', exames: 'read', receitas: 'edit', orcamentos: 'read', usuarios: 'none' }
   },
   atendente: {
     label: 'Atendente', cor: 'badge-gray',
-    perms: { dashboard: 'read', clientes: 'edit', manipulacao: 'read', exames: 'read', orcamentos: 'none', usuarios: 'none' }
+    perms: { dashboard: 'read', clientes: 'edit', manipulacao: 'read', exames: 'read', receitas: 'read', orcamentos: 'none', usuarios: 'none' }
   },
 };
 
@@ -238,8 +239,8 @@ async function dbGetClientes() {
 
 async function dbSaveCliente(obj, isEdit) {
   var row = {
-    id: obj.id, nome: obj.nome, nasc: obj.nasc || null,
-    sexo: obj.sexo || null, tel: obj.tel, email: obj.email || null,
+    id: obj.id, nome: obj.nome, cpf: obj.cpf || null, nasc: obj.nasc || null,
+    sexo: obj.sexo || null, tel: obj.tel || null, email: obj.email || null,
     endereco: obj.endereco || null, obs: obj.obs || null, ativo: true,
     alergias_cliente: obj.alergiasCliente || null,
     medico_referencia: obj.medicoReferencia || null
@@ -639,6 +640,7 @@ var PAGE_TITLES = {
   clientes: ['Clientes', 'Gerenciar cadastros de pacientes'],
   manipulacao: ['Manipulação', 'Histórico de manipulações farmacêuticas'],
   exames: ['Exames', 'Histórico de exames realizados'],
+  receitas: ['Receitas', 'Receitas médicas e medicamentos dos pacientes'],
   orcamentos: ['Orçamentos', 'Relatório financeiro e orçamentos'],
   usuarios: ['Usuários', 'Gerenciar acessos e permissões'],
 };
@@ -662,6 +664,7 @@ function renderPage(page) {
     clientes: pgClientes,
     manipulacao: pgManipulacao,
     exames: pgExames,
+    receitas: pgReceitas,
     orcamentos: pgOrcamentos,
     usuarios: pgUsuarios,
   };
@@ -788,7 +791,7 @@ function filterClientes(q) {
 
 function renderClientesTable(clientes, servicos, q) {
   var list = q ? clientes.filter(function (c) {
-    var haystack = (c.nome + (c.tel || '') + (c.email || '') + (c.id || '')).toLowerCase();
+    var haystack = (c.nome + (c.cpf || '') + (c.tel || '') + (c.email || '') + (c.id || '')).toLowerCase();
     return haystack.includes(q.toLowerCase());
   }) : clientes;
   // Ordenar por mais recentemente atendido
@@ -830,6 +833,7 @@ function verCliente(id) {
       '<div class="divider"></div>' +
       '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem"><div style="font-size:.85rem;font-weight:600">Dados Cadastrais</div>' + (canEdit('clientes') ? '<button class="btn btn-sm btn-ghost" onclick="closeModal(\'modalDetalheCliente\');openModalCliente(\'' + c.id + '\')">✏️ Editar</button>' : '') + '</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1.25rem;font-size:.83rem">' +
+      (c.cpf ? '<div style="grid-column:1/-1"><span style="color:var(--tx3)">CPF: </span><strong>' + esc(c.cpf) + '</strong></div>' : '') +
       '<div><span style="color:var(--tx3)">Endereço: </span>' + esc(c.endereco || '—') + '</div>' +
       '<div><span style="color:var(--tx3)">E-mail: </span>' + esc(c.email || '—') + '</div>' +
       '<div><span style="color:var(--tx3)">Nascimento: </span>' + (c.nasc ? fmtDate(c.nasc) : '—') + '</div>' +
@@ -997,10 +1001,22 @@ function marcarEntregue(id) {
   var hoje = new Date().toISOString().split('T')[0];
   var cached = fromCache('servicos') || [];
   var idx = cached.findIndex(function (x) { return x.id === id; });
-  if (idx >= 0) { cached[idx].dataEntregaReal = hoje; cached[idx].data_entrega_real = hoje; setCache('servicos', cached); }
-  clearCache('servicos');
+  if (idx >= 0) {
+    cached[idx].dataEntregaReal = hoje;
+    cached[idx].data_entrega_real = hoje;
+    setCache('servicos', cached);
+  }
+  // Persistir no Supabase sem limpar o cache local
+  if (sb && STATE.isSupabase) {
+    withTimeout(sb.from('servicos').update({ data_entrega_real: hoje }).eq('id', id), 3000)
+      .then(function () { clearCache('servicos'); })
+      .catch(function (e) { console.warn('Erro ao salvar entrega no Supabase:', e.message); });
+  }
   toast('Manipulação marcada como entregue!', 'ok');
-  pgManipulacao();
+  // Atualiza a tela com os dados já atualizados no cache
+  window._manipServicos = cached.filter(function (s) { return s.tipo === 'manipulacao'; }).sort(function (a, b) { return (b.orcNum || 0) - (a.orcNum || 0); });
+  var hoje2 = window._manipHoje || hoje;
+  filtrarManipulacoes();
 }
 
 // ─── EXAMES ──────────────────────────────────────────────
@@ -1055,6 +1071,7 @@ function renderExameTable(servicos, clientes) {
         '<td style="display:flex;gap:.3rem">' +
         '<button class="btn btn-icon btn-sm" title="Ver detalhes" onclick="verExame(\'' + s.id + '\')">👁</button>' +
         (canEdit('exames') ? '<button class="btn btn-icon btn-sm" title="Editar" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\'' + s.id + '\')">✏️</button>' : '') +
+        (!temResult && canEdit('exames') ? '<button class="btn btn-sm btn-green" onclick="marcarResultadoExame(\'' + s.id + '\')" style="font-size:.72rem;padding:.3rem .6rem" title="Confirmar que resultado chegou">🟢</button>' : '') +
         '</td>' +
         '</tr>';
     }).join('') + '</tbody></table></div>';
@@ -1069,6 +1086,12 @@ function filtrarExames() {
     return true;
   });
   set('exameResult', '<div class="card-head"><div class="card-title">Resultados</div></div>' + renderExameTable(list, window._exameClientes || []));
+}
+
+function marcarResultadoExame(id) {
+  // Abre o modal de edição do serviço direcionando para o campo de resultado
+  openModalServico(null, null, id);
+  toast('Preencha o resultado do exame no formulário.', 'yw');
 }
 
 function verExame(id) {
@@ -1299,6 +1322,241 @@ function gerarPDFServicoById(id) {
   });
 }
 
+// ─── RECEITAS ────────────────────────────────────────────
+function dbGetReceitas() {
+  try { return JSON.parse(localStorage.getItem('fc_receitas') || '[]'); } catch (e) { return []; }
+}
+function dbSaveReceita(obj) {
+  var lista = dbGetReceitas();
+  var idx = lista.findIndex(function (r) { return r.id === obj.id; });
+  if (idx >= 0) lista[idx] = obj; else lista.unshift(obj);
+  localStorage.setItem('fc_receitas', JSON.stringify(lista));
+}
+function pgReceitas() {
+  if (!canView('receitas')) { set('content', '<div class="alert alert-red">⛔ Você não tem permissão para acessar esta área.</div>'); return; }
+  var btn = document.getElementById('topActionBtn');
+  if (canEdit('receitas')) { btn.style.display = ''; btn.textContent = '＋ Nova Receita'; }
+  set('content',
+    '<div class="card" style="margin-bottom:1.25rem">' +
+    '<div class="card-head"><div class="card-title">📜 Receitas Médicas</div><div class="card-sub">Histórico de receitas e medicamentos dos pacientes</div></div>' +
+    '<div style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap;padding:0 0 1rem">' +
+    '<div class="fg" style="flex:1;min-width:200px"><label>Buscar por paciente ou medicamento</label><input id="receitaFilter" placeholder="Nome do paciente ou medicamento..." oninput="filtrarReceitas()" /></div>' +
+    (canEdit('receitas') ? '<button class="btn btn-primary" onclick="openModalReceita()">＋ Nova Receita</button>' : '') +
+    '</div>' +
+    '</div>' +
+    '<div id="receitasResult"><div style="text-align:center;padding:2rem;color:var(--tx3)">⏳ Carregando...</div></div>'
+  );
+  dbGetClientes().then(function () { filtrarReceitas(); });
+}
+function filtrarReceitas() {
+  var filterEl = document.getElementById('receitaFilter');
+  var q = filterEl ? filterEl.value.toLowerCase() : '';
+  var receitas = dbGetReceitas();
+  var clientes = fromCache('clientes') || [];
+  var filtradas = receitas.filter(function (r) {
+    if (!q) return true;
+    var cl = clientes.find(function (c) { return c.id === r.clienteId; });
+    var nomePaciente = cl ? (cl.nome || '').toLowerCase() : '';
+    var meds = (r.medicamentos || []).map(function (m) { return (m.nome || '').toLowerCase(); }).join(' ');
+    return nomePaciente.includes(q) || meds.includes(q);
+  });
+  renderReceitasTable(filtradas, clientes);
+}
+function renderReceitasTable(receitas, clientes) {
+  if (!receitas.length) {
+    set('receitasResult',
+      '<div class="empty"><span class="empty-ico">📜</span><p class="empty-txt">Nenhuma receita encontrada</p>' +
+      (canEdit('receitas') ? '<button class="btn btn-primary" style="margin-top:1rem" onclick="openModalReceita()">＋ Nova Receita</button>' : '') +
+      '</div>'
+    );
+    return;
+  }
+  var html = '<div class="card"><div class="table-wrap"><table><thead><tr><th>#</th><th>Paciente</th><th>Data</th><th>Médico</th><th>Medicamentos</th><th>Ações</th></tr></thead><tbody>' +
+    receitas.map(function (r, i) {
+      var cl = clientes.find(function (c) { return c.id === r.clienteId; });
+      var meds = (r.medicamentos || []).map(function (m) {
+        return '<span class="badge badge-blue" style="margin:.1rem">💊 ' + esc(m.nome) + (m.dose ? ' ' + esc(m.dose) : '') + '</span>';
+      }).join('');
+      return '<tr>' +
+        '<td class="td-muted">' + (i + 1) + '</td>' +
+        '<td class="td-name">' + (cl ? esc(cl.nome) : '—') + (cl && cl.cpf ? '<div style="font-size:.72rem;color:var(--tx3)">CPF: ' + esc(cl.cpf) + '</div>' : '') + '</td>' +
+        '<td class="td-muted">' + fmtDate(r.data) + '</td>' +
+        '<td class="td-muted">' + esc(r.medico || '—') + '</td>' +
+        '<td style="max-width:280px;line-height:1.8">' + (meds || '<span class="td-muted">—</span>') + '</td>' +
+        '<td style="display:flex;gap:.3rem">' +
+        '<button class="btn btn-sm btn-ghost" onclick="verReceita(\'' + r.id + '\')">👁 Ver</button>' +
+        (canEdit('receitas') ? '<button class="btn btn-sm btn-ghost" onclick="excluirReceita(\'' + r.id + '\')">🗑️</button>' : '') +
+        '</td></tr>';
+    }).join('') + '</tbody></table></div></div>';
+  set('receitasResult', html);
+}
+function verReceita(id) {
+  var receitas = dbGetReceitas();
+  var r = receitas.find(function (x) { return x.id === id; });
+  if (!r) return;
+  var clientes = fromCache('clientes') || [];
+  var cl = clientes.find(function (c) { return c.id === r.clienteId; });
+  var medsHtml = (r.medicamentos || []).map(function (m) {
+    return '<div style="padding:.6rem .75rem;background:var(--blue-l);border-radius:var(--r);margin-bottom:.4rem">' +
+      '<strong style="color:var(--blue)">💊 ' + esc(m.nome) + '</strong>' +
+      (m.dose ? '<span style="font-size:.8rem;color:var(--tx3)"> — ' + esc(m.dose) + '</span>' : '') +
+      (m.posologia ? '<div style="font-size:.8rem;color:var(--tx2);margin-top:.2rem">' + esc(m.posologia) + '</div>' : '') +
+      '</div>';
+  }).join('');
+  document.getElementById('mOrcSub').textContent = 'Receita de ' + (cl ? cl.nome : '—');
+  set('mOrcBody',
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;font-size:.85rem;margin-bottom:1.25rem">' +
+    '<div><span style="color:var(--tx3)">Paciente:</span> <strong>' + (cl ? esc(cl.nome) : '—') + '</strong></div>' +
+    '<div><span style="color:var(--tx3)">Data:</span> ' + fmtDate(r.data) + '</div>' +
+    (cl && cl.cpf ? '<div><span style="color:var(--tx3)">CPF:</span> ' + esc(cl.cpf) + '</div>' : '') +
+    (r.medico ? '<div><span style="color:var(--tx3)">Médico:</span> ' + esc(r.medico) + '</div>' : '') +
+    '</div>' +
+    '<div class="divider"></div>' +
+    '<div style="font-size:.85rem;font-weight:600;margin-bottom:.75rem">Medicamentos</div>' +
+    medsHtml +
+    (r.obs ? '<div class="divider"></div><div style="font-size:.83rem"><strong>Obs:</strong> ' + esc(r.obs) + '</div>' : '') +
+    '<div style="display:flex;gap:.75rem;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)">' +
+    '<button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeModal(\'modalOrc\')">Fechar</button>' +
+    '</div>'
+  );
+  openModal('modalOrc');
+}
+function excluirReceita(id) {
+  if (!confirm('Excluir esta receita permanentemente?')) return;
+  var lista = dbGetReceitas().filter(function (r) { return r.id !== id; });
+  localStorage.setItem('fc_receitas', JSON.stringify(lista));
+  toast('Receita excluída.', 'ok');
+  filtrarReceitas();
+}
+function openModalReceita(editId) {
+  document.getElementById('mReceitaTitle').textContent = editId ? 'Editar Receita' : 'Nova Receita';
+  document.getElementById('modalReceita').dataset.editId = editId || '';
+  setVal('rClienteSearch', '');
+  setVal('rData', new Date().toISOString().split('T')[0]);
+  setVal('rMedico', '');
+  setVal('rObs', '');
+  document.getElementById('rClienteId').value = '';
+  document.getElementById('rClienteSelected').style.display = 'none';
+  set('rClienteSelected', '');
+  document.getElementById('rClienteResults').style.display = 'none';
+  _medCount = 0;
+  set('rMedsContainer', '');
+  adicionarMedicamento();
+  if (editId) {
+    var r = dbGetReceitas().find(function (x) { return x.id === editId; });
+    if (r) {
+      setVal('rData', r.data || '');
+      setVal('rMedico', r.medico || '');
+      setVal('rObs', r.obs || '');
+      document.getElementById('rClienteId').value = r.clienteId || '';
+      var clientes = fromCache('clientes') || [];
+      var cl = clientes.find(function (c) { return c.id === r.clienteId; });
+      if (cl) {
+        set('rClienteSelected', '<strong>' + esc(cl.nome) + '</strong> — CPF: ' + esc(cl.cpf || '—') + '<button class="btn btn-icon btn-sm" onclick="clearClienteReceita()" style="margin-left:.5rem">✕</button>');
+        document.getElementById('rClienteSelected').style.display = 'flex';
+      }
+      set('rMedsContainer', '');
+      (r.medicamentos || []).forEach(function (m) { adicionarMedicamento(m); });
+    }
+  }
+  openModal('modalReceita');
+}
+var _rTimeout;
+function buscarClienteReceita(q) {
+  clearTimeout(_rTimeout);
+  _rTimeout = setTimeout(function () {
+    if (!q || q.length < 2) { document.getElementById('rClienteResults').style.display = 'none'; return; }
+    var clientes = fromCache('clientes') || [];
+    var found = clientes.filter(function (c) {
+      return (c.nome + (c.cpf || '') + (c.tel || '')).toLowerCase().includes(q.toLowerCase());
+    }).slice(0, 6);
+    var box = document.getElementById('rClienteResults');
+    if (!found.length) {
+      dbGetClientes().then(function (all) {
+        var f2 = all.filter(function (c) { return (c.nome + (c.cpf || '') + (c.tel || '')).toLowerCase().includes(q.toLowerCase()); }).slice(0, 6);
+        renderClienteReceitaDropdown(f2, box);
+      });
+      return;
+    }
+    renderClienteReceitaDropdown(found, box);
+  }, 200);
+}
+function renderClienteReceitaDropdown(clientes, box) {
+  if (!clientes.length) { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  box.innerHTML = '<div style="position:absolute;top:2px;left:0;right:0;background:#fff;border:1.5px solid var(--blue);border-radius:var(--r);box-shadow:var(--md);z-index:50;overflow:hidden">' +
+    clientes.map(function (c) {
+      return '<div onclick="selectClienteReceita(\'' + c.id + '\')" style="padding:.65rem .9rem;cursor:pointer;font-size:.85rem;border-bottom:1px solid var(--border)" onmouseenter="this.style.background=\'var(--bg)\'" onmouseleave="this.style.background=\'\'">' +
+        '<strong>' + esc(c.nome) + '</strong> <span style="color:var(--tx3)">' + (c.cpf ? 'CPF: ' + esc(c.cpf) : esc(c.tel || '')) + '</span></div>';
+    }).join('') + '</div>';
+}
+function selectClienteReceita(id) {
+  var clientes = fromCache('clientes') || [];
+  var cl = clientes.find(function (c) { return c.id === id; });
+  if (!cl) return;
+  document.getElementById('rClienteId').value = id;
+  document.getElementById('rClienteResults').style.display = 'none';
+  set('rClienteSelected', '<strong>' + esc(cl.nome) + '</strong> — CPF: ' + esc(cl.cpf || '—') + '<button class="btn btn-icon btn-sm" onclick="clearClienteReceita()" style="margin-left:.5rem">✕</button>');
+  document.getElementById('rClienteSelected').style.display = 'flex';
+  setVal('rClienteSearch', cl.nome);
+}
+function clearClienteReceita() {
+  document.getElementById('rClienteId').value = '';
+  document.getElementById('rClienteSelected').style.display = 'none';
+  setVal('rClienteSearch', '');
+}
+var _medCount = 0;
+function adicionarMedicamento(dados) {
+  var cont = document.getElementById('rMedsContainer');
+  if (!cont) return;
+  var idx = _medCount++;
+  var div = document.createElement('div');
+  div.style.cssText = 'display:grid;grid-template-columns:1fr auto auto auto;gap:.4rem;align-items:center;background:var(--bg);padding:.6rem;border-radius:var(--r)';
+  div.id = 'med_' + idx;
+  div.innerHTML =
+    '<input placeholder="Nome do medicamento *" value="' + esc((dados && dados.nome) || '') + '" id="med_nome_' + idx + '" style="font-size:.85rem" />' +
+    '<input placeholder="Dose (ex: 500mg)" value="' + esc((dados && dados.dose) || '') + '" id="med_dose_' + idx + '" style="width:110px;font-size:.85rem" />' +
+    '<input placeholder="Posologia" value="' + esc((dados && dados.posologia) || '') + '" id="med_pos_' + idx + '" style="width:160px;font-size:.85rem" />' +
+    '<button type="button" class="btn btn-icon btn-sm" onclick="removerMedicamento(\'med_' + idx + '\')">🗑️</button>';
+  cont.appendChild(div);
+}
+function removerMedicamento(id) {
+  var el = document.getElementById(id);
+  if (el) el.remove();
+}
+function salvarReceita() {
+  var clienteId = document.getElementById('rClienteId').value;
+  var data = gv('rData');
+  if (!clienteId) { toast('Selecione um paciente.', 'er'); return; }
+  if (!data) { toast('Informe a data da receita.', 'er'); return; }
+  var meds = [];
+  document.querySelectorAll('#rMedsContainer > div').forEach(function (div) {
+    var id = div.id.replace('med_', '');
+    var nomeEl = document.getElementById('med_nome_' + id);
+    var doseEl = document.getElementById('med_dose_' + id);
+    var posEl = document.getElementById('med_pos_' + id);
+    var nome = nomeEl ? nomeEl.value.trim() : '';
+    var dose = doseEl ? doseEl.value.trim() : '';
+    var pos = posEl ? posEl.value.trim() : '';
+    if (nome) meds.push({ nome: nome, dose: dose, posologia: pos });
+  });
+  if (!meds.length) { toast('Adicione pelo menos um medicamento.', 'er'); return; }
+  var editId = document.getElementById('modalReceita').dataset.editId;
+  var obj = {
+    id: editId || uid(),
+    clienteId: clienteId,
+    data: data,
+    medico: gv('rMedico') || null,
+    medicamentos: meds,
+    obs: gv('rObs') || null,
+    criadoPor: STATE.user ? STATE.user.nome : '—',
+    criado_em: new Date().toISOString(),
+  };
+  dbSaveReceita(obj);
+  closeModal('modalReceita');
+  toast('Receita salva com sucesso! ✅', 'ok');
+  if (STATE.page === 'receitas') filtrarReceitas();
+}
 // ─── USUÁRIOS ────────────────────────────────────────────
 function pgUsuarios() {
   if (!canEdit('usuarios')) {
@@ -1390,14 +1648,25 @@ function verAtividadeUsuario(userId) {
 //  MODAL HANDLERS
 // ══════════════════════════════════════════════════════════
 function openModalCliente(id) {
-  var c = id ? lsArr('clientes').find(function (x) { return x.id === id; }) : null;
+  var c = null;
+  if (id) {
+    var allC = fromCache('clientes') || [];
+    c = allC.find(function (x) { return x.id === id; });
+    if (!c) c = lsArr('clientes').find(function (x) { return x.id === id; }) || null;
+  }
   document.getElementById('mClienteTitle').textContent = c ? 'Editar Cliente' : 'Novo Cliente';
   setVal('cNome', c ? c.nome : ''); setVal('cNasc', c ? c.nasc : '');
+  setVal('cCpf', c ? (c.cpf || '') : '');
   setVal('cSexo', c ? c.sexo : ''); setVal('cTel', c ? c.tel : ''); setVal('cEmail', c ? c.email : '');
   setVal('cEnd', c ? c.endereco : '');
   setVal('cAlergias', c ? (c.alergiasCliente || c.alergias_cliente || '') : '');
   setVal('cMedico', c ? (c.medicoReferencia || c.medico_referencia || '') : '');
   setVal('cObs', c ? c.obs : '');
+  // Limpar erros
+  var errCpf = document.getElementById('cCpfErr');
+  if (errCpf) errCpf.style.display = 'none';
+  var inpCpf = document.getElementById('cCpf');
+  if (inpCpf) inpCpf.style.borderColor = '';
   document.getElementById('modalCliente').dataset.editId = id || '';
   openModal('modalCliente');
 }
@@ -1412,13 +1681,23 @@ function cancelarModalCliente() {
 }
 
 function salvarCliente() {
-  var nome = gv('cNome'), tel = gv('cTel');
+  var nome = gv('cNome'), cpf = gv('cCpf'), tel = gv('cTel');
   var numTel = tel.replace(/\D/g, '');
   var ok = true;
   if (!nome) { toast('Preencha o nome.', 'er'); return; }
-  if (numTel.length < 10) {
+  // CPF obrigatório
+  var numCpf = cpf.replace(/\D/g, '');
+  if (!cpf || numCpf.length !== 11) {
+    var errCpf = document.getElementById('cCpfErr');
+    if (errCpf) { errCpf.textContent = 'CPF obrigatório e deve ter 11 dígitos.'; errCpf.style.display = 'block'; }
+    var inpCpf = document.getElementById('cCpf');
+    if (inpCpf) inpCpf.style.borderColor = 'var(--red)';
+    ok = false;
+  }
+  // Telefone não obrigatório, mas se preenchido deve ser válido
+  if (tel && numTel.length > 0 && numTel.length < 10) {
     var err = document.getElementById('cTelErr');
-    if (err) { err.textContent = 'Informe um WhatsApp válido (10 ou 11 dígitos).'; err.style.display = 'block'; }
+    if (err) { err.textContent = 'WhatsApp inválido (10 ou 11 dígitos).'; err.style.display = 'block'; }
     var inp = document.getElementById('cTel');
     if (inp) inp.style.borderColor = 'var(--red)';
     ok = false;
@@ -1426,8 +1705,8 @@ function salvarCliente() {
   if (!ok) return;
   var editId = document.getElementById('modalCliente').dataset.editId;
   var obj = {
-    id: editId || uid(), nome: nome, nasc: gv('cNasc') || null, sexo: gv('cSexo') || null,
-    tel: tel, email: gv('cEmail') || null, endereco: gv('cEnd') || null, obs: gv('cObs') || null,
+    id: editId || uid(), nome: nome, cpf: cpf, nasc: gv('cNasc') || null, sexo: gv('cSexo') || null,
+    tel: tel || null, email: gv('cEmail') || null, endereco: gv('cEnd') || null, obs: gv('cObs') || null,
     alergiasCliente: gv('cAlergias') || null, medicoReferencia: gv('cMedico') || null,
   };
   closeModal('modalCliente');
@@ -2096,6 +2375,7 @@ function lsSet(key, value) { localStorage.setItem(getStorageKey(key), JSON.strin
 function openTopAction() {
   if (STATE.page === 'clientes') openModalCliente();
   if (STATE.page === 'manipulacao' || STATE.page === 'exames') openModalServico();
+  if (STATE.page === 'receitas') openModalReceita();
   if (STATE.page === 'usuarios') openModalUsuario();
 }
 
@@ -2142,6 +2422,14 @@ function toast(msg, type) {
 function mPhone(el) {
   var v = el.value.replace(/\D/g, '');
   v = v.replace(/^(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2');
+  el.value = v;
+}
+
+function mCpf(el) {
+  var v = el.value.replace(/\D/g, '');
+  v = v.replace(/(\d{3})(\d)/, '$1.$2');
+  v = v.replace(/(\d{3})(\d)/, '$1.$2');
+  v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
   el.value = v;
 }
 

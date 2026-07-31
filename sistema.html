@@ -72,6 +72,7 @@
         <div class="sb-item" onclick="goTo('manipulacao')" data-page="manipulacao"><span class="ico">⚗️</span>
           Manipulação</div>
         <div class="sb-item" onclick="goTo('exames')" data-page="exames"><span class="ico">🔬</span> Exames</div>
+        <div class="sb-item" onclick="goTo('receitas')" data-page="receitas"><span class="ico">📜</span> Receitas</div>
         <div class="sb-section">Financeiro</div>
         <div class="sb-item" onclick="goTo('orcamentos')" data-page="orcamentos"><span class="ico">📋</span> Orçamentos
         </div>
@@ -123,6 +124,11 @@
       </div>
       <div class="form-grid">
         <div class="fg"><label>Nome Completo *</label><input id="cNome" placeholder="João da Silva" /></div>
+        <div class="fg">
+          <label>CPF *</label>
+          <input id="cCpf" placeholder="000.000.000-00" maxlength="14" oninput="mCpf(this);clearFieldErr('cCpf')" />
+          <span id="cCpfErr" style="display:none;color:var(--red);font-size:.75rem;margin-top:.2rem"></span>
+        </div>
         <div class="fg"><label>Data de Nascimento</label><input id="cNasc" type="date" /></div>
         <div class="fg"><label>Sexo</label><select id="cSexo">
             <option value="">—</option>
@@ -131,7 +137,7 @@
             <option>Outro</option>
           </select></div>
         <div class="fg">
-          <label>WhatsApp *</label>
+          <label>WhatsApp</label>
           <input id="cTel" placeholder="(75) 99999-9999" maxlength="15" oninput="mPhone(this);clearFieldErr('cTel')" />
           <span id="cTelErr" style="display:none;color:var(--red);font-size:.75rem;margin-top:.2rem"></span>
         </div>
@@ -333,6 +339,43 @@
           style="width:100%;justify-content:center">
           Fechar
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: RECEITA -->
+  <div class="modal-bg h" id="modalReceita">
+    <div class="modal modal-lg">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title" id="mReceitaTitle">Nova Receita</div>
+          <div class="modal-sub">Cadastre a receita do paciente</div>
+        </div>
+        <button class="modal-close" onclick="closeModal('modalReceita')">✕</button>
+      </div>
+      <div class="form-grid">
+        <div class="fg full">
+          <label>Paciente *</label>
+          <input id="rClienteSearch" placeholder="Buscar pelo nome ou CPF..."
+            oninput="buscarClienteReceita(this.value)" />
+          <div id="rClienteResults" style="display:none;position:relative"></div>
+          <input type="hidden" id="rClienteId" />
+          <div id="rClienteSelected"
+            style="display:none;padding:.5rem .75rem;background:var(--blue-l);border-radius:var(--r);font-size:.83rem;margin-top:.4rem;align-items:center;justify-content:space-between">
+          </div>
+        </div>
+        <div class="fg"><label>Data da Receita *</label><input id="rData" type="date" /></div>
+        <div class="fg"><label>Médico Prescritor</label><input id="rMedico" placeholder="Dr. Nome — CRM 12345" /></div>
+        <div class="fg full">
+          <label>Medicamentos *</label>
+          <div id="rMedsContainer" style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:.5rem"></div>
+          <button type="button" class="btn btn-ghost" onclick="adicionarMedicamento()" style="width:fit-content;font-size:.82rem">＋ Adicionar Medicamento</button>
+        </div>
+        <div class="fg full"><label>Observações</label><textarea id="rObs" placeholder="Instruções adicionais..."></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('modalReceita')">Cancelar</button>
+        <button class="btn btn-primary" onclick="salvarReceita()">💾 Salvar Receita</button>
       </div>
     </div>
   </div>
