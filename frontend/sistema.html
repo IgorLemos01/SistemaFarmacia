@@ -402,13 +402,17 @@
             style="display:none;padding:.5rem .75rem;background:var(--blue-l);border-radius:var(--r);font-size:.83rem;margin-top:.4rem;align-items:center;justify-content:space-between">
           </div>
         </div>
-        <!-- Tipo de Exame — populado dinamicamente via JS -->
+        <!-- Tipos de Exame — busca + lista de selecionados -->
         <div class="fg full">
           <label>Tipo de Exame *</label>
-          <select id="eTipoExameSelect" onchange="onExameTipoChange()">
-            <option value="">⏳ Carregando exames...</option>
-          </select>
-          <div id="eExameValorChip" style="display:none;margin-top:.5rem;padding:.4rem .8rem;background:var(--blue-l);border-radius:var(--r);font-size:.85rem;font-weight:600;color:var(--blue);width:fit-content"></div>
+          <div style="position:relative">
+            <input id="eExameSearch" placeholder="🔍 Buscar exame pelo nome..." autocomplete="off"
+              oninput="buscarExameModal(this.value)" onfocus="buscarExameModal(this.value)" />
+          </div>
+          <div id="eExameResults" style="display:none;position:relative"></div>
+          <div id="eExamesEmpty" style="display:none;margin-top:.5rem;padding:.55rem .8rem;background:var(--yellow-l);border-radius:var(--r);font-size:.78rem;color:#B45309">Nenhum exame adicionado. Selecione um ou mais acima.</div>
+          <div id="eExamesList" style="display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.5rem"></div>
+          <div class="hint">Você pode adicionar quantos exames quiser. Clique no ✕ para remover um exame.</div>
         </div>
         <!-- Data -->
         <div class="fg"><label>Data *</label><input id="eData" type="date" /></div>

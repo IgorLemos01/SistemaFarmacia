@@ -232,6 +232,9 @@ export function salvarServico() {
 //  MODAL EXAME DEDICADO
 // ══════════════════════════════════════════════════════════
 var _editandoExameId = null;
+var _examesSelecionados = [];
+var _tiposExames = [];
+var _exameFiltered = [];
 
 export function openModalExame(servicoId, clienteId) {
   _editandoExameId = servicoId || null;
@@ -239,28 +242,25 @@ export function openModalExame(servicoId, clienteId) {
   var isEdit = !!servicoId;
 
   // Reset campos
+  _examesSelecionados = [];
+  _tiposExames = [];
+  _exameFiltered = [];
   window.setVal('eClienteSearch', '');
-  window.setVal('eTipoExameSelect', '');
+  window.setVal('eExameSearch', '');
   window.setVal('eData', new Date().toISOString().split('T')[0]);
-  window.setVal('eValor', '');
+  window.setVal('eValor', 'R$ 0,00');
   window.setVal('ePagamento', '');
   window.setVal('eObs', '');
   document.getElementById('eClienteId').value = '';
   document.getElementById('eClienteSelected').style.display = 'none';
   window.set('eClienteSelected', '');
   document.getElementById('eClienteResults').style.display = 'none';
-  var chip = document.getElementById('eExameValorChip');
-  if (chip) chip.style.display = 'none';
+  document.getElementById('eExameResults').style.display = 'none';
+  renderExamesSelecionados();
 
-  // Carrega os exames dinamicamente do banco de dados e popula o select
+  // Carrega os tipos de exame dinamicamente do banco de dados
   window.dbGetTiposExames().then(function (exames) {
-    var selectEl = document.getElementById('eTipoExameSelect');
-    if (selectEl) {
-      selectEl.innerHTML = '<option value="">Selecione o exame...</option>' +
-        exames.map(function (e) {
-          return '<option value="' + e.nome + '|' + e.valor + '">' + e.nome + ' — R$ ' + parseFloat(e.valor).toFixed(2).replace('.', ',') + '</option>';
-        }).join('');
-    }
+    _tiposExames = exames || [];
 
     if (isEdit) {
       var allSrv = window.fromCache('servicos') || [];
@@ -283,19 +283,11 @@ export function openModalExame(servicoId, clienteId) {
       } else {
         document.getElementById('mExameSub').textContent = 'Editando exame #' + window.padNum(s.orcNum);
       }
-      // Preencher tipo de exame (encontrar option pelo nome)
-      if (selectEl && s.tipoExame) {
-        var found = false;
-        for (var i = 0; i < selectEl.options.length; i++) {
-          var opt = selectEl.options[i];
-          var parts = opt.value.split('|');
-          if (parts[0] === s.tipoExame) { selectEl.selectedIndex = i; found = true; break; }
-        }
+      // Preencher exames selecionados
+      if (s.tipoExame) {
+        _examesSelecionados = [{ nome: s.tipoExame, valor: parseFloat(s.valor) || 0 }];
       }
-      onExameTipoChange();
-      var vRaw = parseFloat(s.valor) || 0;
-      var vFmt = 'R$ ' + vRaw.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-      window.setVal('eValor', vFmt);
+      renderExamesSelecionados();
       window.setVal('ePagamento', s.pagamento || '');
       window.setVal('eData', s.data || new Date().toISOString().split('T')[0]);
       window.setVal('eObs', s.obs || '');
@@ -323,19 +315,61 @@ export function openModalExame(servicoId, clienteId) {
   window.openModal('modalExame');
 }
 
-export function onExameTipoChange() {
-  var sel = document.getElementById('eTipoExameSelect');
-  var chip = document.getElementById('eExameValorChip');
-  if (!sel || !sel.value) { if (chip) chip.style.display = 'none'; return; }
-  var parts = sel.value.split('|');
-  var nome = parts[0] || '';
-  var valor = parseFloat(parts[1]) || 0;
-  var vFmt = 'R$ ' + valor.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  window.setVal('eValor', vFmt);
-  if (chip) {
-    chip.textContent = '💰 ' + nome + ' — ' + vFmt;
-    chip.style.display = 'block';
+export function buscarExameModal(q) {
+  var box = document.getElementById('eExameResults');
+  if (!box) return;
+  q = (q || '').toLowerCase().trim();
+  var list = _tiposExames || [];
+  var filtradas = q
+    ? list.filter(function (e) { return (e.nome || '').toLowerCase().indexOf(q) !== -1; })
+    : list;
+  _exameFiltered = filtradas.slice(0, 50);
+  if (!_exameFiltered.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  box.style.display = 'block';
+  box.innerHTML = '<div class="exame-dd">' +
+    _exameFiltered.map(function (e, i) {
+      return '<div class="exame-dd-row" onclick="selectExameModal(' + i + ')" onmouseenter="this.classList.add(\'hov\')" onmouseleave="this.classList.remove(\'hov\')">' +
+        '<span class="exame-dd-nome">' + window.esc(e.nome) + '</span>' +
+        '<span class="exame-dd-valor">' + window.fmt(e.valor) + '</span>' +
+        '</div>';
+    }).join('') + '</div>';
+}
+
+export function selectExameModal(i) {
+  var e = _exameFiltered[i];
+  if (!e) return;
+  var jaTem = _examesSelecionados.some(function (x) { return x.nome === e.nome; });
+  if (jaTem) { window.toast('Este exame já foi adicionado.', 'yw'); return; }
+  _examesSelecionados.push({ nome: e.nome, valor: parseFloat(e.valor) || 0 });
+  window.setVal('eExameSearch', '');
+  document.getElementById('eExameResults').style.display = 'none';
+  renderExamesSelecionados();
+}
+
+export function removeExameSelecionado(i) {
+  _examesSelecionados.splice(i, 1);
+  renderExamesSelecionados();
+}
+
+export function renderExamesSelecionados() {
+  var box = document.getElementById('eExamesList');
+  var empty = document.getElementById('eExamesEmpty');
+  if (!box) return;
+  var total = _examesSelecionados.reduce(function (a, e) { return a + (parseFloat(e.valor) || 0); }, 0);
+  if (!_examesSelecionados.length) {
+    box.innerHTML = '';
+    if (empty) empty.style.display = '';
+  } else {
+    if (empty) empty.style.display = 'none';
+    box.innerHTML = _examesSelecionados.map(function (e, i) {
+      return '<div class="exame-chip">' +
+        '<div class="exame-chip-info"><span class="exame-chip-nome">' + window.esc(e.nome) + '</span><span class="exame-chip-valor">' + window.fmt(e.valor) + '</span></div>' +
+        '<button type="button" class="btn btn-icon btn-sm" title="Remover exame" onclick="removeExameSelecionado(' + i + ')">✕</button>' +
+        '</div>';
+    }).join('') +
+      '<div class="exame-total">Total: <strong>' + window.fmt(total) + '</strong></div>';
   }
+  window.setVal('eValor', 'R$ ' + total.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 }
 
 export var _exTimeout;
@@ -386,67 +420,93 @@ export function clearClienteExame() {
 }
 
 export function cancelarModalExame() {
-  var temDados = window.gv('eTipoExameSelect') || window.gv('eValor') || window.gv('eObs');
+  var temDados = _examesSelecionados.length || window.gv('eValor') !== 'R$ 0,00' || window.gv('eObs');
   if (temDados && !confirm('Descartar os dados preenchidos?')) return;
   window.closeModal('modalExame');
 }
 
+function montarVetoresValor(lista, valorTotal) {
+  var baseSum = lista.reduce(function (a, e) { return a + (parseFloat(e.valor) || 0); }, 0);
+  var vals = lista.map(function (e) { return parseFloat(e.valor) || 0; });
+  if (lista.length === 1) {
+    vals[0] = valorTotal || vals[0];
+  } else if (lista.length > 1 && baseSum > 0 && valorTotal > 0 && Math.abs(valorTotal - baseSum) > 0.005) {
+    var usado = 0;
+    vals = vals.map(function (v, i) {
+      var vv = i === vals.length - 1
+        ? Math.round((valorTotal - usado) * 100) / 100
+        : Math.round((valorTotal * v / baseSum) * 100) / 100;
+      usado += vv;
+      return vv;
+    });
+  }
+  return vals;
+}
+
+function salvarExamesNovos(lista, vals, clienteId, data, pag, obs) {
+  var p = Promise.resolve();
+  lista.forEach(function (e, i) {
+    p = p.then(function () {
+      var obj = {
+        id: window.uid(), clienteId: clienteId, tipo: 'exame', data: data,
+        valor: vals[i], pagamento: pag, obs: obs,
+        tipoExame: e.nome,
+        criadoPor: window.STATE.user ? window.STATE.user.nome : '—',
+      };
+      return window.dbSaveServico(obj);
+    });
+  });
+  return p;
+}
+
 export function salvarExame() {
   var clienteId = document.getElementById('eClienteId').value;
-  var tipoSel = document.getElementById('eTipoExameSelect').value;
   var data = window.gv('eData');
   var valor = window.gv('eValor');
   var pag = window.gv('ePagamento');
   var hasErr = false;
   if (!clienteId) { window.toast('Selecione um cliente.', 'er'); hasErr = true; }
-  if (!tipoSel) { _setFieldErr('eTipoExameSelect'); if (!hasErr) window.toast('Selecione o tipo de exame.', 'er'); hasErr = true; }
+  if (!_examesSelecionados.length) { window.toast('Adicione ao menos um exame.', 'er'); hasErr = true; }
   if (!data) { _setFieldErr('eData'); if (!hasErr) window.toast('Informe a data.', 'er'); hasErr = true; }
-  if (!valor) { _setFieldErr('eValor'); if (!hasErr) window.toast('Informe o valor.', 'er'); hasErr = true; }
   if (!pag) { _setFieldErr('ePagamento'); if (!hasErr) window.toast('Selecione a forma de pagamento.', 'er'); hasErr = true; }
   if (hasErr) return;
 
-  var tipoExameNome = tipoSel.split('|')[0];
-  var valorNum = parseFloat(valor.replace(/[R$\s\.]/g, '').replace(',', '.')) || 0;
+  var valorTotal = parseFloat(valor.replace(/[R$\s\.]/g, '').replace(',', '.')) || 0;
+  var obs = window.gv('eObs') || null;
+  var vals = montarVetoresValor(_examesSelecionados, valorTotal);
+  var totalSalvo = vals.reduce(function (a, v) { return a + (v || 0); }, 0);
 
-  var _clienteParaConfirm = (window.fromCache('clientes') || []).find(function (c) { return c.id === clienteId; }) || null;
+  window.closeModal('modalExame');
 
   if (_editandoExameId) {
     var editId = _editandoExameId;
     var cached = window.fromCache('servicos') || [];
     var existing = cached.find(function (x) { return x.id === editId; }) || {};
+    var primeiro = _examesSelecionados[0];
     var changes = {
       clienteId: clienteId, tipo: 'exame', data: data,
-      valor: valorNum, pagamento: pag, obs: window.gv('eObs') || null,
-      tipoExame: tipoExameNome,
+      valor: vals[0], pagamento: pag, obs: obs,
+      tipoExame: primeiro.nome,
     };
-    window.closeModal('modalExame');
-    window.dbUpdateServico(editId, changes).then(function (num) {
+    var novos = _examesSelecionados.slice(1);
+    var novasVals = vals.slice(1);
+    window.dbUpdateServico(editId, changes).then(function () {
+      return salvarExamesNovos(novos, novasVals, clienteId, data, pag, obs);
+    }).then(function () {
       window.clearCache('servicos');
       window.renderPage(window.STATE.page);
-      window.toast('Exame #' + window.padNum(num || existing.orcNum) + ' atualizado com sucesso!', 'ok');
-      setTimeout(function () {
-        var objFinal = Object.assign({}, existing, changes, { orcNum: num || existing.orcNum });
-        window.abrirConfirmServico(objFinal, _clienteParaConfirm, num || existing.orcNum);
-      }, 150);
+      window.toast('Exame atualizado com sucesso!', 'ok');
     });
     _editandoExameId = null;
     window._editandoExameId = null;
     return;
   }
 
-  var obj = {
-    id: window.uid(), clienteId: clienteId, tipo: 'exame', data: data,
-    valor: valorNum, pagamento: pag, obs: window.gv('eObs') || null,
-    tipoExame: tipoExameNome,
-    criadoPor: window.STATE.user ? window.STATE.user.nome : '—',
-  };
-  window.closeModal('modalExame');
-  window.dbSaveServico(obj).then(function (num) {
+  salvarExamesNovos(_examesSelecionados, vals, clienteId, data, pag, obs).then(function () {
     window.clearCache('servicos');
     window.renderPage(window.STATE.page);
-    setTimeout(function () {
-      window.abrirConfirmServico(obj, _clienteParaConfirm, num);
-    }, 150);
+    var n = _examesSelecionados.length;
+    window.toast(n > 1 ? n + ' exames registrados — total ' + window.fmt(totalSalvo) + '!' : 'Exame registrado com sucesso!', 'ok');
   });
 }
 
@@ -465,7 +525,10 @@ window.clearClienteServico = clearClienteServico;
 window._setFieldErr = _setFieldErr;
 window.salvarServico = salvarServico;
 window.openModalExame = openModalExame;
-window.onExameTipoChange = onExameTipoChange;
+window.buscarExameModal = buscarExameModal;
+window.selectExameModal = selectExameModal;
+window.removeExameSelecionado = removeExameSelecionado;
+window.renderExamesSelecionados = renderExamesSelecionados;
 window.buscarClienteExame = buscarClienteExame;
 window.renderClienteExameDropdown = renderClienteExameDropdown;
 window.selectClienteExame = selectClienteExame;

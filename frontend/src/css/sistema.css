@@ -757,6 +757,108 @@ tr:hover td {
   color: var(--tx3)
 }
 
+.exame-dd {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1.5px solid var(--blue);
+  border-radius: var(--r);
+  box-shadow: var(--md);
+  z-index: 50;
+  overflow-y: auto;
+  max-height: 260px
+}
+
+.exame-dd-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .6rem .9rem;
+  cursor: pointer;
+  font-size: .85rem;
+  border-bottom: 1px solid var(--border)
+}
+
+.exame-dd-row:last-child {
+  border-bottom: none
+}
+
+.exame-dd-row.hov {
+  background: var(--bg)
+}
+
+.exame-dd-nome {
+  font-weight: 600
+}
+
+.exame-dd-valor {
+  white-space: nowrap;
+  font-weight: 700;
+  color: var(--blue)
+}
+
+.exame-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .3rem .35rem .3rem .75rem;
+  background: var(--blue-l);
+  border: 1px solid var(--blue);
+  border-radius: 100px;
+  font-size: .8rem;
+  color: var(--blue)
+}
+
+.exame-chip-info {
+  display: flex;
+  align-items: center;
+  gap: .5rem
+}
+
+.exame-chip-nome {
+  font-weight: 600
+}
+
+.exame-chip-valor {
+  font-weight: 700
+}
+
+.exame-chip .btn-icon {
+  width: 22px;
+  height: 22px;
+  font-size: .7rem;
+  border: none;
+  background: rgba(0, 48, 135, .1);
+  color: var(--blue);
+  border-radius: 50%
+}
+
+.exame-chip .btn-icon:hover {
+  background: var(--red);
+  color: #fff
+}
+
+.exame-total {
+  flex-basis: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: .4rem;
+  padding-top: .35rem;
+  font-size: .85rem;
+  color: var(--tx2)
+}
+
+.exame-total strong {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--blue)
+}
+
 .search-bar {
   position: relative;
   flex: 1;
