@@ -380,6 +380,135 @@
     </div>
   </div>
 
+  <!-- MODAL: EXAME (dedicado) -->
+  <div class="modal-bg h" id="modalExame">
+    <div class="modal modal-lg">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title" id="mExameTitle">Registrar Exame</div>
+          <div class="modal-sub" id="mExameSub">—</div>
+        </div>
+        <button class="modal-close" onclick="closeModal('modalExame')">✕</button>
+      </div>
+      <div class="form-grid">
+        <!-- Cliente -->
+        <div class="fg full">
+          <label>Cliente *</label>
+          <input id="eClienteSearch" placeholder="Buscar pelo nome ou telefone..."
+            oninput="buscarClienteExame(this.value)" />
+          <div id="eClienteResults" style="display:none;position:relative"></div>
+          <input type="hidden" id="eClienteId" />
+          <div id="eClienteSelected"
+            style="display:none;padding:.5rem .75rem;background:var(--blue-l);border-radius:var(--r);font-size:.83rem;margin-top:.4rem;align-items:center;justify-content:space-between">
+          </div>
+        </div>
+        <!-- Tipo de Exame -->
+        <div class="fg full">
+          <label>Tipo de Exame *</label>
+          <select id="eTipoExameSelect" onchange="onExameTipoChange()">
+            <option value="">Selecione o exame...</option>
+            <option value="Glicemia em Jejum|6">Glicemia em Jejum — R$ 6,00</option>
+            <option value="Fezes 1 Amostra|7">Fezes 1 Amostra — R$ 7,00</option>
+            <option value="Ácido Úrico|8">Ácido Úrico — R$ 8,00</option>
+            <option value="Sumário de Urina|8">Sumário de Urina — R$ 8,00</option>
+            <option value="Cálcio (Ca)|10">Cálcio (Ca) — R$ 10,00</option>
+            <option value="Fosfatase Alcalina|10">Fosfatase Alcalina — R$ 10,00</option>
+            <option value="Grupo Sanguíneo|10">Grupo Sanguíneo — R$ 10,00</option>
+            <option value="T3|10">T3 — R$ 10,00</option>
+            <option value="Hemograma Completo|12">Hemograma Completo — R$ 12,00</option>
+            <option value="T4|12">T4 — R$ 12,00</option>
+            <option value="TSH|12">TSH — R$ 12,00</option>
+            <option value="Fezes 2 Amostras|14">Fezes 2 Amostras — R$ 14,00</option>
+            <option value="TGO e TGP|14">TGO e TGP — R$ 14,00</option>
+            <option value="Ureia e Creatinina|14">Ureia e Creatinina — R$ 14,00</option>
+            <option value="Bilirrubina Total e Frações|15">Bilirrubina Total e Frações — R$ 15,00</option>
+            <option value="Teste de Gravidez|15">Teste de Gravidez — R$ 15,00</option>
+            <option value="Ferritina|20">Ferritina — R$ 20,00</option>
+            <option value="Ferro (Fe)|20">Ferro (Fe) — R$ 20,00</option>
+            <option value="Fezes 3 Amostras|20">Fezes 3 Amostras — R$ 20,00</option>
+            <option value="Colesterol Total e Frações (HDL, LDL, VLDL)|25">Colesterol Total e Frações (HDL, LDL, VLDL) — R$ 25,00</option>
+            <option value="Hemoglobina Glicada|25">Hemoglobina Glicada — R$ 25,00</option>
+            <option value="PSA|25">PSA — R$ 25,00</option>
+            <option value="PSA Total e Livre|25">PSA Total e Livre — R$ 25,00</option>
+            <option value="Triglicerídeos|25">Triglicerídeos — R$ 25,00</option>
+            <option value="VDRL|25">VDRL — R$ 25,00</option>
+            <option value="Hepatite C|30">Hepatite C — R$ 30,00</option>
+            <option value="HIV 1 e 2|30">HIV 1 e 2 — R$ 30,00</option>
+            <option value="Sífilis|30">Sífilis — R$ 30,00</option>
+            <option value="Vitamina D 25-OH|30">Vitamina D 25-OH — R$ 30,00</option>
+            <option value="Curva de Glicemia|40">Curva de Glicemia — R$ 40,00</option>
+            <option value="Lactose|40">Lactose — R$ 40,00</option>
+            <option value="Urocultura|40">Urocultura — R$ 40,00</option>
+            <option value="TOTG|50">TOTG — R$ 50,00</option>
+            <option value="Hepatite B|39">Hepatite B — R$ 39,00</option>
+            <option value="Potássio (K)|197">Potássio (K) — R$ 197,00</option>
+            <option value="Magnésio (Mg)|126">Magnésio (Mg) — R$ 126,00</option>
+            <option value="Sódio (Na)|7">Sódio (Na) — R$ 7,00</option>
+            <option value="Vitamina A|29">Vitamina A — R$ 29,00</option>
+            <option value="Vitamina B12|36">Vitamina B12 — R$ 36,00</option>
+            <option value="Vitamina C|5">Vitamina C — R$ 5,00</option>
+            <option value="Anti-Fireglobulina|57">Anti-Fireglobulina — R$ 57,00</option>
+            <option value="Anti-TPO|19">Anti-TPO — R$ 19,00</option>
+            <option value="ASLO|10">ASLO — R$ 10,00</option>
+            <option value="C3|37">C3 — R$ 37,00</option>
+            <option value="C4|37">C4 — R$ 37,00</option>
+            <option value="CH50|92">CH50 — R$ 92,00</option>
+            <option value="IgE para Ácaros (B.tropicalis, D.pteronyssinus, D.farinae e Pó caseiro)|30">IgE para Ácaros — R$ 30,00</option>
+            <option value="IgE para Alfa, Beta Lactoglobulina|42">IgE para Alfa, Beta Lactoglobulina — R$ 42,00</option>
+            <option value="IgE para Barata|42">IgE para Barata — R$ 42,00</option>
+            <option value="IgE para Blomia Tropicalis|42">IgE para Blomia Tropicalis — R$ 42,00</option>
+            <option value="IgE para Caseína|30">IgE para Caseína — R$ 30,00</option>
+            <option value="IgE para Castanha|42">IgE para Castanha — R$ 42,00</option>
+            <option value="IgE para Clara do Ovo|42">IgE para Clara do Ovo — R$ 42,00</option>
+            <option value="IgE para Fungos (P.nottum, C.herbarum, D.alternata e As.Fumugatus)|30">IgE para Fungos — R$ 30,00</option>
+            <option value="IgE para Gema do Ovo|61">IgE para Gema do Ovo — R$ 61,00</option>
+            <option value="IgE para Glúten|30">IgE para Glúten — R$ 30,00</option>
+            <option value="IgE para Leite de Vaca|30">IgE para Leite de Vaca — R$ 30,00</option>
+            <option value="IgE para Marisco/Frutos do Mar|30">IgE para Marisco/Frutos do Mar — R$ 30,00</option>
+            <option value="IgE para Peixe (Tilápia/Merluza)|30">IgE para Peixe (Tilápia/Merluza) — R$ 30,00</option>
+            <option value="IgE para Pelo de Cão e Gato|42">IgE para Pelo de Cão e Gato — R$ 42,00</option>
+            <option value="IgE para Pólen de Gramíneas|30">IgE para Pólen de Gramíneas — R$ 30,00</option>
+            <option value="IgE para Trigo|30">IgE para Trigo — R$ 30,00</option>
+            <option value="IgE Sérico|25">IgE Sérico — R$ 25,00</option>
+            <option value="IgG Total|29">IgG Total — R$ 29,00</option>
+            <option value="IgG Subclasses|881">IgG Subclasses — R$ 881,00</option>
+            <option value="Sangue Oculto nas Fezes|37">Sangue Oculto nas Fezes — R$ 37,00</option>
+            <option value="Zinco|30">Zinco — R$ 30,00</option>
+            <option value="Lactose (sem o líquido)|130">Lactose (sem o líquido) — R$ 130,00</option>
+            <option value="Sexagem Fetal|200">Sexagem Fetal — R$ 200,00</option>
+            <option value="DNA (Jorro)|450">DNA (Jorro) — R$ 450,00</option>
+          </select>
+          <!-- Chip de valor ao lado -->
+          <div id="eExameValorChip" style="display:none;margin-top:.5rem;padding:.4rem .8rem;background:var(--blue-l);border-radius:var(--r);font-size:.85rem;font-weight:600;color:var(--blue);width:fit-content">
+          </div>
+        </div>
+        <!-- Data -->
+        <div class="fg"><label>Data *</label><input id="eData" type="date" /></div>
+        <!-- Valor -->
+        <div class="fg"><label>Valor (R$) *</label><input id="eValor" placeholder="R$ 0,00" oninput="maskValorServico(this)" /></div>
+        <!-- Pagamento -->
+        <div class="fg">
+          <label>Forma de Pagamento *</label>
+          <select id="ePagamento">
+            <option value="">Selecione...</option>
+            <option value="dinheiro">💵 Dinheiro</option>
+            <option value="pix">📲 Pix</option>
+            <option value="debito">💳 Débito</option>
+            <option value="credito">💳 Crédito</option>
+            <option value="pendente">⏳ A receber</option>
+          </select>
+        </div>
+        <!-- Observações -->
+        <div class="fg full"><label>Observações</label><textarea id="eObs"
+            placeholder="Informações adicionais sobre este exame..."></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="cancelarModalExame()">Cancelar</button>
+        <button class="btn btn-primary" onclick="salvarExame()">🔬 Registrar Exame</button>
+      </div>
+    </div>
+  </div>
+
   <script src="assets/js/sistema-app.js"></script>
 </body>
 

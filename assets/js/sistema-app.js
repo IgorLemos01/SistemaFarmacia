@@ -1,4 +1,4 @@
-﻿// ══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
 //  SISTEMA FARMÁCIA COUTO — sistema-app.js
 // ══════════════════════════════════════════════════════════
 
@@ -1043,7 +1043,7 @@ function pgExames() {
       '<div class="fg"><label>Até</label><input type="date" id="eAte" style="width:150px"/></div>' +
       '<div class="fg"><label>Pagamento</label><select id="ePag" style="width:150px"><option value="">Todos</option><option value="dinheiro">Dinheiro</option><option value="pix">Pix</option><option value="debito">Débito</option><option value="credito">Crédito</option><option value="pendente">A receber</option></select></div>' +
       '<button class="btn btn-primary" onclick="filtrarExames()">🔍 Filtrar</button>' +
-      (canEdit('exames') ? '<button class="btn btn-primary" onclick="openModalServico(null,\'exame\')">＋ Novo Exame</button>' : '') +
+      (canEdit('exames') ? '<button class="btn btn-primary" onclick="openModalExame()">＋ Novo Exame</button>' : '') +
       '</div>' +
       '</div>' +
       '<div class="card" id="exameResult">' +
@@ -1056,7 +1056,7 @@ function pgExames() {
 }
 
 function renderExameTable(servicos, clientes) {
-  if (!servicos.length) return '<div class="empty"><span class="empty-ico">🔬</span><p class="empty-txt">Nenhum exame registrado</p>' + (canEdit('exames') ? '<button class="btn btn-primary" style="margin-top:1rem" onclick="openModalServico(null,\'exame\')">＋ Novo Exame</button>' : '') + '</div>';
+  if (!servicos.length) return '<div class="empty"><span class="empty-ico">🔬</span><p class="empty-txt">Nenhum exame registrado</p>' + (canEdit('exames') ? '<button class="btn btn-primary" style="margin-top:1rem" onclick="openModalExame()">＋ Novo Exame</button>' : '') + '</div>';
   return '<div class="table-wrap"><table><thead><tr><th>Orç#</th><th>Cliente</th><th>Tipo de Exame</th><th>Resultado</th><th>Valor</th><th>Pagamento</th><th>Data</th><th></th></tr></thead><tbody>' +
     servicos.map(function (s) {
       var cl = clientes.find(function (c) { return c.id === s.clienteId; });
@@ -1070,8 +1070,7 @@ function renderExameTable(servicos, clientes) {
         '<td class="td-muted">' + fmtDate(s.data) + '</td>' +
         '<td style="display:flex;gap:.3rem">' +
         '<button class="btn btn-icon btn-sm" title="Ver detalhes" onclick="verExame(\'' + s.id + '\')">👁</button>' +
-        (canEdit('exames') ? '<button class="btn btn-icon btn-sm" title="Editar" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\'' + s.id + '\')">✏️</button>' : '') +
-        (!temResult && canEdit('exames') ? '<button class="btn btn-sm btn-green" onclick="marcarResultadoExame(\'' + s.id + '\')" style="font-size:.72rem;padding:.3rem .6rem" title="Confirmar que resultado chegou">🟢</button>' : '') +
+        (canEdit('exames') ? '<button class="btn btn-icon btn-sm" title="Editar" onclick="closeModal(\'modalOrc\');openModalExame(\'' + s.id + '\')">✏️</button>' : '') +
         '</td>' +
         '</tr>';
     }).join('') + '</tbody></table></div>';
@@ -1089,9 +1088,7 @@ function filtrarExames() {
 }
 
 function marcarResultadoExame(id) {
-  // Abre o modal de edição do serviço direcionando para o campo de resultado
-  openModalServico(null, null, id);
-  toast('Preencha o resultado do exame no formulário.', 'yw');
+  openModalExame(id);
 }
 
 function verExame(id) {
@@ -1119,7 +1116,7 @@ function verExame(id) {
       '<span style="font-family:\'Playfair Display\',serif;font-size:1.6rem;font-weight:800;color:var(--blue)">' + fmt(s.valor) + '</span>' +
       '</div>' +
       '<div style="display:flex;gap:.75rem;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border)">' +
-      (canEdit('exames') ? '<button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeModal(\'modalOrc\');openModalServico(null,null,\'' + s.id + '\')">✏️ Editar</button>' : '') +
+      (canEdit('exames') ? '<button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeModal(\'modalOrc\');openModalExame(\'' + s.id + '\')">✏️ Editar</button>' : '') +
       '<button class="btn btn-primary" style="flex:1;justify-content:center" onclick="gerarPDFServicoById(\'' + s.id + '\')">📄 Gerar PDF</button>' +
       '</div>'
     );
@@ -1751,7 +1748,7 @@ function openModalServico(clienteId, tipo, servicoId) {
     var clientes = fromCache('clientes') || [];
     var cl = clientes.find(function (c) { return c.id === clienteId; });
     if (cl) {
-      set('sClienteSelected', '<strong>' + esc(cl.nome) + '</strong> — ' + esc(cl.tel || '') + '<button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">✕</button>');
+      set('sClienteSelected', '<strong>' + esc(cl.nome) + '</strong><button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">✕</button>');
       document.getElementById('sClienteSelected').style.display = 'flex';
       document.getElementById('mServicoSub').textContent = 'Editando orçamento #' + padNum(s.orcNum) + ' — ' + cl.nome;
     } else {
@@ -1790,7 +1787,7 @@ function openModalServico(clienteId, tipo, servicoId) {
     var clientes2 = fromCache('clientes') || [];
     var cl2 = clientes2.find(function (c) { return c.id === clienteId; });
     if (cl2) {
-      set('sClienteSelected', '<strong>' + esc(cl2.nome) + '</strong> — ' + esc(cl2.tel || '') + '<button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">✕</button>');
+      set('sClienteSelected', '<strong>' + esc(cl2.nome) + '</strong><button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">✕</button>');
       document.getElementById('sClienteSelected').style.display = 'flex';
       document.getElementById('mServicoSub').textContent = 'Cliente: ' + cl2.nome;
     }
@@ -1870,7 +1867,7 @@ function selectClienteServico(id) {
   if (!cl) return;
   document.getElementById('sClienteId').value = id;
   document.getElementById('sClienteResults').style.display = 'none';
-  set('sClienteSelected', '<strong>' + esc(cl.nome) + '</strong> — ' + esc(cl.tel || '') + '<button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">✕</button>');
+  set('sClienteSelected', '<strong>' + esc(cl.nome) + '</strong><button class="btn btn-icon btn-sm" onclick="clearClienteServico()" style="margin-left:.5rem">✕</button>');
   document.getElementById('sClienteSelected').style.display = 'flex';
   document.getElementById('mServicoSub').textContent = 'Cliente: ' + cl.nome;
 }
@@ -2124,6 +2121,220 @@ function salvarUsuario() {
 }
 
 // ══════════════════════════════════════════════════════════
+//  MODAL EXAME DEDICADO
+// ══════════════════════════════════════════════════════════
+var _editandoExameId = null;
+
+function openModalExame(servicoId, clienteId) {
+  _editandoExameId = servicoId || null;
+  var isEdit = !!servicoId;
+
+  // Reset campos
+  setVal('eClienteSearch', '');
+  setVal('eTipoExameSelect', '');
+  setVal('eData', new Date().toISOString().split('T')[0]);
+  setVal('eValor', '');
+  setVal('ePagamento', '');
+  setVal('eObs', '');
+  document.getElementById('eClienteId').value = '';
+  document.getElementById('eClienteSelected').style.display = 'none';
+  set('eClienteSelected', '');
+  document.getElementById('eClienteResults').style.display = 'none';
+  var chip = document.getElementById('eExameValorChip');
+  if (chip) chip.style.display = 'none';
+
+  if (isEdit) {
+    var allSrv = fromCache('servicos') || [];
+    var s = allSrv.find(function (x) { return x.id === servicoId; });
+    if (!s) {
+      dbGetServicos().then(function (all) {
+        var srv = all.find(function (x) { return x.id === servicoId; });
+        if (srv) openModalExame(servicoId, srv.clienteId);
+      });
+      return;
+    }
+    // Preencher cliente
+    var clientes = fromCache('clientes') || [];
+    var cl = clientes.find(function (c) { return c.id === s.clienteId; });
+    if (cl) {
+      document.getElementById('eClienteId').value = s.clienteId;
+      set('eClienteSelected', '<strong>' + esc(cl.nome) + '</strong><button class="btn btn-icon btn-sm" onclick="clearClienteExame()" style="margin-left:.5rem">✕</button>');
+      document.getElementById('eClienteSelected').style.display = 'flex';
+      document.getElementById('mExameSub').textContent = 'Editando exame #' + padNum(s.orcNum) + ' — ' + cl.nome;
+    } else {
+      document.getElementById('mExameSub').textContent = 'Editando exame #' + padNum(s.orcNum);
+    }
+    // Preencher tipo de exame (encontrar option pelo nome)
+    var selectEl = document.getElementById('eTipoExameSelect');
+    if (selectEl && s.tipoExame) {
+      var found = false;
+      for (var i = 0; i < selectEl.options.length; i++) {
+        var opt = selectEl.options[i];
+        var parts = opt.value.split('|');
+        if (parts[0] === s.tipoExame) { selectEl.selectedIndex = i; found = true; break; }
+      }
+      if (!found) { selectEl.selectedIndex = 0; }
+    }
+    onExameTipoChange();
+    // Valor formatado
+    var vRaw = parseFloat(s.valor) || 0;
+    var vFmt = 'R$ ' + vRaw.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    setVal('eValor', vFmt);
+    setVal('ePagamento', s.pagamento || '');
+    setVal('eData', s.data || new Date().toISOString().split('T')[0]);
+    setVal('eObs', s.obs || '');
+    document.getElementById('mExameTitle').textContent = 'Editar Exame';
+    document.querySelector('#modalExame .btn-primary[onclick="salvarExame()"]').textContent = '💾 Salvar Alterações';
+  } else {
+    // Modo criação
+    if (clienteId) {
+      var clientes2 = fromCache('clientes') || [];
+      var cl2 = clientes2.find(function (c) { return c.id === clienteId; });
+      if (cl2) {
+        document.getElementById('eClienteId').value = clienteId;
+        set('eClienteSelected', '<strong>' + esc(cl2.nome) + '</strong><button class="btn btn-icon btn-sm" onclick="clearClienteExame()" style="margin-left:.5rem">✕</button>');
+        document.getElementById('eClienteSelected').style.display = 'flex';
+        document.getElementById('mExameSub').textContent = 'Cliente: ' + cl2.nome;
+      }
+    } else {
+      document.getElementById('mExameSub').textContent = 'Registrar exame para um cliente';
+    }
+    document.getElementById('mExameTitle').textContent = 'Registrar Exame';
+    document.querySelector('#modalExame .btn-primary[onclick="salvarExame()"]').textContent = '🔬 Registrar Exame';
+  }
+  openModal('modalExame');
+}
+
+function onExameTipoChange() {
+  var sel = document.getElementById('eTipoExameSelect');
+  var chip = document.getElementById('eExameValorChip');
+  if (!sel || !sel.value) { if (chip) chip.style.display = 'none'; return; }
+  var parts = sel.value.split('|');
+  var nome = parts[0] || '';
+  var valor = parseFloat(parts[1]) || 0;
+  // Preencher valor automaticamente
+  var vFmt = 'R$ ' + valor.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  setVal('eValor', vFmt);
+  // Exibir chip
+  if (chip) {
+    chip.textContent = '💰 ' + nome + ' — ' + vFmt;
+    chip.style.display = 'block';
+  }
+}
+
+var _exTimeout;
+function buscarClienteExame(q) {
+  clearTimeout(_exTimeout);
+  _exTimeout = setTimeout(function () {
+    if (!q || q.length < 2) { document.getElementById('eClienteResults').style.display = 'none'; return; }
+    var clientes = fromCache('clientes') || [];
+    var found = clientes.filter(function (c) { return (c.nome + (c.tel || '')).toLowerCase().includes(q.toLowerCase()); }).slice(0, 6);
+    var box = document.getElementById('eClienteResults');
+    if (!found.length) {
+      dbGetClientes().then(function (all) {
+        var f2 = all.filter(function (c) { return (c.nome + (c.tel || '')).toLowerCase().includes(q.toLowerCase()); }).slice(0, 6);
+        renderClienteExameDropdown(f2, box);
+      });
+      return;
+    }
+    renderClienteExameDropdown(found, box);
+  }, 200);
+}
+
+function renderClienteExameDropdown(clientes, box) {
+  if (!clientes.length) { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  box.innerHTML = '<div style="position:absolute;top:2px;left:0;right:0;background:#fff;border:1.5px solid var(--blue);border-radius:var(--r);box-shadow:var(--md);z-index:50;overflow:hidden">' +
+    clientes.map(function (c) {
+      return '<div onclick="selectClienteExame(\'' + c.id + '\')" style="padding:.65rem .9rem;cursor:pointer;font-size:.85rem;border-bottom:1px solid var(--border)" onmouseenter="this.style.background=\'var(--bg)\'" onmouseleave="this.style.background=\'\'"><strong>' + esc(c.nome) + '</strong> <span style="color:var(--tx3)">' + esc(c.tel || '') + '</span></div>';
+    }).join('') + '</div>';
+}
+
+function selectClienteExame(id) {
+  var clientes = fromCache('clientes') || [];
+  var cl = clientes.find(function (c) { return c.id === id; });
+  if (!cl) return;
+  document.getElementById('eClienteId').value = id;
+  document.getElementById('eClienteResults').style.display = 'none';
+  set('eClienteSelected', '<strong>' + esc(cl.nome) + '</strong><button class="btn btn-icon btn-sm" onclick="clearClienteExame()" style="margin-left:.5rem">✕</button>');
+  document.getElementById('eClienteSelected').style.display = 'flex';
+  document.getElementById('mExameSub').textContent = 'Cliente: ' + cl.nome;
+  setVal('eClienteSearch', cl.nome);
+}
+
+function clearClienteExame() {
+  document.getElementById('eClienteId').value = '';
+  document.getElementById('eClienteSelected').style.display = 'none';
+  setVal('eClienteSearch', '');
+  document.getElementById('mExameSub').textContent = 'Registrar exame para um cliente';
+}
+
+function cancelarModalExame() {
+  var temDados = gv('eTipoExameSelect') || gv('eValor') || gv('eObs');
+  if (temDados && !confirm('Descartar os dados preenchidos?')) return;
+  closeModal('modalExame');
+}
+
+function salvarExame() {
+  var clienteId = document.getElementById('eClienteId').value;
+  var tipoSel = document.getElementById('eTipoExameSelect').value;
+  var data = gv('eData');
+  var valor = gv('eValor');
+  var pag = gv('ePagamento');
+  var hasErr = false;
+  if (!clienteId) { toast('Selecione um cliente.', 'er'); hasErr = true; }
+  if (!tipoSel) { _setFieldErr('eTipoExameSelect'); if (!hasErr) toast('Selecione o tipo de exame.', 'er'); hasErr = true; }
+  if (!data) { _setFieldErr('eData'); if (!hasErr) toast('Informe a data.', 'er'); hasErr = true; }
+  if (!valor) { _setFieldErr('eValor'); if (!hasErr) toast('Informe o valor.', 'er'); hasErr = true; }
+  if (!pag) { _setFieldErr('ePagamento'); if (!hasErr) toast('Selecione a forma de pagamento.', 'er'); hasErr = true; }
+  if (hasErr) return;
+
+  var tipoExameNome = tipoSel.split('|')[0];
+  var valorNum = parseFloat(valor.replace(/[R$\s\.]/g, '').replace(',', '.')) || 0;
+
+  var _clienteParaConfirm = (fromCache('clientes') || []).find(function (c) { return c.id === clienteId; }) || null;
+
+  if (_editandoExameId) {
+    var editId = _editandoExameId;
+    var cached = fromCache('servicos') || [];
+    var existing = cached.find(function (x) { return x.id === editId; }) || {};
+    var changes = {
+      clienteId: clienteId, tipo: 'exame', data: data,
+      valor: valorNum, pagamento: pag, obs: gv('eObs') || null,
+      tipoExame: tipoExameNome,
+    };
+    closeModal('modalExame');
+    dbUpdateServico(editId, changes).then(function (num) {
+      clearCache('servicos');
+      renderPage(STATE.page);
+      toast('Exame #' + padNum(num || existing.orcNum) + ' atualizado com sucesso!', 'ok');
+      setTimeout(function () {
+        var objFinal = Object.assign({}, existing, changes, { orcNum: num || existing.orcNum });
+        abrirConfirmServico(objFinal, _clienteParaConfirm, num || existing.orcNum);
+      }, 150);
+    });
+    _editandoExameId = null;
+    return;
+  }
+
+  // Modo criação
+  var obj = {
+    id: uid(), clienteId: clienteId, tipo: 'exame', data: data,
+    valor: valorNum, pagamento: pag, obs: gv('eObs') || null,
+    tipoExame: tipoExameNome,
+    criadoPor: STATE.user ? STATE.user.nome : '—',
+  };
+  closeModal('modalExame');
+  dbSaveServico(obj).then(function (num) {
+    clearCache('servicos');
+    renderPage(STATE.page);
+    setTimeout(function () {
+      abrirConfirmServico(obj, _clienteParaConfirm, num);
+    }, 150);
+  });
+}
+
+// ══════════════════════════════════════════════════════════
 //  CONFIRMAÇÃO PÓS-SERVIÇO + PDF INDIVIDUAL PROFISSIONAL
 // ══════════════════════════════════════════════════════════
 
@@ -2374,7 +2585,8 @@ function lsSet(key, value) { localStorage.setItem(getStorageKey(key), JSON.strin
 
 function openTopAction() {
   if (STATE.page === 'clientes') openModalCliente();
-  if (STATE.page === 'manipulacao' || STATE.page === 'exames') openModalServico();
+  if (STATE.page === 'manipulacao') openModalServico(null, 'manipulacao');
+  if (STATE.page === 'exames') openModalExame();
   if (STATE.page === 'receitas') openModalReceita();
   if (STATE.page === 'usuarios') openModalUsuario();
 }
