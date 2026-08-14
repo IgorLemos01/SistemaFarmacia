@@ -130,7 +130,7 @@ export function openModalReceita(editId) {
       var clientes = window.fromCache('clientes') || [];
       var cl = clientes.find(function (c) { return c.id === r.clienteId; });
       if (cl) {
-        window.set('rClienteSelected', '<strong>' + window.esc(cl.nome) + '</strong> — CPF: ' + window.esc(cl.cpf || '—') + '<button class="btn btn-icon btn-sm" onclick="clearClienteReceita()" style="margin-left:.5rem">✕</button>');
+        window.set('rClienteSelected', '<strong>' + window.esc(cl.nome) + '</strong> CPF: ' + window.esc(cl.cpf || '-') + '<button class="btn btn-icon btn-sm" onclick="clearClienteReceita()" style="margin-left:.5rem">x</button>');
         document.getElementById('rClienteSelected').style.display = 'flex';
       }
       window.set('rMedsContainer', '');
@@ -177,7 +177,7 @@ export function selectClienteReceita(id) {
   if (!cl) return;
   document.getElementById('rClienteId').value = id;
   document.getElementById('rClienteResults').style.display = 'none';
-  window.set('rClienteSelected', '<strong>' + window.esc(cl.nome) + '</strong> — CPF: ' + window.esc(cl.cpf || '—') + '<button class="btn btn-icon btn-sm" onclick="clearClienteReceita()" style="margin-left:.5rem">✕</button>');
+  window.set('rClienteSelected', '<strong>' + window.esc(cl.nome) + '</strong> CPF: ' + window.esc(cl.cpf || '-') + '<button class="btn btn-icon btn-sm" onclick="clearClienteReceita()" style="margin-left:.5rem">x</button>');
   document.getElementById('rClienteSelected').style.display = 'flex';
   window.setVal('rClienteSearch', cl.nome);
 }

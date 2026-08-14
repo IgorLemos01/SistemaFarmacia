@@ -36,7 +36,7 @@ export function renderPage(p) {
   if (renderFn) {
     renderFn();
   } else {
-    window.set('content', '<div class="alert alert-red">⚠️ Página não encontrada: ' + window.esc(p) + '</div>');
+    window.set('content', '<div class="alert alert-red">Página não encontrada: ' + window.esc(p) + '</div>');
   }
 }
 
@@ -117,3 +117,16 @@ document.addEventListener('DOMContentLoaded', function () {
 // Bind to window for global availability
 window.renderPage = renderPage;
 window.goTo = goTo;
+
+// Toggle sidebar open/close
+export function toggleSidebar() {
+  var sidebar = document.getElementById('sidebar');
+  var openBtn = document.getElementById('sidebarOpenBtn');
+  var toggleBtn = document.getElementById('sidebarToggle');
+  if (!sidebar) return;
+  var collapsed = sidebar.classList.toggle('collapsed');
+  if (openBtn) openBtn.style.display = collapsed ? 'flex' : 'none';
+  if (toggleBtn) toggleBtn.title = collapsed ? 'Abrir menu' : 'Fechar menu';
+}
+
+window.toggleSidebar = toggleSidebar;

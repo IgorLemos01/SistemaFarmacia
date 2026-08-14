@@ -7,7 +7,7 @@ export function pgDashboard() {
     window.set('content', '<div class="alert alert-red" style="margin-top:1rem">⛔ Você não tem permissão para visualizar o dashboard.</div>');
     return;
   }
-  window.set('content', '<div style="text-align:center;padding:3rem;color:var(--tx3)"><span style="font-size:2rem">⏳</span><p style="margin-top:.5rem">Carregando...</p></div>');
+  window.set('content', '<div style="text-align:center;padding:3rem;color:var(--tx3)"><p>Carregando...</p></div>');
   
   Promise.all([window.dbGetClientes(), window.dbGetServicos()]).then(function (results) {
     var clientes = results[0], servicos = results[1];
@@ -56,15 +56,15 @@ export function pgDashboard() {
       }).join('');
       
     window.set('content',
-      (nomeUser ? '<p style="font-size:.85rem;color:var(--tx3);margin-bottom:1rem">' + saudacao + ', <strong>' + window.esc(nomeUser) + '</strong>! 👋</p>' : '') +
-      (alertas.length ? '<div class="alert alert-yellow" style="margin-bottom:1.25rem">⚠️ <div><strong>Atenção:</strong> ' + alertas.join(' &nbsp;·&nbsp; ') + '</div></div>' : '') +
+      (nomeUser ? '<p style="font-size:.85rem;color:var(--tx3);margin-bottom:1rem">' + saudacao + ', <strong>' + window.esc(nomeUser) + '</strong>!</p>' : '') +
+      (alertas.length ? '<div class="alert alert-yellow" style="margin-bottom:1.25rem"><div><strong>Aten\u00e7\u00e3o:</strong> ' + alertas.join(' &nbsp;&middot;&nbsp; ') + '</div></div>' : '') +
       '<div class="stats-grid">' +
-      '<div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">👥</div><div><div class="stat-val">' + clientes.length + '</div><div class="stat-lbl">Clientes cadastrados</div></div></div>' +
-      '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)">📋</div><div><div class="stat-val">' + hojeSrv.length + '</div><div class="stat-lbl">Atendimentos hoje</div></div></div>' +
-      '<div class="stat-card"><div class="stat-ico" style="background:var(--purple-l)">⚗️</div><div><div class="stat-val">' + manip.length + '</div><div class="stat-lbl">Manipulações total</div></div></div>' +
-      '<div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)">🔬</div><div><div class="stat-val">' + exames.length + '</div><div class="stat-lbl">Exames total</div></div></div>' +
-      '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">💰</div><div><div class="stat-val">' + window.fmt(receita) + '</div><div class="stat-lbl">Receita total</div><div class="stat-chg chg-up">+' + window.fmt(receitaHoje) + ' hoje</div></div></div>' +
-      '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)">⏳</div><div><div class="stat-val">' + window.fmt(aReceber) + '</div><div class="stat-lbl">A receber</div></div></div>' +
+      '<div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)"></div><div><div class="stat-val">' + clientes.length + '</div><div class="stat-lbl">Clientes cadastrados</div></div></div>' +
+      '<div class="stat-card"><div class="stat-ico" style="background:var(--green-l)"></div><div><div class="stat-val">' + hojeSrv.length + '</div><div class="stat-lbl">Atendimentos hoje</div></div></div>' +
+      '<div class="stat-card"><div class="stat-ico" style="background:var(--purple-l)"></div><div><div class="stat-val">' + manip.length + '</div><div class="stat-lbl">Manipula\u00e7\u00f5es total</div></div></div>' +
+      '<div class="stat-card"><div class="stat-ico" style="background:var(--blue-l)"></div><div><div class="stat-val">' + exames.length + '</div><div class="stat-lbl">Exames total</div></div></div>' +
+      '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)"></div><div><div class="stat-val">' + window.fmt(receita) + '</div><div class="stat-lbl">Receita total</div><div class="stat-chg chg-up">+' + window.fmt(receitaHoje) + ' hoje</div></div></div>' +
+      '<div class="stat-card"><div class="stat-ico" style="background:var(--yellow-l)"></div><div><div class="stat-val">' + window.fmt(aReceber) + '</div><div class="stat-lbl">A receber</div></div></div>' +
       '</div>' +
       '<div style="display:grid;grid-template-columns:1.6fr 1fr;gap:1.25rem">' +
       '<div class="card">' +
@@ -73,7 +73,7 @@ export function pgDashboard() {
         '<div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Tipo</th><th>Atendente</th><th>Valor</th><th>Pagamento</th><th>Data</th></tr></thead><tbody>' +
         servicos.slice(0, 8).map(function (s) {
           var cl = clientes.find(function (c) { return c.id === s.clienteId; });
-          return '<tr><td class="td-name">' + (cl ? window.esc(cl.nome) : '—') + '</td><td>' + window.tipoBadge(s.tipo) + '</td><td class="td-muted">' + window.esc(s.criadoPor || '—') + '</td><td style="font-weight:600">' + window.fmt(s.valor) + '</td><td>' + window.pagBadge(s.pagamento) + '</td><td class="td-muted">' + window.fmtDate(s.data) + '</td></tr>';
+          return '<tr><td class="td-name">' + (cl ? window.esc(cl.nome) : '-') + '</td><td>' + window.tipoBadge(s.tipo) + '</td><td class="td-muted">' + window.esc(s.criadoPor || '-') + '</td><td style="font-weight:600">' + window.fmt(s.valor) + '</td><td>' + window.pagBadge(s.pagamento) + '</td><td class="td-muted">' + window.fmtDate(s.data) + '</td></tr>';
         }).join('') + '</tbody></table></div>') +
       '</div>' +
       '<div style="display:flex;flex-direction:column;gap:1.25rem">' +

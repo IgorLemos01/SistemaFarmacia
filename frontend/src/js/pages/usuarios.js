@@ -24,7 +24,7 @@ export function pgUsuarios() {
       '<div class="card">' +
       '<div class="card-head"><div><div class="card-title">Usuários do Sistema</div><div class="card-sub">Gerencie acessos, perfis e permissões</div></div>' +
       '<button class="btn btn-primary" onclick="openModalUsuario()">＋ Novo Usuário</button></div>' +
-      (ativos <= 1 ? '<div class="alert alert-yellow" style="margin-bottom:1.25rem">⚠️ <div>Apenas <strong>1 usuário ativo</strong>. Crie mais para garantir continuidade de acesso.</div></div>' : '') +
+      (ativos <= 1 ? '<div class="alert alert-yellow" style="margin-bottom:1.25rem"><div>Apenas <strong>1 usuário ativo</strong>. Crie mais para garantir continuidade de acesso.</div></div>' : '') +
       '<div class="table-wrap"><table>' +
       '<thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Módulos</th><th>Status</th><th>Últ. acesso</th><th>Criado em</th><th>Ações</th></tr></thead>' +
       '<tbody>' +

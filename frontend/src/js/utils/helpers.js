@@ -11,25 +11,24 @@ export function padNum(n) { return String(n || 0).padStart(4, '0'); }
 export function fmt(v) { return 'R$ ' + parseFloat(v || 0).toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
 
 export function fmtDate(d) {
-  if (!d) return '—';
+  if (!d) return '-';
   try { var dt = new Date(d + 'T12:00:00'); return dt.toLocaleDateString('pt-BR'); } catch (e) { return d; }
 }
 
 export function tipoBadge(t) {
-  var map = { manipulacao: '<span class="badge badge-purple">⚗️ Manipulação</span>', exame: '<span class="badge badge-blue">🔬 Exame</span>', produto: '<span class="badge badge-green">💊 Produto</span>' };
+  var map = { manipulacao: '<span class="badge badge-purple">Manipula\u00e7\u00e3o</span>', exame: '<span class="badge badge-blue">Exame</span>', produto: '<span class="badge badge-green">Produto</span>' };
   return map[t] || '<span class="badge badge-gray">' + esc(t) + '</span>';
 }
 
 export function pagBadge(p) {
-  var map = { dinheiro: '<span class="badge badge-green">💵 Dinheiro</span>', pix: '<span class="badge badge-blue">📲 Pix</span>', debito: '<span class="badge badge-gray">💳 Débito</span>', credito: '<span class="badge badge-yellow">💳 Crédito</span>', pendente: '<span class="badge badge-red">⏳ A receber</span>' };
-  return map[p] || '<span class="badge badge-gray">' + esc(p || '—') + '</span>';
+  var map = { dinheiro: '<span class="badge badge-green">Dinheiro</span>', pix: '<span class="badge badge-blue">Pix</span>', debito: '<span class="badge badge-gray">D\u00e9bito</span>', credito: '<span class="badge badge-yellow">Cr\u00e9dito</span>', pendente: '<span class="badge badge-red">A receber</span>' };
+  return map[p] || '<span class="badge badge-gray">' + esc(p || '-') + '</span>';
 }
 
 export function openModal(id) { document.getElementById(id).classList.remove('h'); }
 export function closeModal(id) { document.getElementById(id).classList.add('h'); }
 
 export function toast(msg, type) {
-  var icons = { ok: '✅', er: '❌', yw: '⚠️' };
   var box = document.getElementById('toasts');
   if (!box) {
     box = document.createElement('div');
@@ -38,7 +37,7 @@ export function toast(msg, type) {
   }
   var el = document.createElement('div');
   el.className = 'toast t-' + (type || 'ok');
-  el.innerHTML = '<span>' + (icons[type] || 'ℹ️') + '</span> ' + msg;
+  el.textContent = msg;
   box.appendChild(el);
   setTimeout(function () { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(function () { el.remove(); }, 300); }, 4000);
 }

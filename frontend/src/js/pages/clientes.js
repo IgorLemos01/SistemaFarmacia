@@ -81,7 +81,7 @@ export function verCliente(id) {
       '<div><span style="color:var(--tx3)">Sexo: </span>' + window.esc(c.sexo || '—') + '</div>' +
       (medicoVal ? '<div style="grid-column:1/-1"><span style="color:var(--tx3)">Médico de referência: </span>' + window.esc(medicoVal) + '</div>' : '') +
       '</div>' +
-      (alergiasVal ? '<div class="alert alert-yellow" style="margin-bottom:.75rem">⚠️ <div><strong>Alergias:</strong> ' + window.esc(alergiasVal) + '</div></div>' : '') +
+      (alergiasVal ? '<div class="alert alert-yellow" style="margin-bottom:.75rem"><div><strong>Alergias:</strong> ' + window.esc(alergiasVal) + '</div></div>' : '') +
       (c.obs ? '<div style="background:var(--yellow-l);border-radius:var(--r);padding:.75rem;font-size:.8rem;margin-bottom:1.25rem"><strong>Obs:</strong> ' + window.esc(c.obs) + '</div>' : '') +
       '<div class="divider"></div>' +
       '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem"><div style="font-size:.85rem;font-weight:600">Histórico de Serviços</div></div>' +

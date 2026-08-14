@@ -50,13 +50,13 @@ export function openModalServico(clienteId, tipo, servicoId) {
     window.setVal('sLaboratorio', s.laboratorio || '');
     onTipoChange();
     document.querySelector('#modalServico .modal-title').textContent = 'Editar Serviço';
-    document.querySelector('#modalServico .btn-primary[onclick="salvarServico()"]').textContent = '💾 Salvar Alterações';
+    document.querySelector('#modalServico .btn-primary[onclick="salvarServico()"]').textContent = 'Salvar Alterações';
     window.openModal('modalServico');
     return;
   }
 
   document.querySelector('#modalServico .modal-title').textContent = 'Registrar Serviço';
-  document.querySelector('#modalServico .btn-primary[onclick="salvarServico()"]').textContent = '💾 Registrar Serviço';
+  document.querySelector('#modalServico .btn-primary[onclick="salvarServico()"]').textContent = 'Registrar Serviço';
   document.getElementById('sClienteId').value = clienteId || '';
   document.getElementById('sClienteSearch').value = '';
   window.set('sClienteSelected', '');
@@ -302,7 +302,7 @@ export function openModalExame(servicoId, clienteId) {
       window.setVal('eData', s.data || new Date().toISOString().split('T')[0]);
       window.setVal('eObs', s.obs || '');
       document.getElementById('mExameTitle').textContent = 'Editar Exame';
-      document.querySelector('#modalExame .btn-primary[onclick="salvarExame()"]').textContent = '💾 Salvar Alterações';
+      document.querySelector('#modalExame .btn-primary[onclick="salvarExame()"]').textContent = 'Salvar Alterações';
     } else {
       // Modo criação
       if (clienteId) {
@@ -318,7 +318,7 @@ export function openModalExame(servicoId, clienteId) {
         document.getElementById('mExameSub').textContent = 'Registrar exame para um cliente';
       }
       document.getElementById('mExameTitle').textContent = 'Registrar Exame';
-      document.querySelector('#modalExame .btn-primary[onclick="salvarExame()"]').textContent = '🔬 Registrar Exame';
+      document.querySelector('#modalExame .btn-primary[onclick="salvarExame()"]').textContent = 'Registrar Exame';
     }
   });
 
@@ -374,10 +374,9 @@ export function renderExamesSelecionados() {
     box.innerHTML = _examesSelecionados.map(function (e, i) {
       return '<div class="exame-chip">' +
         '<div class="exame-chip-info"><span class="exame-chip-nome">' + window.esc(e.nome) + '</span><span class="exame-chip-valor">' + window.fmt(e.valor) + '</span></div>' +
-        '<button type="button" class="btn btn-icon btn-sm" title="Remover exame" onclick="removeExameSelecionado(' + i + ')">✕</button>' +
+        '<button type="button" class="btn btn-icon btn-sm" title="Remover exame" onclick="removeExameSelecionado(' + i + ')">x</button>' +
         '</div>';
-    }).join('') +
-      '<div class="exame-total">Total: <strong>' + window.fmt(total) + '</strong></div>';
+    }).join('');
   }
   window.setVal('eValor', 'R$ ' + total.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 }
