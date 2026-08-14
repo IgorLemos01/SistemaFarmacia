@@ -94,7 +94,8 @@
     <main class="main">
       <div class="topbar">
         <div style="display:flex;align-items:center;gap:.75rem">
-          <button class="sb-open-btn" id="sidebarOpenBtn" onclick="toggleSidebar()" title="Abrir menu" style="display:none">
+          <button class="sb-open-btn" id="sidebarOpenBtn" onclick="toggleSidebar()" title="Abrir menu"
+            style="display:none">
             <span>&#9776;</span>
           </button>
           <div>
@@ -367,14 +368,16 @@
             style="display:none;padding:.5rem .75rem;background:var(--blue-l);border-radius:var(--r);font-size:.83rem;margin-top:.4rem;align-items:center;justify-content:space-between">
           </div>
         </div>
-        <div class="fg"><label>Data da Receita *</label><input id="rData" type="date" /></div>
+        <div class="fg"><label>Data da Venda *</label><input id="rData" type="date" /></div>
         <div class="fg"><label>Médico Prescritor</label><input id="rMedico" placeholder="Dr. Nome — CRM 12345" /></div>
         <div class="fg full">
           <label>Medicamentos *</label>
           <div id="rMedsContainer" style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:.5rem"></div>
-          <button type="button" class="btn btn-ghost" onclick="adicionarMedicamento()" style="width:fit-content;font-size:.82rem">＋ Adicionar Medicamento</button>
+          <button type="button" class="btn btn-ghost" onclick="adicionarMedicamento()"
+            style="width:fit-content;font-size:.82rem">＋ Adicionar Medicamento</button>
         </div>
-        <div class="fg full"><label>Observações</label><textarea id="rObs" placeholder="Instruções adicionais..."></textarea></div>
+        <div class="fg full"><label>Observações</label><textarea id="rObs"
+            placeholder="Instruções adicionais..."></textarea></div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-ghost" onclick="closeModal('modalReceita')">Cancelar</button>
@@ -414,14 +417,17 @@
               oninput="buscarExameModal(this.value)" onfocus="buscarExameModal(this.value)" />
           </div>
           <div id="eExameResults" style="display:none;position:relative"></div>
-          <div id="eExamesEmpty" style="display:none;margin-top:.5rem;padding:.55rem .8rem;background:var(--yellow-l);border-radius:var(--r);font-size:.78rem;color:#B45309">Nenhum exame adicionado. Selecione um ou mais acima.</div>
+          <div id="eExamesEmpty"
+            style="display:none;margin-top:.5rem;padding:.55rem .8rem;background:var(--yellow-l);border-radius:var(--r);font-size:.78rem;color:#B45309">
+            Nenhum exame adicionado. Selecione um ou mais acima.</div>
           <div id="eExamesList" style="display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.5rem"></div>
           <div class="hint">Você pode adicionar quantos exames quiser. Clique no ✕ para remover um exame.</div>
         </div>
         <!-- Data -->
         <div class="fg"><label>Data *</label><input id="eData" type="date" /></div>
         <!-- Valor -->
-        <div class="fg"><label>Valor (R$) *</label><input id="eValor" placeholder="R$ 0,00" oninput="maskValorServico(this)" /></div>
+        <div class="fg"><label>Valor (R$) *</label><input id="eValor" placeholder="R$ 0,00"
+            oninput="maskValorServico(this)" /></div>
         <!-- Pagamento -->
         <div class="fg">
           <label>Forma de Pagamento *</label>
@@ -456,9 +462,12 @@
         <button class="modal-close" onclick="closeModal('modalTipoExame')">✕</button>
       </div>
       <div class="form-grid">
-        <div class="fg full"><label>Nome do Exame *</label><input id="teNome" placeholder="Ex: Hemograma Completo" /></div>
-        <div class="fg"><label>Valor (R$) *</label><input id="teValor" placeholder="0,00" oninput="maskValorServico(this)" /></div>
-        <div class="fg"><label>Ordem (exibição)</label><input id="teOrdem" type="number" placeholder="0" min="0" step="1" /></div>
+        <div class="fg full"><label>Nome do Exame *</label><input id="teNome" placeholder="Ex: Hemograma Completo" />
+        </div>
+        <div class="fg"><label>Valor (R$) *</label><input id="teValor" placeholder="0,00"
+            oninput="maskValorServico(this)" /></div>
+        <div class="fg"><label>Ordem (exibição)</label><input id="teOrdem" type="number" placeholder="0" min="0"
+            step="1" /></div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-ghost" onclick="closeModal('modalTipoExame')">Cancelar</button>
