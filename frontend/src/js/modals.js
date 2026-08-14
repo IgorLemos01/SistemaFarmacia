@@ -120,11 +120,18 @@ export function buscarClienteServico(q) {
   _srTimeout = setTimeout(function () {
     if (!q || q.length < 2) { document.getElementById('sClienteResults').style.display = 'none'; return; }
     var clientes = window.fromCache('clientes') || [];
-    var found = clientes.filter(function (c) { return (c.nome + (c.tel || '')).toLowerCase().includes(q.toLowerCase()); }).slice(0, 6);
+    var ql = q.toLowerCase().replace(/[^\d]/g, q.replace(/[^\d]/g, '').length >= 3 ? '' : q.toLowerCase());
+    var found = clientes.filter(function (c) {
+      var hay = (c.nome + ' ' + (c.tel || '') + ' ' + (c.cpf || '')).toLowerCase();
+      return hay.includes(q.toLowerCase()) || (c.cpf || '').replace(/\D/g, '').includes(q.replace(/\D/g, ''));
+    }).slice(0, 6);
     var box = document.getElementById('sClienteResults');
     if (!found.length) {
       window.dbGetClientes().then(function (all) {
-        var found2 = all.filter(function (c) { return (c.nome + (c.tel || '')).toLowerCase().includes(q.toLowerCase()); }).slice(0, 6);
+        var found2 = all.filter(function (c) {
+          var hay = (c.nome + ' ' + (c.tel || '') + ' ' + (c.cpf || '')).toLowerCase();
+          return hay.includes(q.toLowerCase()) || (c.cpf || '').replace(/\D/g, '').includes(q.replace(/\D/g, ''));
+        }).slice(0, 6);
         renderClienteDropdown(found2, box);
       });
       return;
@@ -137,7 +144,10 @@ export function renderClienteDropdown(clientes, box) {
   if (!clientes.length) { box.style.display = 'none'; return; }
   box.style.display = 'block';
   box.innerHTML = '<div style="position:absolute;top:2px;left:0;right:0;background:#fff;border:1.5px solid var(--blue);border-radius:var(--r);box-shadow:var(--md);z-index:50;overflow:hidden">' +
-    clientes.map(function (c) { return '<div onclick="selectClienteServico(\'' + c.id + '\')" style="padding:.65rem .9rem;cursor:pointer;font-size:.85rem;border-bottom:1px solid var(--border)" onmouseenter="this.style.background=\'var(--bg)\'" onmouseleave="this.style.background=\'\'"><strong>' + window.esc(c.nome) + '</strong> <span style="color:var(--tx3)">' + window.esc(c.tel || '') + '</span></div>'; }).join('') + '</div>';
+    clientes.map(function (c) {
+      var sub = [c.tel, c.cpf].filter(Boolean).join(' · ');
+      return '<div onclick="selectClienteServico(\'' + c.id + '\')" style="padding:.65rem .9rem;cursor:pointer;font-size:.85rem;border-bottom:1px solid var(--border)" onmouseenter="this.style.background=\'var(--bg)\'" onmouseleave="this.style.background=\'\'"><strong>' + window.esc(c.nome) + '</strong>' + (sub ? ' <span style="color:var(--tx3)">' + window.esc(sub) + '</span>' : '') + '</div>';
+    }).join('') + '</div>';
 }
 
 export function selectClienteServico(id) {
@@ -378,11 +388,17 @@ export function buscarClienteExame(q) {
   _exTimeout = setTimeout(function () {
     if (!q || q.length < 2) { document.getElementById('eClienteResults').style.display = 'none'; return; }
     var clientes = window.fromCache('clientes') || [];
-    var found = clientes.filter(function (c) { return (c.nome + (c.tel || '')).toLowerCase().includes(q.toLowerCase()); }).slice(0, 6);
+    var found = clientes.filter(function (c) {
+      var hay = (c.nome + ' ' + (c.tel || '') + ' ' + (c.cpf || '')).toLowerCase();
+      return hay.includes(q.toLowerCase()) || (c.cpf || '').replace(/\D/g, '').includes(q.replace(/\D/g, ''));
+    }).slice(0, 6);
     var box = document.getElementById('eClienteResults');
     if (!found.length) {
       window.dbGetClientes().then(function (all) {
-        var f2 = all.filter(function (c) { return (c.nome + (c.tel || '')).toLowerCase().includes(q.toLowerCase()); }).slice(0, 6);
+        var f2 = all.filter(function (c) {
+          var hay = (c.nome + ' ' + (c.tel || '') + ' ' + (c.cpf || '')).toLowerCase();
+          return hay.includes(q.toLowerCase()) || (c.cpf || '').replace(/\D/g, '').includes(q.replace(/\D/g, ''));
+        }).slice(0, 6);
         renderClienteExameDropdown(f2, box);
       });
       return;
@@ -396,7 +412,8 @@ export function renderClienteExameDropdown(clientes, box) {
   box.style.display = 'block';
   box.innerHTML = '<div style="position:absolute;top:2px;left:0;right:0;background:#fff;border:1.5px solid var(--blue);border-radius:var(--r);box-shadow:var(--md);z-index:50;overflow:hidden">' +
     clientes.map(function (c) {
-      return '<div onclick="selectClienteExame(\'' + c.id + '\')" style="padding:.65rem .9rem;cursor:pointer;font-size:.85rem;border-bottom:1px solid var(--border)" onmouseenter="this.style.background=\'var(--bg)\'" onmouseleave="this.style.background=\'\'"><strong>' + window.esc(c.nome) + '</strong> <span style="color:var(--tx3)">' + window.esc(c.tel || '') + '</span></div>';
+      var sub = [c.tel, c.cpf].filter(Boolean).join(' · ');
+      return '<div onclick="selectClienteExame(\'' + c.id + '\')" style="padding:.65rem .9rem;cursor:pointer;font-size:.85rem;border-bottom:1px solid var(--border)" onmouseenter="this.style.background=\'var(--bg)\'" onmouseleave="this.style.background=\'\'"><strong>' + window.esc(c.nome) + '</strong>' + (sub ? ' <span style="color:var(--tx3)">' + window.esc(sub) + '</span>' : '') + '</div>';
     }).join('') + '</div>';
 }
 

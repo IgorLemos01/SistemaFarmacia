@@ -12,7 +12,7 @@ export function pgClientes() {
   window.set('content',
     '<div class="card">' +
     '<div class="card-head">' +
-    '<div class="search-bar"><span class="ico">🔍</span><input placeholder="Buscar por nome, telefone, e-mail..." oninput="filterClientes(this.value)" id="clienteFilter"/></div>' +
+    '<div class="search-bar"><span class="ico">🔍</span><input placeholder="Buscar por nome, CPF, telefone, e-mail..." oninput="filterClientes(this.value)" id="clienteFilter"/></div>' +
     (window.canEdit('clientes') ? '<button class="btn btn-primary" onclick="openModalCliente()">＋ Novo Cliente</button>' : '') +
     '</div>' +
     '<div id="clientesTable"><div class="empty"><span class="empty-ico">⏳</span><p class="empty-txt">Carregando...</p></div></div>' +
