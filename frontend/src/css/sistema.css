@@ -552,6 +552,12 @@ a {
   flex-shrink: 0
 }
 
+.stat-ico svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor
+}
+
 .stat-val {
   font-size: 1.6rem;
   font-weight: 700;

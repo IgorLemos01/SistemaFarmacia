@@ -128,6 +128,101 @@ export function filtrarTL(filtro, clienteId) {
   });
 }
 
+// ── Modal de Cliente ──────────────────────────────────────
+var _editandoClienteId = null;
+
+export function openModalCliente(id) {
+  _editandoClienteId = id || null;
+  var titulo = document.getElementById('mClienteTitle');
+  if (titulo) titulo.textContent = id ? 'Editar Cliente' : 'Novo Cliente';
+  // Limpa campos
+  ['cNome','cCpf','cNasc','cTel','cEmail','cEnd','cAlergias','cMedico','cObs'].forEach(function(f) {
+    window.setVal(f, '');
+  });
+  window.setVal('cSexo', '');
+  // Limpa erros
+  var cpfErr = document.getElementById('cCpfErr');
+  var telErr = document.getElementById('cTelErr');
+  if (cpfErr) cpfErr.style.display = 'none';
+  if (telErr) telErr.style.display = 'none';
+
+  if (id) {
+    var clientes = window.fromCache('clientes') || [];
+    var c = clientes.find(function(x) { return x.id === id; });
+    if (c) {
+      window.setVal('cNome', c.nome || '');
+      window.setVal('cCpf', c.cpf || '');
+      window.setVal('cNasc', c.nasc || '');
+      window.setVal('cSexo', c.sexo || '');
+      window.setVal('cTel', c.tel || '');
+      window.setVal('cEmail', c.email || '');
+      window.setVal('cEnd', c.endereco || '');
+      window.setVal('cAlergias', c.alergiasCliente || c.alergias_cliente || '');
+      window.setVal('cMedico', c.medicoReferencia || c.medico_referencia || '');
+      window.setVal('cObs', c.obs || '');
+    }
+  }
+  window.openModal('modalCliente');
+}
+
+export function cancelarModalCliente() {
+  var nome = window.gv('cNome'), cpf = window.gv('cCpf'), tel = window.gv('cTel');
+  if ((nome || cpf || tel) && !confirm('Descartar os dados preenchidos?')) return;
+  window.closeModal('modalCliente');
+}
+
+export function salvarCliente() {
+  var nome = window.gv('cNome');
+  var cpf = window.gv('cCpf');
+  var tel = window.gv('cTel');
+  var hasErr = false;
+
+  if (!nome) {
+    window.toast('Informe o nome do cliente.', 'er');
+    var el = document.getElementById('cNome');
+    if (el) { el.style.borderColor = 'var(--red)'; el.focus(); }
+    hasErr = true;
+  }
+
+  // Validação CPF duplicado (apenas para novo cliente)
+  if (cpf && !_editandoClienteId) {
+    var clientes = window.fromCache('clientes') || [];
+    var cpfLimpo = cpf.replace(/\D/g, '');
+    var dup = clientes.find(function(c) { return (c.cpf || '').replace(/\D/g, '') === cpfLimpo && cpfLimpo.length > 0; });
+    if (dup) {
+      var cpfErr = document.getElementById('cCpfErr');
+      if (cpfErr) { cpfErr.textContent = 'CPF já cadastrado para ' + dup.nome; cpfErr.style.display = 'block'; }
+      hasErr = true;
+    }
+  }
+
+  if (hasErr) return;
+
+  var obj = {
+    id: _editandoClienteId || window.uid(),
+    nome: nome,
+    cpf: cpf || null,
+    nasc: window.gv('cNasc') || null,
+    sexo: window.gv('cSexo') || null,
+    tel: tel || null,
+    email: window.gv('cEmail') || null,
+    endereco: window.gv('cEnd') || null,
+    alergiasCliente: window.gv('cAlergias') || null,
+    medicoReferencia: window.gv('cMedico') || null,
+    obs: window.gv('cObs') || null,
+  };
+
+  var isEdit = !!_editandoClienteId;
+  window.closeModal('modalCliente');
+  _editandoClienteId = null;
+
+  window.dbSaveCliente(obj, isEdit).then(function () {
+    window.clearCache('clientes');
+    window.toast((isEdit ? 'Cliente atualizado' : 'Cliente cadastrado') + ' com sucesso!', 'ok');
+    if (window.STATE.page === 'clientes') window.renderPage('clientes');
+  });
+}
+
 // Bind to window for global availability
 window.pgClientes = pgClientes;
 window.filterClientes = filterClientes;
@@ -135,3 +230,6 @@ window.renderClientesTable = renderClientesTable;
 window.verCliente = verCliente;
 window.renderTimeline = renderTimeline;
 window.filtrarTL = filtrarTL;
+window.openModalCliente = openModalCliente;
+window.cancelarModalCliente = cancelarModalCliente;
+window.salvarCliente = salvarCliente;

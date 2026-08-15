@@ -130,3 +130,22 @@ export function toggleSidebar() {
 }
 
 window.toggleSidebar = toggleSidebar;
+
+// Despacha o botão de ação do topo para o modal correto de acordo com a página
+export function openTopAction() {
+  var page = window.STATE ? window.STATE.page : '';
+  if (page === 'clientes' && window.openModalCliente) { window.openModalCliente(); return; }
+  if (page === 'exames' && window.openModalExame) { window.openModalExame(); return; }
+  if (page === 'manipulacao' && window.openModalServico) { window.openModalServico(null, 'manipulacao'); return; }
+  if (page === 'receitas' && window.openModalReceita) { window.openModalReceita(); return; }
+}
+window.openTopAction = openTopAction;
+
+// Limpa erro visual de campo
+export function clearFieldErr(id) {
+  var el = document.getElementById(id);
+  if (el) el.style.borderColor = '';
+  var errEl = document.getElementById(id + 'Err');
+  if (errEl) errEl.style.display = 'none';
+}
+window.clearFieldErr = clearFieldErr;

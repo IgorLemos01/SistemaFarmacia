@@ -60,6 +60,7 @@ export function renderOrcTable(servicos, clientes) {
         '<td class="td-muted">' + window.fmtDate(s.data) + '</td>' +
         '<td style="display:flex;gap:.3rem">' +
         '<button class="btn btn-icon btn-sm" title="Ver detalhes" onclick="' + tipoModal + '(\'' + s.id + '\')">👁</button>' +
+        '<button class="btn btn-icon btn-sm" title="Gerar PDF" onclick="gerarPDFServicoById(\'' + s.id + '\')">PDF</button>' +
         (canEditSrv ? '<button class="btn btn-icon btn-sm" title="Editar" onclick="closeModal(\'modalOrc\');' + (s.tipo === 'exame' ? 'openModalExame' : 'openModalServico') + '(null,null,\'' + s.id + '\')">✏️</button>' : '') +
         '</td></tr>';
     }).join('') + '</tbody></table></div>';
