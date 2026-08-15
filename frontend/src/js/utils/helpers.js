@@ -65,6 +65,40 @@ export function startClock() {
   tick(); setInterval(tick, 1000);
 }
 
+// Retorna a descrição resumida de um serviço para exibição em tabelas
+export function getServicoDesc(s) {
+  if (!s) return '-';
+  if (s.tipo === 'manipulacao') return s.formula || '-';
+  if (s.tipo === 'exame') return s.tipoExame || '-';
+  if (s.tipo === 'produto') return s.produtoDesc || '-';
+  return s.formula || s.tipoExame || s.produtoDesc || '-';
+}
+
+// Abre o modal de confirmação após salvar um serviço
+export function abrirConfirmServico(servico, cliente, orcNum) {
+  var PAG_LABEL = { dinheiro: 'Dinheiro', pix: 'Pix', debito: 'Débito', credito: 'Crédito', pendente: 'A receber' };
+  var TIPO_LABEL = { manipulacao: 'Manipulação', exame: 'Exame', produto: 'Produto/Venda' };
+  window._lastSavedServico = servico;
+  window._lastSavedCliente = cliente;
+  window._lastSavedOrcNum = orcNum;
+  var desc = getServicoDesc(servico);
+  var body =
+    '<div style="text-align:center;padding:1rem 0 1.25rem">' +
+    '<div class="orc-num" style="font-size:2.2rem">#' + padNum(orcNum) + '</div>' +
+    '<div style="font-size:.8rem;color:var(--tx3);margin-top:.2rem">' + fmtDate(servico.data) + '</div>' +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;font-size:.84rem;margin-bottom:1rem">' +
+    '<div><span style="color:var(--tx3)">Cliente:</span> <strong>' + esc(cliente ? cliente.nome : '-') + '</strong></div>' +
+    '<div><span style="color:var(--tx3)">Tipo:</span> ' + (TIPO_LABEL[servico.tipo] || servico.tipo) + '</div>' +
+    '<div><span style="color:var(--tx3)">Pagamento:</span> ' + (PAG_LABEL[servico.pagamento] || servico.pagamento || '-') + '</div>' +
+    '<div><span style="color:var(--tx3)">Valor:</span> <strong style="color:var(--blue)">' + fmt(servico.valor) + '</strong></div>' +
+    (desc && desc !== '-' ? '<div style="grid-column:1/-1"><span style="color:var(--tx3)">Descrição:</span> ' + esc(desc.slice(0, 80)) + (desc.length > 80 ? '…' : '') + '</div>' : '') +
+    '</div>';
+  set('confirmServicoBody', body);
+  openModal('modalConfirmServico');
+  toast('Serviço #' + padNum(orcNum) + ' registrado com sucesso!', 'ok');
+}
+
 // Bind to window for global availability
 window.set = set;
 window.gv = gv;
@@ -82,3 +116,5 @@ window.toast = toast;
 window.mPhone = mPhone;
 window.mCpf = mCpf;
 window.startClock = startClock;
+window.getServicoDesc = getServicoDesc;
+window.abrirConfirmServico = abrirConfirmServico;
