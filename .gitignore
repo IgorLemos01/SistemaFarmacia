@@ -10,12 +10,26 @@ dist/
 .next/
 out/
 
-# Environment variables
+# Environment variables — NUNCA comite estes arquivos
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.docker
+
+# Chaves privadas e credenciais sensíveis
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+*-service-account.json
+
+# Logs
+*.log
+logs/
 
 # OS files
 .DS_Store

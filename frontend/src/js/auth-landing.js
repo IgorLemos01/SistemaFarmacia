@@ -1,14 +1,41 @@
-// ============================================================
-//  SESSÃO & AUTENTICAÇÃO
-// ============================================================
+// ══════════════════════════════════════════════════════════
+//  SESSÃO & AUTENTICAÇÃO (landing) — auth-landing.js
+//
+//  Usa Supabase Auth. Sem senhas hardcoded neste arquivo.
+// ══════════════════════════════════════════════════════════
 
 let currentUser = null;
 
-function checkSession() {
-  const saved = sessionStorage.getItem('fc_user');
-  if (saved) {
-    currentUser = JSON.parse(saved);
-    showLoggedIn();
+// Inicializa cliente Supabase para a landing (usa as mesmas env vars do sistema)
+let sbLanding = null;
+(function () {
+  if (
+    typeof window.supabase !== 'undefined' &&
+    LANDING_SUPABASE_URL &&
+    LANDING_SUPABASE_KEY
+  ) {
+    try {
+      sbLanding = window.supabase.createClient(LANDING_SUPABASE_URL, LANDING_SUPABASE_KEY);
+    } catch (e) {
+      console.error('[auth-landing] Erro ao inicializar Supabase:', e);
+    }
+  }
+})();
+
+async function checkSession() {
+  if (!sbLanding) return;
+  try {
+    const { data } = await sbLanding.auth.getSession();
+    if (data && data.session && data.session.user) {
+      currentUser = {
+        user: data.session.user.email,
+        nome: data.session.user.email.split('@')[0],
+        id: data.session.user.id
+      };
+      showLoggedIn();
+    }
+  } catch (e) {
+    console.warn('[auth-landing] Erro ao verificar sessão:', e.message);
   }
 }
 
@@ -20,9 +47,11 @@ function showLoggedIn() {
   switchTab('cadastro');
 }
 
-function logout() {
+async function logout() {
+  if (sbLanding) {
+    try { await sbLanding.auth.signOut(); } catch (e) { /* ignora */ }
+  }
   currentUser = null;
-  sessionStorage.removeItem('fc_user');
   document.getElementById('sessionBar').classList.remove('visible');
   document.getElementById('tabCadastro').style.display = 'none';
   document.getElementById('tabLista').style.display = 'none';
@@ -31,26 +60,42 @@ function logout() {
 }
 
 async function doLogin() {
-  const user = document.getElementById('loginUser').value.trim().toLowerCase();
+  const email = document.getElementById('loginUser').value.trim().toLowerCase();
   const pass = document.getElementById('loginPass').value;
 
-  if (!user || !pass) {
-    toast('Preencha usuário e senha.', 'error'); return;
+  if (!email || !pass) {
+    toast('Preencha e-mail e senha.', 'error'); return;
+  }
+
+  if (!sbLanding) {
+    toast('Serviço de autenticação não configurado. Contate o administrador.', 'error');
+    return;
   }
 
   const btn = document.getElementById('btnLogin');
   btn.disabled = true; btn.textContent = 'Entrando...';
 
-  await sleep(600); // UX delay
-
-  const atendente = ATENDENTES[user];
-  if (atendente && atendente.senha === pass) {
-    currentUser = { user, nome: atendente.nome };
-    sessionStorage.setItem('fc_user', JSON.stringify(currentUser));
-    showLoggedIn();
-    toast(`Bem-vindo(a), ${atendente.nome}! ✅`, 'success');
-  } else {
-    toast('Usuário ou senha incorretos.', 'error');
+  try {
+    const { data, error } = await sbLanding.auth.signInWithPassword({ email, password: pass });
+    if (error) {
+      toast(
+        error.message === 'Invalid login credentials'
+          ? 'E-mail ou senha incorretos.'
+          : 'Erro de login: ' + error.message,
+        'error'
+      );
+    } else if (data && data.user) {
+      currentUser = {
+        user: data.user.email,
+        nome: data.user.email.split('@')[0],
+        id: data.user.id
+      };
+      showLoggedIn();
+      toast(`Bem-vindo(a)! ✅`, 'success');
+    }
+  } catch (e) {
+    toast('Erro inesperado. Tente novamente.', 'error');
+    console.error('[auth-landing] Erro no login:', e);
   }
 
   btn.disabled = false; btn.textContent = 'Entrar →';

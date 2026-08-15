@@ -6,7 +6,12 @@ export function set(id, html) { var el = document.getElementById(id); if (el) el
 export function gv(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
 export function setVal(id, v) { var el = document.getElementById(id); if (el) el.value = v || ''; }
 export function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-export function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+export function uid() {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
 export function padNum(n) { return String(n || 0).padStart(4, '0'); }
 export function fmt(v) { return 'R$ ' + parseFloat(v || 0).toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
 

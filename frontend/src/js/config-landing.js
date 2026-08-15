@@ -1,7 +1,10 @@
-// Credenciais dos atendentes (gerenciadas pelo admin)
-// Para adicionar/remover atendentes, edite este objeto:
-const ATENDENTES = {
-  'admin':     { senha: 'admin123',   nome: 'Administrador' },
-  'joao':      { senha: 'couto2025',  nome: 'João Silva' },
-  'maria':     { senha: 'farma123',   nome: 'Maria Oliveira' },
-};
+// ══════════════════════════════════════════════════════════
+//  CONFIGURAÇÃO DA LANDING PAGE — config-landing.js
+//
+//  A autenticação usa Supabase Auth — sem credenciais hardcoded.
+//  Configure frontend/.env com as variáveis VITE_SUPABASE_URL e
+//  VITE_SUPABASE_KEY (veja o arquivo .env.example).
+// ══════════════════════════════════════════════════════════
+
+const LANDING_SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
+const LANDING_SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY || '';

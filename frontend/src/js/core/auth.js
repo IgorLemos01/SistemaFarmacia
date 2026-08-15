@@ -24,23 +24,20 @@ export function doLogin() {
   function showErr(msg) { err.textContent = msg; err.style.display = 'block'; }
   
   function tryLocal() {
-    // Modo offline / login local fallback
+    // Modo offline: autentica apenas com usuários em cache local.
+    // NÃO há credenciais hardcoded — requer conexão com Supabase no primeiro acesso.
     var users = window.fromCache('users') || [];
     var matchedUser = users.find(function (u) { return u.email === email; });
-    // Se for admin padrão e não estiver salvo localmente, criar
-    if (email === 'admin@farmaciacouto.com' && pass === 'admin123') {
-      matchedUser = {
-        id: 'admin-001', email: 'admin@farmaciacouto.com', nome: 'Administrador',
-        perfil: 'admin', perms: window.normalisePerms({}, 'admin'), ativo: true
-      };
-    }
-    
+
     if (matchedUser && matchedUser.ativo !== false) {
       window.STATE.user = matchedUser;
       window.STATE.perms = window.normalisePerms(matchedUser.perms, matchedUser.perfil);
       window.STATE.isSupabase = false;
       sessionStorage.setItem('fc_session', JSON.stringify({ user: matchedUser, isSupabase: false }));
       window.initApp();
+    } else if (!window.sb) {
+      showErr('Sem conexão com o servidor. Faça login online pelo menos uma vez para habilitar o modo offline.');
+      btn.disabled = false; btn.textContent = 'Entrar no sistema';
     } else {
       showErr('E-mail ou senha inválidos ou usuário inativo.');
       btn.disabled = false; btn.textContent = 'Entrar no sistema';

@@ -2,6 +2,16 @@
 //  CADASTRAR E LISTAR CLIENTES
 // ============================================================
 
+// Escapa caracteres HTML para prevenir XSS ao renderizar dados do banco
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
 async function cadastrarCliente() {
   if (!currentUser) { toast('Faça login primeiro.', 'error'); return; }
 
@@ -38,14 +48,14 @@ async function cadastrarCliente() {
   let sucesso = false;
 
   // Tenta salvar no Supabase
-  if (supabase) {
+  if (sbLanding) {
     try {
-      const { error } = await supabase.from('clientes').insert([registro]);
+      const { error } = await sbLanding.from('clientes').insert([registro]);
       if (error) throw error;
       sucesso = true;
     } catch (e) {
-      console.error('Supabase error:', e);
-      toast('⚠️ Supabase não configurado. Salvando localmente.', 'info');
+      console.error('[clientes-landing] Supabase error:', e);
+      toast('⚠️ Erro ao salvar. Salvando localmente.', 'info');
     }
   }
 
@@ -58,7 +68,8 @@ async function cadastrarCliente() {
   }
 
   if (sucesso) {
-    toast(`Cliente ${campos.nome} cadastrado com sucesso! ✅`, 'success');
+    // esc() para evitar XSS mesmo no toast (textContent seria seguro, mas por consistência)
+    toast(`Cliente ${esc(campos.nome)} cadastrado com sucesso! ✅`, 'success');
     limparFormCadastro();
   }
 
@@ -79,16 +90,16 @@ async function carregarClientes() {
 
   let clientes = [];
 
-  if (supabase) {
+  if (sbLanding) {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await sbLanding
         .from('clientes')
         .select('*')
         .order('criado_em', { ascending: false })
         .limit(50);
       if (!error && data) clientes = data;
     } catch (e) {
-      console.error(e);
+      console.error('[clientes-landing] Erro ao carregar:', e);
     }
   }
 
@@ -107,14 +118,15 @@ async function carregarClientes() {
     return;
   }
 
+  // Todos os campos de dados do banco passam por esc() para prevenir XSS
   const html = clientes.map(c => `
     <div class="cliente-row">
       <div>
-        <div class="cliente-row-name">${c.nome}</div>
-        <div class="cliente-row-meta">📞 ${c.telefone} · ${c.cidade}/${c.estado} · Atendente: ${c.atendente || '—'}</div>
+        <div class="cliente-row-name">${esc(c.nome)}</div>
+        <div class="cliente-row-meta">📞 ${esc(c.telefone)} · ${esc(c.cidade)}/${esc(c.estado)} · Atendente: ${esc(c.atendente || '—')}</div>
         <div class="cliente-row-meta" style="margin-top:2px">${formatDate(c.criado_em)}</div>
       </div>
-      <span class="cliente-row-produto">${c.produto || '—'}</span>
+      <span class="cliente-row-produto">${esc(c.produto || '—')}</span>
     </div>
   `).join('');
 
