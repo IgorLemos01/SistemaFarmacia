@@ -186,13 +186,29 @@ export function buscarClienteReceita(q) {
 }
 
 export function renderClienteReceitaDropdown(clientes, box) {
-  if (!clientes.length) { box.style.display = 'none'; return; }
+  var q = document.getElementById('rClienteSearch').value.trim();
+  if (!clientes.length && (!q || q.length < 2)) { box.style.display = 'none'; return; }
   box.style.display = 'block';
+
+  var rowsHtml = clientes.map(function (c) {
+    return '<div onclick="selectClienteReceita(\'' + c.id + '\')" style="padding:.65rem .9rem;cursor:pointer;font-size:.85rem;border-bottom:1px solid var(--border)" onmouseenter="this.style.background=\'var(--bg)\'" onmouseleave="this.style.background=\'\'">' +
+      '<strong>' + window.esc(c.nome) + '</strong> <span style="color:var(--tx3)">' + (c.cpf ? 'CPF: ' + window.esc(c.cpf) : window.esc(c.tel || '')) + '</span></div>';
+  }).join('');
+
+  var addRowHtml = '<div onclick="window.openModalClienteFromSearch(\'' + window.esc(q).replace(/'/g, "\\'") + '\', \'rClienteId\', \'rClienteResults\', \'selectClienteReceita\')" style="padding:.7rem .9rem;cursor:pointer;font-size:.83rem;color:var(--blue);background:var(--blue-l);display:flex;align-items:center;gap:.4rem;font-weight:600;transition:background .2s" onmouseenter="this.style.background=\'rgba(0,48,135,0.1)\'" onmouseleave="this.style.background=\'var(--blue-l)\'">' +
+    '<span>＋ Cadastrar novo cliente ' + (q ? '<strong>"' + window.esc(q) + '"</strong>' : '') + '</span>' +
+    '</div>';
+
+  var emptyHeader = '';
+  if (!clientes.length) {
+    emptyHeader = '<div style="padding:.65rem .9rem;font-size:.8rem;color:var(--tx3);border-bottom:1px solid var(--border);background:#fff">Nenhum cliente encontrado</div>';
+  }
+
   box.innerHTML = '<div style="position:absolute;top:2px;left:0;right:0;background:#fff;border:1.5px solid var(--blue);border-radius:var(--r);box-shadow:var(--md);z-index:50;overflow:hidden">' +
-    clientes.map(function (c) {
-      return '<div onclick="selectClienteReceita(\'' + c.id + '\')" style="padding:.65rem .9rem;cursor:pointer;font-size:.85rem;border-bottom:1px solid var(--border)" onmouseenter="this.style.background=\'var(--bg)\'" onmouseleave="this.style.background=\'\'">' +
-        '<strong>' + window.esc(c.nome) + '</strong> <span style="color:var(--tx3)">' + (c.cpf ? 'CPF: ' + window.esc(c.cpf) : window.esc(c.tel || '')) + '</span></div>';
-    }).join('') + '</div>';
+    emptyHeader +
+    rowsHtml +
+    addRowHtml +
+    '</div>';
 }
 
 export function selectClienteReceita(id) {

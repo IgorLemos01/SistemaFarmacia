@@ -223,7 +223,45 @@ export function salvarCliente() {
     window.clearCache('clientes');
     window.toast((isEdit ? 'Cliente atualizado' : 'Cliente cadastrado') + ' com sucesso!', 'ok');
     if (window.STATE.page === 'clientes') window.renderPage('clientes');
+
+    // Se o modal foi aberto a partir de uma busca rápida (ex: exames, receitas, manipulação)
+    if (!isEdit && window._searchTargetInputId && window._searchSelectCallbackName) {
+      var callbackName = window._searchSelectCallbackName;
+
+      // Limpar os estados temporários
+      window._searchTargetInputId = null;
+      window._searchTargetResultsId = null;
+      window._searchSelectCallbackName = null;
+
+      // Atualiza o cache local de clientes de forma síncrona/imediata para que o callback possa encontrá-lo
+      var clientes = window.fromCache('clientes') || [];
+      if (!clientes.find(function(c) { return c.id === obj.id; })) {
+        clientes.push(obj);
+        localStorage.setItem(window.getStorageKey('clientes'), JSON.stringify(clientes));
+        if (window.CACHE) window.CACHE.clientes = clientes;
+      }
+
+      // Executa o callback de seleção
+      if (typeof window[callbackName] === 'function') {
+        window[callbackName](obj.id);
+      }
+    }
   });
+}
+
+// Abre o modal de cliente a partir de uma busca, pré-preenchendo o nome e organizando o z-index do modal
+export function openModalClienteFromSearch(nomeInicial, targetInputId, targetResultsId, selectCallbackName) {
+  window._searchTargetInputId = targetInputId;
+  window._searchTargetResultsId = targetResultsId;
+  window._searchSelectCallbackName = selectCallbackName;
+
+  openModalCliente();
+  window.setVal('cNome', nomeInicial);
+
+  var modalClienteEl = document.getElementById('modalCliente');
+  if (modalClienteEl) {
+    modalClienteEl.style.zIndex = '300';
+  }
 }
 
 // Bind to window for global availability
@@ -236,3 +274,4 @@ window.filtrarTL = filtrarTL;
 window.openModalCliente = openModalCliente;
 window.cancelarModalCliente = cancelarModalCliente;
 window.salvarCliente = salvarCliente;
+window.openModalClienteFromSearch = openModalClienteFromSearch;

@@ -31,7 +31,18 @@ export function pagBadge(p) {
 }
 
 export function openModal(id) { document.getElementById(id).classList.remove('h'); }
-export function closeModal(id) { document.getElementById(id).classList.add('h'); }
+export function closeModal(id) {
+  var el = document.getElementById(id);
+  if (el) {
+    el.classList.add('h');
+    if (id === 'modalCliente') {
+      el.style.zIndex = '';
+      window._searchTargetInputId = null;
+      window._searchTargetResultsId = null;
+      window._searchSelectCallbackName = null;
+    }
+  }
+}
 
 export function migrateOldKeys() {
   try {
