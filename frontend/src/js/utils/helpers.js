@@ -33,6 +33,17 @@ export function pagBadge(p) {
 export function openModal(id) { document.getElementById(id).classList.remove('h'); }
 export function closeModal(id) { document.getElementById(id).classList.add('h'); }
 
+export function migrateOldKeys() {
+  try {
+    if (localStorage.getItem('fc_clientes') && !localStorage.getItem('fc_local_clientes')) {
+      localStorage.setItem('fc_local_clientes', localStorage.getItem('fc_clientes'));
+    }
+    if (localStorage.getItem('fc_servicos') && !localStorage.getItem('fc_local_servicos')) {
+      localStorage.setItem('fc_local_servicos', localStorage.getItem('fc_servicos'));
+    }
+  } catch (e) { console.error('Migration error:', e); }
+}
+
 export function toast(msg, type) {
   var box = document.getElementById('toasts');
   if (!box) {
@@ -123,3 +134,4 @@ window.mCpf = mCpf;
 window.startClock = startClock;
 window.getServicoDesc = getServicoDesc;
 window.abrirConfirmServico = abrirConfirmServico;
+window.migrateOldKeys = migrateOldKeys;
