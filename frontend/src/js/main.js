@@ -112,6 +112,26 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.modal-bg').forEach(function (bg) {
     bg.addEventListener('click', function (e) { if (e.target === bg) bg.classList.add('h'); });
   });
+
+  // Fechar dropdowns de busca ao clicar fora
+  document.addEventListener('click', function (e) {
+    var targets = [
+      { resultsId: 'eExameResults', searchId: 'eExameSearch' },
+      { resultsId: 'eClienteResults', searchId: 'eClienteSearch' },
+      { resultsId: 'sClienteResults', searchId: 'sClienteSearch' },
+      { resultsId: 'rClienteResults', searchId: 'rClienteSearch' }
+    ];
+
+    targets.forEach(function (item) {
+      var resultsEl = document.getElementById(item.resultsId);
+      var searchEl = document.getElementById(item.searchId);
+      if (resultsEl && resultsEl.style.display !== 'none') {
+        if (e.target !== searchEl && !resultsEl.contains(e.target)) {
+          resultsEl.style.display = 'none';
+        }
+      }
+    });
+  });
 });
 
 // Bind to window for global availability
