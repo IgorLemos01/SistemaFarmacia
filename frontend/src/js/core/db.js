@@ -67,7 +67,7 @@ export async function dbGetClientes() {
 
 export async function dbSaveCliente(obj, isEdit) {
   var row = {
-    id: obj.id, nome: obj.nome, cpf: obj.cpf || null, nasc: obj.nasc || null,
+    id: obj.id, nome: obj.nome, cpf: obj.cpf || null, rg: obj.rg || null, nasc: obj.nasc || null,
     sexo: obj.sexo || null, tel: obj.tel || null, email: obj.email || null,
     endereco: obj.endereco || null, obs: obj.obs || null, ativo: true,
     alergias_cliente: obj.alergiasCliente || null,

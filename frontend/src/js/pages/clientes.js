@@ -74,7 +74,8 @@ export function verCliente(id) {
       '<div class="divider"></div>' +
       '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem"><div style="font-size:.85rem;font-weight:600">Dados Cadastrais</div>' + (window.canEdit('clientes') ? '<button class="btn btn-sm btn-ghost" onclick="closeModal(\'modalDetalheCliente\');openModalCliente(\'' + c.id + '\')">✏️ Editar</button>' : '') + '</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1.25rem;font-size:.83rem">' +
-      (c.cpf ? '<div style="grid-column:1/-1"><span style="color:var(--tx3)">CPF: </span><strong>' + window.esc(c.cpf) + '</strong></div>' : '') +
+      (c.cpf ? '<div><span style="color:var(--tx3)">CPF: </span><strong>' + window.esc(c.cpf) + '</strong></div>' : '<div></div>') +
+      (c.rg ? '<div><span style="color:var(--tx3)">RG: </span><strong>' + window.esc(c.rg) + '</strong></div>' : '<div></div>') +
       '<div><span style="color:var(--tx3)">Endereço: </span>' + window.esc(c.endereco || '—') + '</div>' +
       '<div><span style="color:var(--tx3)">E-mail: </span>' + window.esc(c.email || '—') + '</div>' +
       '<div><span style="color:var(--tx3)">Nascimento: </span>' + (c.nasc ? window.fmtDate(c.nasc) : '—') + '</div>' +
@@ -136,7 +137,7 @@ export function openModalCliente(id) {
   var titulo = document.getElementById('mClienteTitle');
   if (titulo) titulo.textContent = id ? 'Editar Cliente' : 'Novo Cliente';
   // Limpa campos
-  ['cNome','cCpf','cNasc','cTel','cEmail','cEnd','cAlergias','cMedico','cObs'].forEach(function(f) {
+  ['cNome','cCpf','cRg','cNasc','cTel','cEmail','cEnd','cAlergias','cMedico','cObs'].forEach(function(f) {
     window.setVal(f, '');
   });
   window.setVal('cSexo', '');
@@ -148,10 +149,11 @@ export function openModalCliente(id) {
 
   if (id) {
     var clientes = window.fromCache('clientes') || [];
-    var c = clientes.find(function(x) { return x.id === id; });
+    var c = clientes.find(function (x) { return x.id === id; });
     if (c) {
       window.setVal('cNome', c.nome || '');
       window.setVal('cCpf', c.cpf || '');
+      window.setVal('cRg', c.rg || '');
       window.setVal('cNasc', c.nasc || '');
       window.setVal('cSexo', c.sexo || '');
       window.setVal('cTel', c.tel || '');
@@ -166,8 +168,8 @@ export function openModalCliente(id) {
 }
 
 export function cancelarModalCliente() {
-  var nome = window.gv('cNome'), cpf = window.gv('cCpf'), tel = window.gv('cTel');
-  if ((nome || cpf || tel) && !confirm('Descartar os dados preenchidos?')) return;
+  var nome = window.gv('cNome'), cpf = window.gv('cCpf'), rg = window.gv('cRg'), tel = window.gv('cTel');
+  if ((nome || cpf || rg || tel) && !confirm('Descartar os dados preenchidos?')) return;
   window.closeModal('modalCliente');
 }
 
@@ -202,6 +204,7 @@ export function salvarCliente() {
     id: _editandoClienteId || window.uid(),
     nome: nome,
     cpf: cpf || null,
+    rg: window.gv('cRg') || null,
     nasc: window.gv('cNasc') || null,
     sexo: window.gv('cSexo') || null,
     tel: tel || null,

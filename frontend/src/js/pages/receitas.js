@@ -52,9 +52,18 @@ export function renderReceitasTable(receitas, clientes) {
       var meds = (r.medicamentos || []).map(function (m) {
         return '<span class="badge badge-blue" style="margin:.1rem">💊 ' + window.esc(m.nome) + (m.dose ? ' ' + window.esc(m.dose) : '') + '</span>';
       }).join('');
+      
+      var docHtml = '';
+      if (cl) {
+        var docs = [];
+        if (cl.cpf) docs.push('CPF: ' + window.esc(cl.cpf));
+        if (cl.rg) docs.push('RG: ' + window.esc(cl.rg));
+        if (docs.length) docHtml = '<div style="font-size:.72rem;color:var(--tx3)">' + docs.join(' · ') + '</div>';
+      }
+
       return '<tr>' +
         '<td class="td-muted">' + (i + 1) + '</td>' +
-        '<td class="td-name">' + (cl ? window.esc(cl.nome) : '—') + (cl && cl.cpf ? '<div style="font-size:.72rem;color:var(--tx3)">CPF: ' + window.esc(cl.cpf) + '</div>' : '') + '</td>' +
+        '<td class="td-name">' + (cl ? window.esc(cl.nome) : '—') + docHtml + '</td>' +
         '<td class="td-muted">' + window.fmtDate(r.data) + '</td>' +
         '<td class="td-muted">' + window.esc(r.medico || '—') + '</td>' +
         '<td style="max-width:280px;line-height:1.8">' + (meds || '<span class="td-muted">—</span>') + '</td>' +
@@ -85,6 +94,9 @@ export function verReceita(id) {
     '<div><span style="color:var(--tx3)">Paciente:</span> <strong>' + (cl ? window.esc(cl.nome) : '—') + '</strong></div>' +
     '<div><span style="color:var(--tx3)">Data:</span> ' + window.fmtDate(r.data) + '</div>' +
     (cl && cl.cpf ? '<div><span style="color:var(--tx3)">CPF:</span> ' + window.esc(cl.cpf) + '</div>' : '') +
+    (cl && cl.rg ? '<div><span style="color:var(--tx3)">RG:</span> ' + window.esc(cl.rg) + '</div>' : '') +
+    (cl && cl.nasc ? '<div><span style="color:var(--tx3)">Nascimento:</span> ' + window.fmtDate(cl.nasc) + '</div>' : '') +
+    (cl && cl.tel ? '<div><span style="color:var(--tx3)">Contato:</span> ' + window.esc(cl.tel) + '</div>' : '') +
     (r.medico ? '<div><span style="color:var(--tx3)">Médico:</span> ' + window.esc(r.medico) + '</div>' : '') +
     '</div>' +
     '<div class="divider"></div>' +
@@ -130,7 +142,19 @@ export function openModalReceita(editId) {
       var clientes = window.fromCache('clientes') || [];
       var cl = clientes.find(function (c) { return c.id === r.clienteId; });
       if (cl) {
-        window.set('rClienteSelected', '<strong>' + window.esc(cl.nome) + '</strong> CPF: ' + window.esc(cl.cpf || '-') + '<button class="btn btn-icon btn-sm" onclick="clearClienteReceita()" style="margin-left:.5rem">x</button>');
+        var infoHtml = '<div style="width: 100%; display: flex; flex-direction: column; gap: 0.25rem;">' +
+          '<div style="display: flex; justify-content: space-between; align-items: center;">' +
+            '<strong>' + window.esc(cl.nome) + '</strong>' +
+            '<button class="btn btn-icon btn-sm" onclick="clearClienteReceita()">x</button>' +
+          '</div>' +
+          '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem; font-size: 0.78rem; color: var(--tx3); margin-top: 0.25rem;">' +
+            '<div><span style="font-weight:600">CPF:</span> ' + window.esc(cl.cpf || '—') + '</div>' +
+            '<div><span style="font-weight:600">RG:</span> ' + window.esc(cl.rg || '—') + '</div>' +
+            '<div><span style="font-weight:600">Nascimento:</span> ' + (cl.nasc ? window.fmtDate(cl.nasc) : '—') + '</div>' +
+            '<div><span style="font-weight:600">Contato:</span> ' + window.esc(cl.tel || '—') + '</div>' +
+          '</div>' +
+        '</div>';
+        window.set('rClienteSelected', infoHtml);
         document.getElementById('rClienteSelected').style.display = 'flex';
       }
       window.set('rMedsContainer', '');
@@ -177,7 +201,19 @@ export function selectClienteReceita(id) {
   if (!cl) return;
   document.getElementById('rClienteId').value = id;
   document.getElementById('rClienteResults').style.display = 'none';
-  window.set('rClienteSelected', '<strong>' + window.esc(cl.nome) + '</strong> CPF: ' + window.esc(cl.cpf || '-') + '<button class="btn btn-icon btn-sm" onclick="clearClienteReceita()" style="margin-left:.5rem">x</button>');
+  var infoHtml = '<div style="width: 100%; display: flex; flex-direction: column; gap: 0.25rem;">' +
+    '<div style="display: flex; justify-content: space-between; align-items: center;">' +
+      '<strong>' + window.esc(cl.nome) + '</strong>' +
+      '<button class="btn btn-icon btn-sm" onclick="clearClienteReceita()">x</button>' +
+    '</div>' +
+    '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem; font-size: 0.78rem; color: var(--tx3); margin-top: 0.25rem;">' +
+      '<div><span style="font-weight:600">CPF:</span> ' + window.esc(cl.cpf || '—') + '</div>' +
+      '<div><span style="font-weight:600">RG:</span> ' + window.esc(cl.rg || '—') + '</div>' +
+      '<div><span style="font-weight:600">Nascimento:</span> ' + (cl.nasc ? window.fmtDate(cl.nasc) : '—') + '</div>' +
+      '<div><span style="font-weight:600">Contato:</span> ' + window.esc(cl.tel || '—') + '</div>' +
+    '</div>' +
+  '</div>';
+  window.set('rClienteSelected', infoHtml);
   document.getElementById('rClienteSelected').style.display = 'flex';
   window.setVal('rClienteSearch', cl.nome);
 }
