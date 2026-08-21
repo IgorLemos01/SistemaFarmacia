@@ -479,6 +479,119 @@ export async function dbDeleteTipoExame(id) {
   setCache('tipos_exames', cached);
 }
 
+// ══════════════════════════════════════════════════════════
+//  MEDICAMENTOS — catálogo persistente
+// ══════════════════════════════════════════════════════════
+
+export async function dbGetMedicamentos() {
+  var cached = fromCache('medicamentos') || [];
+  if (cached.length) return cached;
+
+  // Tenta buscar do Supabase
+  if (window.sb && window.STATE.isSupabase) {
+    try {
+      var res = await window.withTimeout(
+        window.sb.from('medicamentos').select('*').order('nome'), 3000
+      );
+      if (!res.error && res.data && res.data.length) {
+        var normed = res.data.map(function (r) {
+          return {
+            id: r.id, nome: r.nome || '', rms: r.rms || '',
+            laboratorio: r.laboratorio || '', dose: r.dose || '',
+            posologia: r.posologia || ''
+          };
+        });
+        setCache('medicamentos', normed);
+        return normed;
+      }
+    } catch (e) { console.warn('dbGetMedicamentos supabase error:', e); }
+  }
+  // Fallback localStorage
+  try {
+    var ls = localStorage.getItem('fc_medicamentos');
+    var data = ls ? JSON.parse(ls) : [];
+    if (data.length) setCache('medicamentos', data);
+    return data;
+  } catch (e) { return []; }
+}
+
+export async function dbSaveMedicamento(obj) {
+  var row = {
+    id: obj.id || window.uid(),
+    nome: obj.nome || '',
+    rms: obj.rms || null,
+    laboratorio: obj.laboratorio || null,
+    dose: obj.dose || null,
+    posologia: obj.posologia || null,
+  };
+  var cached = fromCache('medicamentos') || [];
+  var idx = cached.findIndex(function (x) { return x.id === row.id; });
+  if (idx >= 0) cached[idx] = row; else cached.push(row);
+  cached.sort(function (a, b) { return (a.nome || '').localeCompare(b.nome || ''); });
+  setCache('medicamentos', cached);
+  try { localStorage.setItem('fc_medicamentos', JSON.stringify(cached)); } catch (e) {}
+
+  if (window.sb && window.STATE.isSupabase) {
+    try {
+      var res = await window.withTimeout(
+        window.sb.from('medicamentos').upsert([{
+          id: row.id, nome: row.nome, rms: row.rms,
+          laboratorio: row.laboratorio, dose: row.dose, posologia: row.posologia
+        }]), 3000
+      );
+      if (res.error) throw res.error;
+      clearCache('medicamentos');
+    } catch (e) {
+      console.error('dbSaveMedicamento error:', e);
+      window.toast('Salvo localmente. Sincroniza quando reconectar.', 'yw');
+    }
+  }
+  return row.id;
+}
+
+export async function dbUpdateMedicamento(id, changes) {
+  var cached = fromCache('medicamentos') || [];
+  var idx = cached.findIndex(function (x) { return x.id === id; });
+  if (idx >= 0) cached[idx] = Object.assign({}, cached[idx], changes);
+  cached.sort(function (a, b) { return (a.nome || '').localeCompare(b.nome || ''); });
+  setCache('medicamentos', cached);
+  try { localStorage.setItem('fc_medicamentos', JSON.stringify(cached)); } catch (e) {}
+
+  if (window.sb && window.STATE.isSupabase) {
+    try {
+      var dbRow = {
+        nome: changes.nome, rms: changes.rms || null,
+        laboratorio: changes.laboratorio || null,
+        dose: changes.dose || null, posologia: changes.posologia || null
+      };
+      var res = await window.withTimeout(
+        window.sb.from('medicamentos').update(dbRow).eq('id', id), 3000
+      );
+      if (res.error) throw res.error;
+      clearCache('medicamentos');
+    } catch (e) {
+      console.error('dbUpdateMedicamento error:', e);
+      window.toast('Atualizado localmente. Sincroniza quando reconectar.', 'yw');
+    }
+  }
+}
+
+export async function dbDeleteMedicamento(id) {
+  var cached = fromCache('medicamentos') || [];
+  var idx = cached.findIndex(function (x) { return x.id === id; });
+  if (idx >= 0) cached.splice(idx, 1);
+  setCache('medicamentos', cached);
+  try { localStorage.setItem('fc_medicamentos', JSON.stringify(cached)); } catch (e) {}
+
+  if (window.sb && window.STATE.isSupabase) {
+    try {
+      await window.withTimeout(
+        window.sb.from('medicamentos').delete().eq('id', id), 3000
+      );
+    } catch (e) { console.error('dbDeleteMedicamento error:', e); }
+  }
+}
+
 // Bind to window for global availability
 window.CACHE = CACHE;
 window.CACHE_TTL = CACHE_TTL;
@@ -505,3 +618,9 @@ window.dbGetTiposExames = dbGetTiposExames;
 window.dbSaveTipoExame = dbSaveTipoExame;
 window.dbToggleTipoExame = dbToggleTipoExame;
 window.dbDeleteTipoExame = dbDeleteTipoExame;
+window.dbGetMedicamentos = dbGetMedicamentos;
+window.dbSaveMedicamento = dbSaveMedicamento;
+window.dbUpdateMedicamento = dbUpdateMedicamento;
+window.dbDeleteMedicamento = dbDeleteMedicamento;
+
+

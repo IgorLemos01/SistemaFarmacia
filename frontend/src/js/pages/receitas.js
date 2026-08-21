@@ -11,7 +11,10 @@ export function pgReceitas() {
   if (window.canEdit('receitas')) { btn.style.display = ''; btn.textContent = '＋ Nova Receita'; }
   window.set('content',
     '<div class="card" style="margin-bottom:1.25rem">' +
-    '<div class="card-head"><div class="card-title">📜 Receitas Médicas</div><div class="card-sub">Histórico de receitas e medicamentos dos pacientes</div></div>' +
+    '<div class="card-head" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">' +
+    '<div><div class="card-title">📜 Receitas Médicas</div><div class="card-sub">Histórico de receitas e medicamentos dos pacientes</div></div>' +
+    (window.canEdit('receitas') ? '<button class="btn btn-ghost" style="font-size:.83rem" onclick="openGerenciarMedicamentos()">⚙️ Gerenciar Medicamentos</button>' : '') +
+    '</div>' +
     '<div style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap;padding:0 0 1rem">' +
     '<div class="fg" style="flex:1;min-width:200px"><label>Buscar por paciente ou medicamento</label><input id="receitaFilter" placeholder="Nome do paciente ou medicamento..." oninput="filtrarReceitas()" /></div>' +
     (window.canEdit('receitas') ? '<button class="btn btn-primary" onclick="openModalReceita()">＋ Nova Receita</button>' : '') +
@@ -258,11 +261,14 @@ export function adicionarMedicamento(dados) {
   var idx = _medCount++;
   window._medCount = _medCount;
   var div = document.createElement('div');
-  div.style.cssText = 'display:flex;flex-direction:column;gap:.4rem;background:var(--bg);padding:.75rem;border-radius:var(--r);border:1px solid var(--border)';
+  div.style.cssText = 'display:flex;flex-direction:column;gap:.4rem;background:var(--bg);padding:.75rem;border-radius:var(--r);border:1px solid var(--border);position:relative';
   div.id = 'med_' + idx;
   div.innerHTML =
     '<div style="display:grid;grid-template-columns:1fr 120px 160px auto;gap:.4rem;align-items:center">' +
-      '<input placeholder="Nome do medicamento *" value="' + window.esc((dados && dados.nome) || '') + '" id="med_nome_' + idx + '" style="font-size:.85rem" />' +
+      '<div style="position:relative">' +
+        '<input placeholder="💊 Nome do medicamento *" value="' + window.esc((dados && dados.nome) || '') + '" id="med_nome_' + idx + '" style="font-size:.85rem;width:100%" autocomplete="off" oninput="buscarMedAutocomplete(this,' + idx + ')" onfocus="buscarMedAutocomplete(this,' + idx + ')" />' +
+        '<div id="med_ac_' + idx + '" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:99;background:#fff;border:1.5px solid var(--blue);border-radius:var(--r);box-shadow:var(--md);max-height:220px;overflow-y:auto"></div>' +
+      '</div>' +
       '<input placeholder="Dose (ex: 500mg)" value="' + window.esc((dados && dados.dose) || '') + '" id="med_dose_' + idx + '" style="width:120px;font-size:.85rem" />' +
       '<input placeholder="Posologia" value="' + window.esc((dados && dados.posologia) || '') + '" id="med_pos_' + idx + '" style="width:160px;font-size:.85rem" />' +
       '<button type="button" class="btn btn-icon btn-sm" onclick="removerMedicamento(\'med_' + idx + '\')">🗑️</button>' +
@@ -275,6 +281,48 @@ export function adicionarMedicamento(dados) {
       '<input placeholder="Quant" value="' + window.esc((dados && dados.quant) || '') + '" id="med_quant_' + idx + '" style="font-size:.8rem" />' +
     '</div>';
   cont.appendChild(div);
+}
+
+var _medAcTimeout;
+export function buscarMedAutocomplete(input, idx) {
+  clearTimeout(_medAcTimeout);
+  var box = document.getElementById('med_ac_' + idx);
+  if (!box) return;
+  var q = (input.value || '').toLowerCase().trim();
+  _medAcTimeout = setTimeout(function () {
+    window.dbGetMedicamentos().then(function (lista) {
+      var filtrados = q
+        ? lista.filter(function (m) { return (m.nome || '').toLowerCase().includes(q); })
+        : lista;
+      filtrados = filtrados.slice(0, 12);
+      if (!filtrados.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+      box.style.display = 'block';
+      box.innerHTML = filtrados.map(function (m) {
+        var sub = [m.rms ? 'RMS: ' + m.rms : '', m.laboratorio || ''].filter(Boolean).join(' · ');
+        return '<div style="padding:.6rem .9rem;cursor:pointer;font-size:.85rem;border-bottom:1px solid var(--border)" ' +
+          'onmousedown="selecionarMedAutocomplete(' + idx + ',\'' + m.id + '\')" ' +
+          'onmouseenter="this.style.background=\'var(--blue-l)\'" onmouseleave="this.style.background=\'\'">'
+          + '<strong>' + window.esc(m.nome) + '</strong>' +
+          (sub ? '<div style="font-size:.75rem;color:var(--tx3)">' + window.esc(sub) + '</div>' : '') +
+          '</div>';
+      }).join('');
+    });
+  }, 150);
+}
+
+export function selecionarMedAutocomplete(idx, medId) {
+  window.dbGetMedicamentos().then(function (lista) {
+    var m = lista.find(function (x) { return x.id === medId; });
+    if (!m) return;
+    var setV = function (id, v) { var el = document.getElementById(id); if (el) el.value = v || ''; };
+    setV('med_nome_' + idx, m.nome);
+    setV('med_rms_' + idx, m.rms);
+    setV('med_laboratorio_' + idx, m.laboratorio);
+    setV('med_dose_' + idx, m.dose);
+    setV('med_pos_' + idx, m.posologia);
+    var box = document.getElementById('med_ac_' + idx);
+    if (box) { box.style.display = 'none'; box.innerHTML = ''; }
+  });
 }
 
 export function removerMedicamento(id) {
@@ -352,6 +400,96 @@ export function dbSaveReceita(obj) {
   localStorage.setItem('fc_receitas', JSON.stringify(lista));
 }
 
+// ══════════════════════════════════════════════════════════
+//  GERENCIAR MEDICAMENTOS — catálogo
+// ══════════════════════════════════════════════════════════
+
+var _editandoMedId = null;
+
+export function openGerenciarMedicamentos() {
+  window.dbGetMedicamentos().then(function (lista) {
+    var rows = lista.length
+      ? lista.map(function (m) {
+          return '<div style="display:flex;align-items:center;gap:.75rem;padding:.65rem .85rem;background:var(--bg);border-radius:var(--r);margin-bottom:.4rem">' +
+            '<div style="flex:1;min-width:0">' +
+              '<div style="font-weight:600;font-size:.88rem">' + window.esc(m.nome) + '</div>' +
+              '<div style="font-size:.75rem;color:var(--tx3)">' +
+                [m.rms ? 'RMS: ' + m.rms : '', m.laboratorio || '', m.dose || ''].filter(Boolean).join(' · ') +
+              '</div>' +
+            '</div>' +
+            '<button class="btn btn-icon btn-sm" title="Editar" onclick="openModalMedicamento(\'' + m.id + '\')">✏️</button>' +
+            '<button class="btn btn-icon btn-sm" title="Excluir" onclick="excluirMedicamento(\'' + m.id + '\')" style="color:var(--red)">🗑️</button>' +
+            '</div>';
+        }).join('')
+      : '<div class="empty"><span class="empty-ico">💊</span><p class="empty-txt">Nenhum medicamento cadastrado</p></div>';
+
+    document.getElementById('mOrcSub').textContent = 'Catálogo de medicamentos';
+    window.set('mOrcBody',
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">' +
+      '<div style="font-weight:600;font-size:.9rem">' + lista.length + ' medicamento(s) cadastrado(s)</div>' +
+      '<button class="btn btn-primary btn-sm" style="font-size:.82rem" onclick="openModalMedicamento()">＋ Novo Medicamento</button>' +
+      '</div>' +
+      '<div style="max-height:55vh;overflow-y:auto">' + rows + '</div>'
+    );
+    window.openModal('modalOrc');
+  });
+}
+
+export function openModalMedicamento(id) {
+  _editandoMedId = id || null;
+  if (id) {
+    window.dbGetMedicamentos().then(function (lista) {
+      var m = lista.find(function (x) { return x.id === id; });
+      if (!m) return;
+      document.getElementById('mmNome').value = m.nome || '';
+      document.getElementById('mmRms').value = m.rms || '';
+      document.getElementById('mmLaboratorio').value = m.laboratorio || '';
+      document.getElementById('mmDose').value = m.dose || '';
+      document.getElementById('mmPosologia').value = m.posologia || '';
+      document.getElementById('mMedTitle').textContent = 'Editar Medicamento';
+      window.openModal('modalMedicamento');
+    });
+  } else {
+    ['mmNome','mmRms','mmLaboratorio','mmDose','mmPosologia'].forEach(function (id) {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('mMedTitle').textContent = 'Novo Medicamento';
+    window.openModal('modalMedicamento');
+  }
+}
+
+export function salvarMedicamento() {
+  var nome = document.getElementById('mmNome').value.trim();
+  if (!nome) { window.toast('Informe o nome do medicamento.', 'er'); return; }
+  var obj = {
+    id: _editandoMedId || window.uid(),
+    nome: nome,
+    rms: document.getElementById('mmRms').value.trim(),
+    laboratorio: document.getElementById('mmLaboratorio').value.trim(),
+    dose: document.getElementById('mmDose').value.trim(),
+    posologia: document.getElementById('mmPosologia').value.trim(),
+  };
+  var fn = _editandoMedId
+    ? window.dbUpdateMedicamento(_editandoMedId, obj)
+    : window.dbSaveMedicamento(obj);
+  Promise.resolve(fn).then(function () {
+    window.clearCache('medicamentos');
+    window.closeModal('modalMedicamento');
+    window.toast((_editandoMedId ? 'Medicamento atualizado' : 'Medicamento cadastrado') + ' com sucesso! ✅', 'ok');
+    _editandoMedId = null;
+    openGerenciarMedicamentos();
+  });
+}
+
+export function excluirMedicamento(id) {
+  if (!confirm('Excluir este medicamento do catálogo?')) return;
+  window.dbDeleteMedicamento(id).then(function () {
+    window.clearCache('medicamentos');
+    window.toast('Medicamento excluído.', 'ok');
+    openGerenciarMedicamentos();
+  });
+}
+
 // Bind to window for global availability
 window.pgReceitas = pgReceitas;
 window.filtrarReceitas = filtrarReceitas;
@@ -364,7 +502,13 @@ window.renderClienteReceitaDropdown = renderClienteReceitaDropdown;
 window.selectClienteReceita = selectClienteReceita;
 window.clearClienteReceita = clearClienteReceita;
 window.adicionarMedicamento = adicionarMedicamento;
+window.buscarMedAutocomplete = buscarMedAutocomplete;
+window.selecionarMedAutocomplete = selecionarMedAutocomplete;
 window.removerMedicamento = removerMedicamento;
 window.salvarReceita = salvarReceita;
 window.dbGetReceitas = dbGetReceitas;
 window.dbSaveReceita = dbSaveReceita;
+window.openGerenciarMedicamentos = openGerenciarMedicamentos;
+window.openModalMedicamento = openModalMedicamento;
+window.salvarMedicamento = salvarMedicamento;
+window.excluirMedicamento = excluirMedicamento;

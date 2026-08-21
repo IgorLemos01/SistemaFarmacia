@@ -68,3 +68,17 @@ CREATE POLICY "Permitir modificacao de tipos_exames para autenticados"
   TO authenticated 
   USING (true)
   WITH CHECK (true);
+
+-- 6. Políticas para a tabela `medicamentos`
+ALTER TABLE medicamentos ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Permitir leitura de medicamentos para autenticados"
+  ON medicamentos FOR SELECT
+  TO authenticated
+  USING (true);
+
+CREATE POLICY "Permitir modificacao de medicamentos para autenticados"
+  ON medicamentos FOR ALL
+  TO authenticated
+  USING (true)
+  WITH CHECK (true);

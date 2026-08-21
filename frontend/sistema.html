@@ -480,6 +480,30 @@
     </div>
   </div>
 
+  <!-- MODAL: MEDICAMENTO (formulário cadastro/edição) -->
+  <div class="modal-bg h" id="modalMedicamento">
+    <div class="modal" style="max-width:460px">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title" id="mMedTitle">Novo Medicamento</div>
+          <div class="modal-sub">Preencha os dados do medicamento</div>
+        </div>
+        <button class="modal-close" onclick="closeModal('modalMedicamento')">✕</button>
+      </div>
+      <div class="form-grid">
+        <div class="fg full"><label>Nome do Medicamento *</label><input id="mmNome" placeholder="Ex: Amoxicilina 500mg" /></div>
+        <div class="fg"><label>RMS</label><input id="mmRms" placeholder="Ex: 1.1234.0001" /></div>
+        <div class="fg"><label>Laboratório / Fabricante</label><input id="mmLaboratorio" placeholder="Ex: EMS, Eurofarma..." /></div>
+        <div class="fg"><label>Dose Padrão</label><input id="mmDose" placeholder="Ex: 500mg, 10mg/ml..." /></div>
+        <div class="fg"><label>Posologia Padrão</label><input id="mmPosologia" placeholder="Ex: 1 comp. 8/8h por 7 dias" /></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeModal('modalMedicamento')">Cancelar</button>
+        <button class="btn btn-primary" onclick="salvarMedicamento()">Salvar Medicamento</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module" src="src/js/main.js"></script>
 </body>
 
