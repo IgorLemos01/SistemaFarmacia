@@ -69,6 +69,7 @@ export function renderReceitasTable(receitas, clientes) {
         '<td style="max-width:280px;line-height:1.8">' + (meds || '<span class="td-muted">—</span>') + '</td>' +
         '<td style="display:flex;gap:.3rem">' +
         '<button class="btn btn-sm btn-ghost" onclick="verReceita(\'' + r.id + '\')">👁 Ver</button>' +
+        '<button class="btn btn-sm btn-ghost" title="Gerar PDF" onclick="gerarPDFReceitaById(\'' + r.id + '\')">📄 PDF</button>' +
         (window.canEdit('receitas') ? '<button class="btn btn-sm btn-ghost" onclick="excluirReceita(\'' + r.id + '\')">🗑️</button>' : '') +
         '</td></tr>';
     }).join('') + '</tbody></table></div></div>';
@@ -105,6 +106,7 @@ export function verReceita(id) {
     (r.obs ? '<div class="divider"></div><div style="font-size:.83rem"><strong>Obs:</strong> ' + window.esc(r.obs) + '</div>' : '') +
     '<div style="display:flex;gap:.75rem;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)">' +
     '<button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeModal(\'modalOrc\')">Fechar</button>' +
+    '<button class="btn btn-primary" style="flex:1;justify-content:center" onclick="gerarPDFReceitaById(\'' + r.id + '\')">📄 Gerar PDF</button>' +
     '</div>'
   );
   window.openModal('modalOrc');
