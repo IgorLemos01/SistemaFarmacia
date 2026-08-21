@@ -83,10 +83,19 @@ export function verReceita(id) {
   var clientes = window.fromCache('clientes') || [];
   var cl = clientes.find(function (c) { return c.id === r.clienteId; });
   var medsHtml = (r.medicamentos || []).map(function (m) {
+    var details = [];
+    if (m.rms) details.push('RMS: ' + window.esc(m.rms));
+    if (m.lote) details.push('Lote: ' + window.esc(m.lote));
+    if (m.validade) details.push('Validade: ' + window.esc(m.validade));
+    if (m.laboratorio) details.push('Lab: ' + window.esc(m.laboratorio));
+    if (m.quant) details.push('Quant: ' + window.esc(m.quant));
+    var detailsHtml = details.length ? '<div style="font-size:.78rem;color:var(--tx3);margin-top:.2rem;display:flex;gap:.6rem;flex-wrap:wrap">' + details.join(' · ') + '</div>' : '';
+
     return '<div style="padding:.6rem .75rem;background:var(--blue-l);border-radius:var(--r);margin-bottom:.4rem">' +
       '<strong style="color:var(--blue)">💊 ' + window.esc(m.nome) + '</strong>' +
       (m.dose ? '<span style="font-size:.8rem;color:var(--tx3)"> — ' + window.esc(m.dose) + '</span>' : '') +
       (m.posologia ? '<div style="font-size:.8rem;color:var(--tx2);margin-top:.2rem">' + window.esc(m.posologia) + '</div>' : '') +
+      detailsHtml +
       '</div>';
   }).join('');
   document.getElementById('mOrcSub').textContent = 'Receita de ' + (cl ? cl.nome : '—');
@@ -249,13 +258,22 @@ export function adicionarMedicamento(dados) {
   var idx = _medCount++;
   window._medCount = _medCount;
   var div = document.createElement('div');
-  div.style.cssText = 'display:grid;grid-template-columns:1fr auto auto auto;gap:.4rem;align-items:center;background:var(--bg);padding:.6rem;border-radius:var(--r)';
+  div.style.cssText = 'display:flex;flex-direction:column;gap:.4rem;background:var(--bg);padding:.75rem;border-radius:var(--r);border:1px solid var(--border)';
   div.id = 'med_' + idx;
   div.innerHTML =
-    '<input placeholder="Nome do medicamento *" value="' + window.esc((dados && dados.nome) || '') + '" id="med_nome_' + idx + '" style="font-size:.85rem" />' +
-    '<input placeholder="Dose (ex: 500mg)" value="' + window.esc((dados && dados.dose) || '') + '" id="med_dose_' + idx + '" style="width:110px;font-size:.85rem" />' +
-    '<input placeholder="Posologia" value="' + window.esc((dados && dados.posologia) || '') + '" id="med_pos_' + idx + '" style="width:160px;font-size:.85rem" />' +
-    '<button type="button" class="btn btn-icon btn-sm" onclick="removerMedicamento(\'med_' + idx + '\')">🗑️</button>';
+    '<div style="display:grid;grid-template-columns:1fr 120px 160px auto;gap:.4rem;align-items:center">' +
+      '<input placeholder="Nome do medicamento *" value="' + window.esc((dados && dados.nome) || '') + '" id="med_nome_' + idx + '" style="font-size:.85rem" />' +
+      '<input placeholder="Dose (ex: 500mg)" value="' + window.esc((dados && dados.dose) || '') + '" id="med_dose_' + idx + '" style="width:120px;font-size:.85rem" />' +
+      '<input placeholder="Posologia" value="' + window.esc((dados && dados.posologia) || '') + '" id="med_pos_' + idx + '" style="width:160px;font-size:.85rem" />' +
+      '<button type="button" class="btn btn-icon btn-sm" onclick="removerMedicamento(\'med_' + idx + '\')">🗑️</button>' +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:.4rem">' +
+      '<input placeholder="RMS" value="' + window.esc((dados && dados.rms) || '') + '" id="med_rms_' + idx + '" style="font-size:.8rem" />' +
+      '<input placeholder="Lote" value="' + window.esc((dados && dados.lote) || '') + '" id="med_lote_' + idx + '" style="font-size:.8rem" />' +
+      '<input placeholder="Validade" value="' + window.esc((dados && dados.validade) || '') + '" id="med_validade_' + idx + '" style="font-size:.8rem" />' +
+      '<input placeholder="Laboratório" value="' + window.esc((dados && dados.laboratorio) || '') + '" id="med_laboratorio_' + idx + '" style="font-size:.8rem" />' +
+      '<input placeholder="Quant" value="' + window.esc((dados && dados.quant) || '') + '" id="med_quant_' + idx + '" style="font-size:.8rem" />' +
+    '</div>';
   cont.appendChild(div);
 }
 
@@ -275,10 +293,33 @@ export function salvarReceita() {
     var nomeEl = document.getElementById('med_nome_' + id);
     var doseEl = document.getElementById('med_dose_' + id);
     var posEl = document.getElementById('med_pos_' + id);
+    var rmsEl = document.getElementById('med_rms_' + id);
+    var loteEl = document.getElementById('med_lote_' + id);
+    var validadeEl = document.getElementById('med_validade_' + id);
+    var labEl = document.getElementById('med_laboratorio_' + id);
+    var quantEl = document.getElementById('med_quant_' + id);
+
     var nome = nomeEl ? nomeEl.value.trim() : '';
     var dose = doseEl ? doseEl.value.trim() : '';
     var pos = posEl ? posEl.value.trim() : '';
-    if (nome) meds.push({ nome: nome, dose: dose, posologia: pos });
+    var rms = rmsEl ? rmsEl.value.trim() : '';
+    var lote = loteEl ? loteEl.value.trim() : '';
+    var validade = validadeEl ? validadeEl.value.trim() : '';
+    var laboratorio = labEl ? labEl.value.trim() : '';
+    var quant = quantEl ? quantEl.value.trim() : '';
+
+    if (nome) {
+      meds.push({
+        nome: nome,
+        dose: dose,
+        posologia: pos,
+        rms: rms,
+        lote: lote,
+        validade: validade,
+        laboratorio: laboratorio,
+        quant: quant
+      });
+    }
   });
   if (!meds.length) { window.toast('Adicione pelo menos um medicamento.', 'er'); return; }
   var editId = document.getElementById('modalReceita').dataset.editId;

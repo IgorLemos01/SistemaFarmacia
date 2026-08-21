@@ -279,117 +279,85 @@ export function gerarPDFReceitaById(id) {
 }
 
 export function gerarPDFReceitaIndividual(receita, cliente) {
-  var nomeAtendente = window.STATE.user ? window.STATE.user.nome : '—';
-  
   function xe(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
-  var dataEmissao = new Date(receita.data + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
-  var dataHoje = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
-  var horaHoje = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  var dataHoje = receita.data ? window.fmtDate(receita.data) : new Date().toLocaleDateString('pt-BR');
 
-  // Render medications list
-  var medsHtml = (receita.medicamentos || []).map(function (m, idx) {
-    return '<div class="med-item">' +
-      '<div class="med-header">' +
-      '<span class="med-num">' + (idx + 1) + '.</span>' +
-      '<span class="med-name">' + xe(m.nome) + (m.dose ? ' — ' + xe(m.dose) : '') + '</span>' +
-      '</div>' +
-      (m.posologia ? '<div class="med-posologia"><strong>Uso:</strong> ' + xe(m.posologia) + '</div>' : '') +
-      '</div>';
-  }).join('');
+  var totalSlots = Math.max(3, (receita.medicamentos || []).length);
+  var medsHtml = '';
+  for (var i = 0; i < totalSlots; i++) {
+    var m = (receita.medicamentos && receita.medicamentos[i]) || {};
+    medsHtml +=
+      '<tr>' +
+      '<td colspan="3" class="label-cell" style="width:75%;border:1px solid #000;padding:8px 10px;font-size:12px;font-weight:bold;text-transform:uppercase">' +
+      'MEDICAMENTO: <span class="value-text" style="font-weight:normal">' + (m.nome ? (xe(m.nome) + (m.dose ? ' - ' + xe(m.dose) : '') + (m.posologia ? ' (' + xe(m.posologia) + ')' : '')) : '') + '</span>' +
+      '</td>' +
+      '<td class="label-cell" style="width:25%;border:1px solid #000;padding:8px 10px;font-size:12px;font-weight:bold;text-transform:uppercase">' +
+      'RMS: <span class="value-text" style="font-weight:normal">' + xe(m.rms || '') + '</span>' +
+      '</td>' +
+      '</tr>' +
+      '<tr>' +
+      '<td class="label-cell" style="width:25%;border:1px solid #000;padding:8px 10px;font-size:12px;font-weight:bold;text-transform:uppercase">' +
+      'LOTE: <span class="value-text" style="font-weight:normal">' + xe(m.lote || '') + '</span>' +
+      '</td>' +
+      '<td class="label-cell" style="width:25%;border:1px solid #000;padding:8px 10px;font-size:12px;font-weight:bold;text-transform:uppercase">' +
+      'VALIDADE: <span class="value-text" style="font-weight:normal">' + xe(m.validade || '') + '</span>' +
+      '</td>' +
+      '<td class="label-cell" style="width:30%;border:1px solid #000;padding:8px 10px;font-size:12px;font-weight:bold;text-transform:uppercase">' +
+      'LABORATÓRIO: <span class="value-text" style="font-weight:normal">' + xe(m.laboratorio || '') + '</span>' +
+      '</td>' +
+      '<td class="label-cell" style="width:20%;border:1px solid #000;padding:8px 10px;font-size:12px;font-weight:bold;text-transform:uppercase">' +
+      'QUANT: <span class="value-text" style="font-weight:normal">' + xe(m.quant || '') + '</span>' +
+      '</td>' +
+      '</tr>';
+  }
 
   var html =
     '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/>' +
-    '<title>Receita Médica — ' + xe(cliente ? cliente.nome : '') + '</title>' +
-    '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>' +
+    '<title>Receita Controlada — ' + xe(cliente ? cliente.nome : '') + '</title>' +
     '<style>' +
     '*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}' +
-    'body{font-family:"Source Sans 3",Arial,sans-serif;background:#F0F2F5;color:#111827;min-height:100vh;padding:32px 16px}' +
-    '.page{width:210mm;min-height:297mm;margin:0 auto;background:#fff;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.14);overflow:hidden;position:relative;display:flex;flex-direction:column;justify-content:space-between}' +
-    '.accent-bar{height:5px;background:linear-gradient(90deg,#001a4d 0%,#003087 45%,#059669 100%)}' +
-    '.header{padding:28px 40px 24px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid #E8ECF4}' +
-    '.brand-name{font-family:"Playfair Display",serif;font-size:24px;font-weight:900;color:#003087;letter-spacing:-.5px;line-height:1}' +
-    '.brand-tag{font-size:9.5px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.14em;margin-top:3px}' +
-    '.brand-contact{margin-top:10px}' +
-    '.brand-contact div{font-size:10.5px;color:#6B7280;margin-top:2px}' +
-    '.brand-contact strong{color:#374151;font-weight:600}' +
-    '.doc-block{text-align:right}' +
-    '.doc-label{font-size:9px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.16em}' +
-    '.doc-title{font-family:"Playfair Display",serif;font-size:26px;font-weight:900;color:#003087;line-height:1;margin:3px 0}' +
-    '.doc-date{font-size:10px;color:#6B7280;margin-top:4px}' +
-    '.content-area{padding:22px 40px;flex-grow:1}' +
-    '.section-label{font-size:9px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.16em;display:flex;align-items:center;gap:8px;margin-bottom:12px}' +
-    '.section-label::after{content:"";flex:1;height:1px;background:#E8ECF4}' +
-    '.client-card{background:#F8F9FF;border:1px solid #E8ECF4;border-radius:10px;padding:16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin-bottom:24px}' +
-    '.cf-label{font-size:9px;color:#9CA3AF;font-weight:700;text-transform:uppercase;letter-spacing:.15em}' +
-    '.cf-value{font-size:12px;font-weight:600;color:#111827;margin-top:3px}' +
-    '.meds-container{margin-top:20px;display:flex;flex-direction:column;gap:16px}' +
-    '.med-item{background:#fff;border-left:4px solid #003087;padding:4px 0 4px 16px}' +
-    '.med-header{display:flex;align-items:baseline;gap:6px}' +
-    '.med-num{font-size:14px;font-weight:700;color:#003087}' +
-    '.med-name{font-size:14px;font-weight:700;color:#111827}' +
-    '.med-posologia{font-size:12px;color:#4B5563;margin-top:4px;line-height:1.5}' +
-    '.obs-block{margin-top:28px;background:#FFFBEB;border:1px dashed #FCD34D;border-radius:8px;padding:12px 16px;font-size:11.5px;color:#78350F}' +
-    '.footer{padding:24px 40px 20px;border-top:1px solid #E8ECF4;display:flex;align-items:flex-end;justify-content:space-between}' +
-    '.validity{font-size:10px;color:#9CA3AF;line-height:1.7}' +
-    '.sig-block{text-align:center;min-width:220px}' +
-    '.sig-line{width:100%;height:1px;background:#D1D5DB;margin:0 auto 6px}' +
-    '.sig-name{font-size:11px;color:#374151;font-weight:700}' +
-    '.sig-role{font-size:9px;color:#9CA3AF;margin-top:1px}' +
-    '.footer-right{text-align:right;font-size:9px;color:#9CA3AF}' +
-    '@media print{body{background:#fff;padding:0}.page{box-shadow:none;border-radius:0;width:100%;min-height:auto}.no-print{display:none!important}}' +
-    '@page{margin:0;size:A4}' +
+    'body{font-family:Arial,sans-serif;background:#F0F2F5;color:#000;min-height:100vh;padding:32px 16px;display:flex;justify-content:center}' +
+    '.page{width:210mm;background:#fff;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.14);padding:40px;position:relative}' +
+    'table.receita-table{width:100%;border-collapse:collapse;border:2px solid #000;margin-top:10px}' +
+    'table.receita-table td{border:1px solid #000;padding:8px 10px;font-size:12px;vertical-align:middle;color:#000}' +
+    '.label-cell{font-weight:bold;text-transform:uppercase}' +
+    '.value-text{font-weight:normal;text-transform:uppercase}' +
+    '.disclaimer{font-size:11px;font-weight:bold;text-align:justify;line-height:1.4}' +
+    '@media print{body{background:#fff;padding:0}.page{box-shadow:none;border-radius:0;width:100%;padding:0}.no-print{display:none!important}}' +
     '</style></head><body>' +
     '<div class="no-print" style="position:fixed;top:20px;right:20px;z-index:999;display:flex;gap:8px">' +
-    '<button onclick="window.print()" style="background:#003087;color:#fff;border:none;padding:11px 24px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;box-shadow:0 4px 16px rgba(0,48,135,.4);letter-spacing:.02em">📥 Salvar PDF</button>' +
-    '<button onclick="window.close()" style="background:#fff;color:#374151;border:1px solid #E5E7EB;padding:11px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:\'Source Sans 3\',sans-serif">✕ Fechar</button>' +
+    '<button onclick="window.print()" style="background:#003087;color:#fff;border:none;padding:11px 24px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;box-shadow:0 4px 16px rgba(0,48,135,.4)">📥 Salvar PDF</button>' +
+    '<button onclick="window.close()" style="background:#fff;color:#374151;border:1px solid #E5E7EB;padding:11px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:Arial,sans-serif">✕ Fechar</button>' +
     '</div>' +
     '<div class="page">' +
-    '<div>' +
-    '<div class="accent-bar"></div>' +
-    '<div class="header">' +
-    '<div>' +
-    '<div class="brand-name">Farmácia Couto</div>' +
-    '<div class="brand-tag">Saúde &amp; Bem-estar</div>' +
-    '<div class="brand-contact">' +
-    '<div>📞 <strong>(75) 99115-4571</strong></div>' +
-    '<div>📸 <strong>@farmaciacouto</strong></div>' +
-    '</div>' +
-    '</div>' +
-    '<div class="doc-block">' +
-    '<div class="doc-label">Documento</div>' +
-    '<div class="doc-title">Receita Médica</div>' +
-    '<div class="doc-date">' + dataHoje + ' · ' + horaHoje + '</div>' +
-    '</div>' +
-    '</div>' +
-    '<div class="content-area">' +
-    '<div class="section-label">Identificação do Paciente</div>' +
-    '<div class="client-card">' +
-    '<div><div class="cf-label">Paciente</div><div class="cf-value">' + xe(cliente ? cliente.nome : '—') + '</div></div>' +
-    '<div><div class="cf-label">WhatsApp</div><div class="cf-value">' + xe(cliente && cliente.tel ? cliente.tel : '—') + '</div></div>' +
-    '<div><div class="cf-label">CPF</div><div class="cf-value">' + xe(cliente && cliente.cpf ? cliente.cpf : '—') + '</div></div>' +
-    '<div><div class="cf-label">Data de Nasc.</div><div class="cf-value">' + (cliente && cliente.nasc ? window.fmtDate(cliente.nasc) : '—') + '</div></div>' +
-    '</div>' +
-    '<div class="section-label">Prescrição e Instruções</div>' +
-    '<div class="meds-container">' + medsHtml + '</div>' +
-    (receita.obs ?
-      '<div class="obs-block">' +
-      '<strong>📝 Observações:</strong> ' + xe(receita.obs) +
-      '</div>' : '') +
-    '</div>' +
-    '</div>' +
-    '<div class="footer">' +
-    '<div class="validity">' +
-    'Receita emitida em: <strong>' + dataEmissao + '</strong><br>' +
-    'Farmácia Couto · (75) 99115-4571 · @farmaciacouto' +
-    '</div>' +
-    '<div class="sig-block">' +
-    '<div class="sig-line"></div>' +
-    '<div class="sig-name">' + xe(receita.medico ? 'Dr(a). ' + receita.medico : nomeAtendente) + '</div>' +
-    '<div class="sig-role">' + (receita.medico ? 'Assinatura e Carimbo do Médico' : 'Responsável pelo Registro') + '</div>' +
-    '</div>' +
-    '<div class="footer-right">Farmácia Couto<br>Receituário</div>' +
-    '</div>' +
+    '<table class="receita-table">' +
+    '<tr>' +
+    '<td colspan="4" style="text-align:center;font-size:16px;font-weight:bold;padding:12px" class="label-cell">FARMÁCIA COUTO LTDA</td>' +
+    '</tr>' +
+    '<tr>' +
+    '<td colspan="4" class="label-cell">NOME COMPLETO: <span class="value-text">' + xe(cliente ? cliente.nome : '') + '</span></td>' +
+    '</tr>' +
+    '<tr>' +
+    '<td style="width:25%" class="label-cell">RG: <span class="value-text">' + xe(cliente && cliente.rg ? cliente.rg : '') + '</span></td>' +
+    '<td colspan="2" style="width:50%" class="label-cell">CPF: <span class="value-text">' + xe(cliente && cliente.cpf ? cliente.cpf : '') + '</span></td>' +
+    '<td style="width:25%" class="label-cell">DATA NASC.: <span class="value-text">' + (cliente && cliente.nasc ? window.fmtDate(cliente.nasc) : '') + '</span></td>' +
+    '</tr>' +
+    '<tr>' +
+    '<td colspan="4" class="label-cell">CONTATO: <span class="value-text">' + xe(cliente && cliente.tel ? cliente.tel : '') + '</span></td>' +
+    '</tr>' +
+    medsHtml +
+    '<tr>' +
+    '<td colspan="2" style="width:50%" class="label-cell">FARMACÊUTICO: LEANDRO COUTO</td>' +
+    '<td colspan="2" style="width:50%" class="label-cell">DATA: <span class="value-text">' + dataHoje + '</span></td>' +
+    '</tr>' +
+    '<tr>' +
+    '<td colspan="4" style="height:65px;vertical-align:top" class="label-cell">ASS:</td>' +
+    '</tr>' +
+    '<tr>' +
+    '<td colspan="4" class="disclaimer">CIENTE QUE DE ACORDO COM A PORTARIA 344/98 E RDC Nº 20/2011 NÃO É PERMITIDO A TROCA OU DEVOLUÇÃO DE MEDICAMENTO CONTROLADO/ ANTIBIÓTICO.</td>' +
+    '</tr>' +
+    '</table>' +
     '</div>' +
     '</body></html>';
 
@@ -402,4 +370,5 @@ export function gerarPDFReceitaIndividual(receita, cliente) {
 
 window.gerarPDFReceitaById = gerarPDFReceitaById;
 window.gerarPDFReceitaIndividual = gerarPDFReceitaIndividual;
+
 
