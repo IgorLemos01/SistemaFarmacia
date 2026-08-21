@@ -313,8 +313,108 @@ function lsSet(key, value) { localStorage.setItem(getStorageKey(key), JSON.strin
 // ══════════════════════════════════════════════════════════
 
 export async function dbGetTiposExames() {
-  // Retorna os tipos de exame do Supabase (com fallback local em cache)
-  var fallback = fromCache('tipos_exames') || [];
+  var fallback = [
+    { nome: 'Glicemia em Jejum', valor: 7.00, ordem: 60 },
+    { nome: 'Fezes 1 Amostra', valor: 8.00, ordem: 70 },
+    { nome: 'Ácido Úrico', valor: 9.00, ordem: 80 },
+    { nome: 'Sumário de Urina', valor: 9.00, ordem: 81 },
+    { nome: 'Cálcio (Ca)', valor: 11.00, ordem: 100 },
+    { nome: 'Fosfatase Alcalina', valor: 11.00, ordem: 101 },
+    { nome: 'Grupo Sanguíneo', valor: 11.00, ordem: 102 },
+    { nome: 'T3', valor: 11.00, ordem: 103 },
+    { nome: 'Hemograma Completo', valor: 13.00, ordem: 120 },
+    { nome: 'T4', valor: 13.00, ordem: 121 },
+    { nome: 'TSH', valor: 13.00, ordem: 122 },
+    { nome: 'Fezes 2 Amostras', valor: 15.00, ordem: 140 },
+    { nome: 'TGO e TGP', valor: 15.00, ordem: 141 },
+    { nome: 'Ureia e Creatinina', valor: 15.00, ordem: 142 },
+    { nome: 'Bilirrubina Total e Frações', valor: 16.00, ordem: 150 },
+    { nome: 'Teste de Gravidez', valor: 16.00, ordem: 151 },
+    { nome: 'Ferritina', valor: 22.00, ordem: 200 },
+    { nome: 'Ferro (Fe)', valor: 22.00, ordem: 201 },
+    { nome: 'Fezes 3 Amostras', valor: 22.00, ordem: 202 },
+    { nome: 'Colesterol Total e Frações (HDL, LDL, VLDL)', valor: 27.00, ordem: 250 },
+    { nome: 'Hemoglobina Glicada', valor: 27.00, ordem: 251 },
+    { nome: 'PSA', valor: 27.00, ordem: 252 },
+    { nome: 'PSA Total e Livre', valor: 27.00, ordem: 253 },
+    { nome: 'Triglicerídeos', valor: 27.00, ordem: 254 },
+    { nome: 'VDRL', valor: 27.00, ordem: 255 },
+    { nome: 'Hepatite C', valor: 32.00, ordem: 300 },
+    { nome: 'HIV 1 e 2', valor: 32.00, ordem: 301 },
+    { nome: 'Sífilis', valor: 32.00, ordem: 302 },
+    { nome: 'Vitamina D 25-OH', valor: 32.00, ordem: 303 },
+    { nome: 'Curva de Glicemia', valor: 43.00, ordem: 400 },
+    { nome: 'Lactose', valor: 43.00, ordem: 401 },
+    { nome: 'Urocultura', valor: 43.00, ordem: 402 },
+    { nome: 'TOTG', valor: 53.00, ordem: 500 },
+    { nome: 'Hepatite B', valor: 42.00, ordem: 390 },
+    { nome: 'Potássio (K)', valor: 208.00, ordem: 1970 },
+    { nome: 'Magnésio (Mg)', valor: 133.00, ordem: 1260 },
+    { nome: 'Sódio (Na)', valor: 8.00, ordem: 70 },
+    { nome: 'Vitamina A', valor: 31.00, ordem: 290 },
+    { nome: 'Vitamina B12', valor: 38.00, ordem: 360 },
+    { nome: 'Vitamina C', valor: 6.00, ordem: 50 },
+    { nome: 'Anti-Fireglobulina', valor: 61.00, ordem: 570 },
+    { nome: 'Anti-TPO', valor: 201.00, ordem: 190 },
+    { nome: 'ASLO', valor: 11.00, ordem: 100 },
+    { nome: 'C3', valor: 40.00, ordem: 370 },
+    { nome: 'C4', valor: 40.00, ordem: 371 },
+    { nome: 'CH50', valor: 98.00, ordem: 920 },
+    { nome: 'IgE para Ácaros (B.tropicalis, D.pteronyssinus, D.farinae e Pó caseiro)', valor: 32.00, ordem: 300 },
+    { nome: 'IgE para Alfa, Beta Lactoglobulina', valor: 45.00, ordem: 420 },
+    { nome: 'IgE para Barata', valor: 45.00, ordem: 421 },
+    { nome: 'IgE para Blomia Tropicalis', valor: 45.00, ordem: 422 },
+    { nome: 'IgE para Caseína', valor: 32.00, ordem: 300 },
+    { nome: 'IgE para Castanha', valor: 45.00, ordem: 423 },
+    { nome: 'IgE para Clara do Ovo', valor: 45.00, ordem: 424 },
+    { nome: 'IgE para Fungos (P.nottum, C.herbarum, D.alternata e As.Fumugatus)', valor: 32.00, ordem: 300 },
+    { nome: 'IgE para Gema do Ovo', valor: 65.00, ordem: 610 },
+    { nome: 'IgE para Glúten', valor: 32.00, ordem: 300 },
+    { nome: 'IgE para Leite de Vaca', valor: 32.00, ordem: 300 },
+    { nome: 'IgE para Marisco/Frutos do Mar', valor: 32.00, ordem: 300 },
+    { nome: 'IgE para Peixe (Tilápia/Merluza)', valor: 32.00, ordem: 300 },
+    { nome: 'IgE para Pelo de Cão e Gato', valor: 45.00, ordem: 425 },
+    { nome: 'IgE para Pólen de Gramíneas', valor: 32.00, ordem: 300 },
+    { nome: 'IgE para Trigo', valor: 32.00, ordem: 300 },
+    { nome: 'IgE Sérico', valor: 27.00, ordem: 250 },
+    { nome: 'IgG Total', valor: 31.00, ordem: 290 },
+    { nome: 'IgG Subclasses', valor: 930.00, ordem: 8810 },
+    { nome: 'Sangue Oculto nas Fezes', valor: 40.00, ordem: 370 },
+    { nome: 'Zinco', valor: 32.00, ordem: 300 },
+    { nome: 'Lactose (sem o líquido)', valor: 138.00, ordem: 1300 },
+    { nome: 'Sexagem Fetal', valor: 211.00, ordem: 2000 },
+    { nome: 'DNA (Jorro)', valor: 475.00, ordem: 4500 }
+  ];
+
+  // Executa migração se a versão de preços for antiga
+  if (localStorage.getItem('fc_exames_version_v2') !== '5') {
+    try {
+      var atual = fromCache('tipos_exames') || [];
+      if (window.sb && window.STATE.isSupabase) {
+        var res = await window.withTimeout(window.sb.from('tipos_exames').select('*').eq('ativo', true), 3000);
+        if (!res.error && res.data) {
+          atual = res.data;
+        }
+      }
+      for (var i = 0; i < fallback.length; i++) {
+        var fItem = fallback[i];
+        var match = atual.find(function (x) { return x.nome.toLowerCase() === fItem.nome.toLowerCase(); });
+        if (match) {
+          if (parseFloat(match.valor) !== fItem.valor) {
+            match.valor = fItem.valor;
+            await dbSaveTipoExame(match);
+          }
+        } else {
+          await dbSaveTipoExame(fItem);
+        }
+      }
+      localStorage.setItem('fc_exames_version_v2', '5');
+    } catch (e) {
+      console.warn('Erro na migração de tipos de exames:', e);
+    }
+  }
+
+  var cached = fromCache('tipos_exames') || [];
   if (window.sb && window.STATE.isSupabase) {
     try {
       var res = await window.withTimeout(window.sb.from('tipos_exames').select('*').eq('ativo', true).order('ordem'), 3000);
@@ -326,83 +426,12 @@ export async function dbGetTiposExames() {
       console.warn('Erro ao buscar tipos de exames:', e);
     }
   }
-  // Se não carregar do banco e não tiver cache, usar lista estática/padrão
-  if (!fallback.length) {
-    fallback = [
-      { nome: 'Glicemia em Jejum', valor: 6.00, ordem: 60 },
-      { nome: 'Fezes 1 Amostra', valor: 7.00, ordem: 70 },
-      { nome: 'Ácido Úrico', valor: 8.00, ordem: 80 },
-      { nome: 'Sumário de Urina', valor: 8.00, ordem: 81 },
-      { nome: 'Cálcio (Ca)', valor: 10.00, ordem: 100 },
-      { nome: 'Fosfatase Alcalina', valor: 10.00, ordem: 101 },
-      { nome: 'Grupo Sanguíneo', valor: 10.00, ordem: 102 },
-      { nome: 'T3', valor: 10.00, ordem: 103 },
-      { nome: 'Hemograma Completo', valor: 12.00, ordem: 120 },
-      { nome: 'T4', valor: 12.00, ordem: 121 },
-      { nome: 'TSH', valor: 12.00, ordem: 122 },
-      { nome: 'Fezes 2 Amostras', valor: 14.00, ordem: 140 },
-      { nome: 'TGO e TGP', valor: 14.00, ordem: 141 },
-      { nome: 'Ureia e Creatinina', valor: 14.00, ordem: 142 },
-      { nome: 'Bilirrubina Total e Frações', valor: 15.00, ordem: 150 },
-      { nome: 'Teste de Gravidez', valor: 15.00, ordem: 151 },
-      { nome: 'Ferritina', valor: 20.00, ordem: 200 },
-      { nome: 'Ferro (Fe)', valor: 20.00, ordem: 201 },
-      { nome: 'Fezes 3 Amostras', valor: 20.00, ordem: 202 },
-      { nome: 'Colesterol Total e Frações (HDL, LDL, VLDL)', valor: 25.00, ordem: 250 },
-      { nome: 'Hemoglobina Glicada', valor: 25.00, ordem: 251 },
-      { nome: 'PSA', valor: 25.00, ordem: 252 },
-      { nome: 'PSA Total e Livre', valor: 25.00, ordem: 253 },
-      { nome: 'Triglicerídeos', valor: 25.00, ordem: 254 },
-      { nome: 'VDRL', valor: 25.00, ordem: 255 },
-      { nome: 'Hepatite C', valor: 30.00, ordem: 300 },
-      { nome: 'HIV 1 e 2', valor: 30.00, ordem: 301 },
-      { nome: 'Sífilis', valor: 30.00, ordem: 302 },
-      { nome: 'Vitamina D 25-OH', valor: 30.00, ordem: 303 },
-      { nome: 'Curva de Glicemia', valor: 40.00, ordem: 400 },
-      { nome: 'Lactose', valor: 40.00, ordem: 401 },
-      { nome: 'Urocultura', valor: 40.00, ordem: 402 },
-      { nome: 'TOTG', valor: 50.00, ordem: 500 },
-      { nome: 'Hepatite B', valor: 39.00, ordem: 390 },
-      { nome: 'Potássio (K)', valor: 197.00, ordem: 1970 },
-      { nome: 'Magnésio (Mg)', valor: 126.00, ordem: 1260 },
-      { nome: 'Sódio (Na)', valor: 7.00, ordem: 70 },
-      { nome: 'Vitamina A', valor: 29.00, ordem: 290 },
-      { nome: 'Vitamina B12', valor: 36.00, ordem: 360 },
-      { nome: 'Vitamina C', valor: 5.00, ordem: 50 },
-      { nome: 'Anti-Fireglobulina', valor: 57.00, ordem: 570 },
-      { nome: 'Anti-TPO', valor: 19.00, ordem: 190 },
-      { nome: 'ASLO', valor: 10.00, ordem: 100 },
-      { nome: 'C3', valor: 37.00, ordem: 370 },
-      { nome: 'C4', valor: 37.00, ordem: 371 },
-      { nome: 'CH50', valor: 92.00, ordem: 920 },
-      { nome: 'IgE para Ácaros (B.tropicalis, D.pteronyssinus, D.farinae e Pó caseiro)', valor: 30.00, ordem: 300 },
-      { nome: 'IgE para Alfa, Beta Lactoglobulina', valor: 42.00, ordem: 420 },
-      { nome: 'IgE para Barata', valor: 42.00, ordem: 421 },
-      { nome: 'IgE para Blomia Tropicalis', valor: 42.00, ordem: 422 },
-      { nome: 'IgE para Caseína', valor: 30.00, ordem: 300 },
-      { nome: 'IgE para Castanha', valor: 42.00, ordem: 423 },
-      { nome: 'IgE para Clara do Ovo', valor: 42.00, ordem: 424 },
-      { nome: 'IgE para Fungos (P.nottum, C.herbarum, D.alternata e As.Fumugatus)', valor: 30.00, ordem: 300 },
-      { nome: 'IgE para Gema do Ovo', valor: 61.00, ordem: 610 },
-      { nome: 'IgE para Glúten', valor: 30.00, ordem: 300 },
-      { nome: 'IgE para Leite de Vaca', valor: 30.00, ordem: 300 },
-      { nome: 'IgE para Marisco/Frutos do Mar', valor: 30.00, ordem: 300 },
-      { nome: 'IgE para Peixe (Tilápia/Merluza)', valor: 30.00, ordem: 300 },
-      { nome: 'IgE para Pelo de Cão e Gato', valor: 42.00, ordem: 425 },
-      { nome: 'IgE para Pólen de Gramíneas', valor: 30.00, ordem: 300 },
-      { nome: 'IgE para Trigo', valor: 30.00, ordem: 300 },
-      { nome: 'IgE Sérico', valor: 25.00, ordem: 250 },
-      { nome: 'IgG Total', valor: 29.00, ordem: 290 },
-      { nome: 'IgG Subclasses', valor: 881.00, ordem: 8810 },
-      { nome: 'Sangue Oculto nas Fezes', valor: 37.00, ordem: 370 },
-      { nome: 'Zinco', valor: 30.00, ordem: 300 },
-      { nome: 'Lactose (sem o líquido)', valor: 130.00, ordem: 1300 },
-      { nome: 'Sexagem Fetal', valor: 200.00, ordem: 2000 },
-      { nome: 'DNA (Jorro)', valor: 450.00, ordem: 4500 }
-    ];
+
+  if (!cached.length) {
     setCache('tipos_exames', fallback);
+    return fallback;
   }
-  return fallback;
+  return cached;
 }
 
 export async function dbSaveTipoExame(obj) {
