@@ -7,7 +7,7 @@ export var CACHE_TTL = 30000;
 export var FETCH_LOCK = { clientes: false, servicos: false, users: false };
 
 export function getStorageKey(key) {
-  if (key === 'clientes' || key === 'servicos') {
+  if (key === 'clientes' || key === 'servicos' || key === 'medicamentos') {
     var prefix = window.STATE.isSupabase ? 'fc_sb_' : 'fc_local_';
     return prefix + key;
   }
@@ -24,7 +24,11 @@ export function setCache(key, data) {
   try { localStorage.setItem(getStorageKey(key), JSON.stringify(data)); } catch (e) { }
 }
 
-export function clearCache(key) { CACHE[key] = null; CACHE.lastFetch[key] = 0; }
+export function clearCache(key) {
+  CACHE[key] = null;
+  CACHE.lastFetch[key] = 0;
+  try { localStorage.removeItem(getStorageKey(key)); } catch (e) { }
+}
 
 export function fromCache(key) {
   if (CACHE[key]) return CACHE[key];
@@ -485,15 +489,13 @@ export async function dbDeleteTipoExame(id) {
 
 export async function dbGetMedicamentos() {
   var cached = fromCache('medicamentos') || [];
-  if (cached.length) return cached;
 
-  // Tenta buscar do Supabase
   if (window.sb && window.STATE.isSupabase) {
     try {
       var res = await window.withTimeout(
         window.sb.from('medicamentos').select('*').order('nome'), 3000
       );
-      if (!res.error && res.data && res.data.length) {
+      if (!res.error && res.data) {
         var normed = res.data.map(function (r) {
           return {
             id: r.id, nome: r.nome || '', rms: r.rms || '',
@@ -506,13 +508,8 @@ export async function dbGetMedicamentos() {
       }
     } catch (e) { console.warn('dbGetMedicamentos supabase error:', e); }
   }
-  // Fallback localStorage
-  try {
-    var ls = localStorage.getItem('fc_medicamentos');
-    var data = ls ? JSON.parse(ls) : [];
-    if (data.length) setCache('medicamentos', data);
-    return data;
-  } catch (e) { return []; }
+
+  return cached;
 }
 
 export async function dbSaveMedicamento(obj) {
